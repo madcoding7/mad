@@ -2,86 +2,76 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>mad</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DoxyEdu</title>
+
+  <script src="/scram/scramjet.all.js"></script>
+  <script src="/baremux/index.js"></script>
+  <script src="/epoxy/index.js"></script>
+  <script src="/register-sw.js"></script>
+
+  <script>
+    window.addEventListener("DOMContentLoaded", () => {
+      const style = document.createElement("style");
+      style.textContent = `* { cursor: none !important; }`;
+      document.head.appendChild(style);
+
+      const cursor = document.createElement("img");
+      cursor.src = "/cursor.gif";
+      cursor.style.position = "fixed";
+      cursor.style.width = "17px";
+      cursor.style.height = "21px";
+      cursor.style.pointerEvents = "none";
+      cursor.style.zIndex = "9999999";
+      document.body.appendChild(cursor);
+
+      document.addEventListener("mousemove", e => {
+        cursor.style.left = e.clientX + "px";
+        cursor.style.top = e.clientY + "px";
+      });
+    });
+  </script>
 
   <style>
     :root {
       --bg: #f4f7fb;
-      --panel: #ffffff;
-      --panel-2: #eef3f9;
+      --bg2: #eaf0f8;
+      --card: #ffffff;
       --text: #1f2937;
       --muted: #6b7280;
-      --accent: #3b82f6;
-      --accent-2: #2563eb;
-      --border: #dbe3ee;
-      --shadow: 0 10px 30px rgba(0,0,0,0.08);
-      --radius: 18px;
-    }
-
-    body.theme-aero {
-      --bg: linear-gradient(135deg, #003366 0%, #0d5cab 50%, #37d5d6 100%);
-      --panel: rgba(255,255,255,0.82);
-      --panel-2: rgba(255,255,255,0.65);
-      --text: #102033;
-      --muted: #3d556e;
-      --accent: #0078ff;
-      --accent-2: #00a2ff;
-      --border: rgba(255,255,255,0.55);
-      --shadow: 0 20px 45px rgba(0,0,0,0.28);
-    }
-
-    body.theme-dark {
-      --bg: linear-gradient(135deg, #0b1020 0%, #111827 60%, #0f172a 100%);
-      --panel: #111827;
-      --panel-2: #1f2937;
-      --text: #f3f4f6;
-      --muted: #9ca3af;
-      --accent: #60a5fa;
-      --accent-2: #22d3ee;
-      --border: #263244;
-      --shadow: 0 16px 40px rgba(0,0,0,0.45);
-    }
-
-    body.theme-retro {
-      --bg: #08110a;
-      --panel: #0d1a0f;
-      --panel-2: #102515;
-      --text: #8cff8c;
-      --muted: #4caf50;
-      --accent: #8cff8c;
-      --accent-2: #56ff56;
-      --border: #1f4a24;
-      --shadow: 0 0 18px rgba(80,255,80,0.15);
+      --primary: #2563eb;
+      --primary2: #1d4ed8;
+      --border: #dbe3ef;
+      --shadow: 0 10px 25px rgba(0,0,0,0.08);
+      --radius: 16px;
     }
 
     * { box-sizing: border-box; }
+
     body {
-      margin: 0;
       font-family: Inter, Arial, sans-serif;
-      background: var(--bg);
+      background: linear-gradient(180deg, var(--bg), var(--bg2));
       color: var(--text);
+      margin: 0;
       min-height: 100vh;
-      transition: all .25s ease;
+      overflow-y: auto;
+      transition: background .25s, color .25s;
     }
 
-    .app {
-      width: min(1200px, 94%);
-      margin: 24px auto;
-    }
+    a { color: inherit; }
 
     .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
       display: flex;
       align-items: center;
-      gap: 14px;
       justify-content: space-between;
-      margin-bottom: 18px;
-      padding: 14px 18px;
-      background: var(--panel);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(14px);
+      gap: 12px;
+      padding: 14px 22px;
+      background: rgba(255,255,255,0.75);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border);
     }
 
     .brand {
@@ -89,448 +79,1396 @@
       align-items: center;
       gap: 12px;
       font-weight: 800;
-      font-size: 1.2rem;
-      letter-spacing: .4px;
+      color: var(--primary);
     }
 
-    .brand-badge {
-      width: 36px;
-      height: 36px;
-      border-radius: 12px;
-      background: linear-gradient(135deg, var(--accent), var(--accent-2));
-      display: grid;
-      place-items: center;
-      color: white;
-      font-weight: 900;
+    .brand img {
+      width: 34px;
+      height: 34px;
+      object-fit: contain;
     }
 
-    .top-controls {
+    .nav-links {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 16px;
       flex-wrap: wrap;
     }
 
-    .chip, select, button, input {
-      border: 1px solid var(--border);
-      background: var(--panel-2);
+    .nav-links a, .nav-links button {
+      text-decoration: none;
       color: var(--text);
-      border-radius: 12px;
-      padding: 10px 12px;
-      font: inherit;
-    }
-
-    button {
-      cursor: pointer;
-      transition: .2s ease;
-    }
-
-    button:hover {
-      transform: translateY(-1px);
-      border-color: var(--accent);
-    }
-
-    .primary {
-      background: linear-gradient(135deg, var(--accent), var(--accent-2));
-      color: white;
+      font-weight: 600;
+      background: transparent;
       border: none;
+      cursor: pointer;
+      padding: 8px 12px;
+      border-radius: 10px;
     }
 
-    .tabs-wrap {
-      background: var(--panel);
+    .nav-links a:hover, .nav-links button:hover {
+      background: rgba(37,99,235,0.08);
+      color: var(--primary);
+    }
+
+    .page {
+      width: min(1150px, 92%);
+      margin: 28px auto;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1.5fr .9fr;
+      gap: 22px;
+      align-items: stretch;
+    }
+
+    .hero-card, .panel, .main-ui-container {
+      background: var(--card);
       border: 1px solid var(--border);
-      border-radius: var(--radius);
       box-shadow: var(--shadow);
-      padding: 10px;
-      margin-bottom: 18px;
-      backdrop-filter: blur(14px);
+      border-radius: var(--radius);
     }
 
-    .tabs-bar {
+    .hero-card {
+      padding: 34px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-card::before {
+      content: "";
+      position: absolute;
+      inset: auto -50px -50px auto;
+      width: 240px;
+      height: 240px;
+      background: radial-gradient(circle, rgba(37,99,235,.16), transparent 65%);
+      border-radius: 50%;
+    }
+
+    .logo-img {
+      width: 88px;
+      height: 88px;
+      object-fit: contain;
+      display: block;
+      margin-bottom: 18px;
+    }
+
+    h1 {
+      margin: 0 0 10px;
+      font-size: 2.3rem;
+      line-height: 1.1;
+    }
+
+    p {
+      color: var(--muted);
+      margin: 0 0 18px;
+      line-height: 1.5;
+    }
+
+    #sj-form {
       display: flex;
       gap: 10px;
-      overflow-x: auto;
-      padding-bottom: 6px;
+      flex-wrap: wrap;
+      margin-top: 18px;
     }
 
-    .tab {
-      min-width: 180px;
+    #sj-address, #proxy-nav-input, #bookmark-name, #bookmark-url, #home-url, #search-engine-input {
+      flex: 1;
+      min-width: 240px;
+      padding: 13px 14px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: #fff;
+      color: var(--text);
+      outline: none;
+      font-size: 15px;
+    }
+
+    #sj-address:focus, #proxy-nav-input:focus, #bookmark-name:focus, #bookmark-url:focus, #home-url:focus, #search-engine-input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(37,99,235,.12);
+    }
+
+    .primary-btn, .ghost-btn, .chip-btn {
+      border: none;
+      border-radius: 12px;
+      padding: 12px 16px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .primary-btn {
+      background: linear-gradient(180deg, var(--primary), var(--primary2));
+      color: white;
+    }
+
+    .primary-btn:hover { filter: brightness(1.03); }
+
+    .ghost-btn {
+      background: #eef4ff;
+      color: var(--primary);
+    }
+
+    .ghost-btn:hover { background: #e3edff; }
+
+    .chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .chip-btn {
+      background: #f3f6fb;
+      color: var(--text);
+      border: 1px solid var(--border);
+      padding: 10px 14px;
+    }
+
+    .chip-btn:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+      background: #f8fbff;
+    }
+
+    .side-card {
+      padding: 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .mini-title {
+      font-size: .95rem;
+      font-weight: 800;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+
+    .list-links {
+      display: grid;
+      gap: 10px;
+    }
+
+    .list-links a {
+      text-decoration: none;
+      padding: 12px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      color: var(--text);
+      background: #fafcff;
+      font-weight: 600;
+    }
+
+    .list-links a:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 22px;
+      margin-top: 22px;
+    }
+
+    .panel {
+      padding: 20px;
+    }
+
+    .section-head {
       display: flex;
       align-items: center;
       justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .section-head h3 {
+      margin: 0;
+      font-size: 1.05rem;
+    }
+
+    .segmented {
+      display: flex;
       gap: 8px;
-      padding: 10px 12px;
-      border-radius: 14px;
+      flex-wrap: wrap;
+    }
+
+    .segmented button {
       border: 1px solid var(--border);
-      background: var(--panel-2);
+      background: #f8fafc;
+      color: var(--text);
+      padding: 9px 12px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 700;
+    }
+
+    .segmented button.active {
+      background: #eaf2ff;
+      border-color: #bfd4ff;
+      color: var(--primary);
+    }
+
+    .news-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+      gap: 14px;
+    }
+
+    .news-card {
+      display: flex;
+      flex-direction: column;
+      border: 1px solid var(--border);
+      text-decoration: none;
+      background: white;
+      transition: .18s ease;
+      border-radius: 14px;
+      overflow: hidden;
+      min-height: 100%;
+    }
+
+    .news-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 18px rgba(0,0,0,.08);
+      border-color: #bfd4ff;
+    }
+
+    .news-thumb {
+      width: 100%;
+      height: 120px;
+      object-fit: cover;
+      background: #eef2f7;
+    }
+
+    .news-content {
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+    }
+
+    .news-title {
+      color: var(--text);
+      font-size: .9rem;
+      font-weight: 800;
+      margin-bottom: 8px;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .news-date {
+      font-size: .75rem;
+      color: var(--muted);
+      margin-top: auto;
+    }
+
+    .score-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .score-card {
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px;
+      background: #fff;
+    }
+
+    .score-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      font-size: .8rem;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .score-match {
+      font-weight: 800;
+      font-size: .95rem;
+    }
+
+    #error-msg {
+      color: #b91c1c;
+      margin-top: 12px;
+      display: none;
+      padding: 12px;
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      border-radius: 12px;
+    }
+
+    /* PROXY OVERLAY */
+    #proxy-overlay {
+      position: fixed;
+      inset: 0;
+      background: #eef2f7;
+      z-index: 9999;
+      display: none;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .proxy-tabs {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 10px;
+      background: #dfe7f2;
+      border-bottom: 1px solid #c9d5e6;
+      overflow-x: auto;
+      flex-shrink: 0;
+    }
+
+    .tab {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      min-width: 140px;
+      max-width: 220px;
+      padding: 9px 12px;
+      border: 1px solid #bfd0e6;
+      background: #f7faff;
+      border-radius: 12px;
       cursor: pointer;
       white-space: nowrap;
     }
 
     .tab.active {
-      border-color: var(--accent);
-      box-shadow: inset 0 0 0 1px var(--accent);
+      background: white;
+      border-color: #8bb4ff;
     }
 
     .tab-title {
       overflow: hidden;
       text-overflow: ellipsis;
+      font-size: 13px;
+      font-weight: 700;
     }
 
     .tab-close {
       border: none;
       background: transparent;
-      color: var(--muted);
-      padding: 0 4px;
       cursor: pointer;
+      color: #64748b;
+      font-weight: 700;
     }
 
-    .layout {
-      display: grid;
-      grid-template-columns: 2fr 1fr;
-      gap: 18px;
+    .tab-add {
+      border: none;
+      background: white;
+      border-radius: 10px;
+      padding: 8px 12px;
+      cursor: pointer;
+      font-weight: 800;
     }
 
-    .panel {
-      background: var(--panel);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      padding: 22px;
-      backdrop-filter: blur(14px);
+    .proxy-bar {
+      min-height: 56px;
+      background: white;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      border-bottom: 1px solid #d9e3ef;
+      flex-shrink: 0;
     }
 
-    .hero h1 {
-      margin: 0 0 10px;
-      font-size: clamp(2rem, 4vw, 3.6rem);
-      line-height: 1;
+    .proxy-bar-left, .proxy-bar-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
 
-    .hero p {
-      color: var(--muted);
-      margin: 0 0 18px;
-    }
-
-    .search-row {
+    #proxy-nav-form {
+      flex-grow: 1;
       display: flex;
       gap: 10px;
-      flex-wrap: wrap;
-      margin-bottom: 16px;
     }
 
-    .search-row input {
-      flex: 1;
-      min-width: 260px;
-      padding: 14px;
-    }
-
-    .quick-links {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 12px;
-      margin-top: 14px;
-    }
-
-    .quick-link {
-      text-decoration: none;
-      color: var(--text);
-      border: 1px solid var(--border);
-      background: var(--panel-2);
-      padding: 16px;
-      border-radius: 14px;
-      text-align: center;
-      font-weight: 600;
-    }
-
-    .section-title {
-      margin: 0 0 14px;
-      font-size: 1.05rem;
-    }
-
-    .sports-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-      gap: 14px;
-    }
-
-    .sports-card {
-      text-decoration: none;
-      color: inherit;
-      border: 1px solid var(--border);
-      background: var(--panel-2);
-      border-radius: 16px;
-      overflow: hidden;
-      transition: .2s ease;
-    }
-
-    .sports-card:hover {
-      transform: translateY(-3px);
-      border-color: var(--accent);
-    }
-
-    .sports-thumb {
+    #sj-frame {
+      border: none;
       width: 100%;
-      height: 140px;
-      object-fit: cover;
+      height: calc(100% - 112px);
+      background: white;
       display: block;
-      background: #dfe7f2;
     }
 
-    .sports-body {
-      padding: 12px;
+    /* drawers */
+    .drawer {
+      position: fixed;
+      top: 76px;
+      right: 18px;
+      width: 320px;
+      max-height: calc(100vh - 110px);
+      overflow: auto;
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      box-shadow: var(--shadow);
+      z-index: 10010;
+      display: none;
+      padding: 16px;
     }
 
-    .sports-title {
-      font-weight: 700;
-      font-size: .95rem;
-      margin-bottom: 8px;
+    .drawer h4 {
+      margin: 0 0 12px;
     }
 
-    .sports-date {
-      color: var(--muted);
-      font-size: .82rem;
-    }
-
-    .side-stack {
-      display: grid;
-      gap: 18px;
-    }
-
-    .mini-list {
+    .bookmark-list {
       display: grid;
       gap: 10px;
+      margin-top: 12px;
     }
 
-    .mini-item {
-      padding: 12px;
+    .bookmark-item {
       border: 1px solid var(--border);
       border-radius: 12px;
-      background: var(--panel-2);
+      padding: 10px;
+      display: grid;
+      gap: 8px;
     }
 
-    .footer-note {
-      margin-top: 18px;
-      text-align: center;
+    .bookmark-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .small-btn {
+      border: none;
+      background: #eef4ff;
+      color: var(--primary);
+      border-radius: 10px;
+      padding: 8px 10px;
+      cursor: pointer;
+      font-weight: 700;
+    }
+
+    .small-danger {
+      background: #fef2f2;
+      color: #b91c1c;
+    }
+
+    .setting-row {
+      display: grid;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .setting-row label {
+      font-size: 13px;
+      font-weight: 700;
       color: var(--muted);
-      font-size: .9rem;
     }
 
-    @media (max-width: 900px) {
-      .layout {
-        grid-template-columns: 1fr;
-      }
-      .quick-links {
-        grid-template-columns: repeat(2, 1fr);
-      }
+    /* logs */
+    #logs-window {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 320px;
+      background: white;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      border-radius: 14px;
+      overflow: hidden;
+      z-index: 10000;
+      display: flex;
+      flex-direction: column;
     }
 
-    @media (max-width: 560px) {
-      .quick-links {
+    .logs-header {
+      background: var(--primary);
+      color: white;
+      padding: 10px 14px;
+      font-weight: bold;
+      cursor: move;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      user-select: none;
+    }
+
+    .logs-controls button {
+      background: transparent;
+      border: none;
+      color: white;
+      cursor: pointer;
+      margin-left: 5px;
+      font-size: 16px;
+    }
+
+    #update-logs-frame {
+      width: 100%;
+      height: 300px;
+      border: none;
+      background: #f9f9f9;
+      transition: height .25s;
+    }
+
+    /* themes */
+    body.theme-midnight {
+      --bg: #0b1220;
+      --bg2: #131c2f;
+      --card: #111827;
+      --text: #e5e7eb;
+      --muted: #94a3b8;
+      --primary: #60a5fa;
+      --primary2: #3b82f6;
+      --border: #243041;
+      --shadow: 0 10px 25px rgba(0,0,0,0.35);
+    }
+    body.theme-forest {
+      --bg: #eef7f0;
+      --bg2: #dfeee4;
+      --card: #ffffff;
+      --text: #1d2b22;
+      --muted: #5f6f66;
+      --primary: #2f855a;
+      --primary2: #276749;
+      --border: #d2e6d8;
+    }
+    body.theme-sunset {
+      --bg: #fff3eb;
+      --bg2: #ffe4d6;
+      --card: #ffffff;
+      --text: #3a1f16;
+      --muted: #8a6455;
+      --primary: #ea580c;
+      --primary2: #dc2626;
+      --border: #f2d6c8;
+    }
+
+    @media (max-width: 920px) {
+      .hero, .grid {
         grid-template-columns: 1fr;
+      }
+      .topbar {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+      #sj-frame {
+        height: calc(100% - 122px);
       }
     }
   </style>
 </head>
 <body>
-  <div class="app">
-    <div class="topbar">
-      <div class="brand">
-        <div class="brand-badge">m</div>
-        <span>mad</span>
-      </div>
-
-      <div class="top-controls">
-        <button id="new-tab-btn" class="primary">+ New Tab</button>
-        <select id="theme-select">
-          <option value="default">Default</option>
-          <option value="aero">Frutiger Aero</option>
-          <option value="dark">Dark Neon</option>
-          <option value="retro">Retro Terminal</option>
-        </select>
-      </div>
+  <div class="topbar">
+    <div class="brand">
+      <img src="logo.svg" alt="DoxyEdu">
+      <span>DoxyEdu</span>
     </div>
-
-    <div class="tabs-wrap">
-      <div class="tabs-bar" id="tabs-bar"></div>
-    </div>
-
-    <div class="layout">
-      <div class="panel hero">
-        <h1>Welcome to mad</h1>
-        <p>A cleaner, faster, better front page with tabs, themes, shortcuts, and sports headlines.</p>
-
-        <div class="search-row">
-          <input id="home-search" type="text" placeholder="Search the web..." />
-          <button class="primary" id="search-btn">Search</button>
-        </div>
-
-        <div class="quick-links">
-          <a class="quick-link" href="https://youtube.com" target="_blank">YouTube</a>
-          <a class="quick-link" href="https://wikipedia.org" target="_blank">Wikipedia</a>
-          <a class="quick-link" href="https://github.com" target="_blank">GitHub</a>
-          <a class="quick-link" href="https://reddit.com" target="_blank">Reddit</a>
-        </div>
-      </div>
-
-      <div class="side-stack">
-        <div class="panel">
-          <h3 class="section-title">Dashboard</h3>
-          <div class="mini-list">
-            <div class="mini-item"><strong>Brand:</strong> mad</div>
-            <div class="mini-item"><strong>Tabs:</strong> <span id="tab-count">0</span></div>
-            <div class="mini-item"><strong>Theme:</strong> <span id="theme-name">Default</span></div>
-          </div>
-        </div>
-
-        <div class="panel">
-          <h3 class="section-title">Shortcuts</h3>
-          <div class="mini-list">
-            <div class="mini-item">Use tabs to organize pages</div>
-            <div class="mini-item">Switch themes from the top right</div>
-            <div class="mini-item">Search directly from the homepage</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="panel" style="margin-top: 18px;">
-      <h3 class="section-title">Latest Sports Headlines</h3>
-      <div id="sports-news" class="sports-grid">
-        <p style="color: var(--muted)">Loading sports news...</p>
-      </div>
-    </div>
-
-    <div class="footer-note">
-      mad — redesigned homepage
+    <div class="nav-links">
+      <a href="/">Home</a>
+      <button type="button" onclick="openQuickNav('https://crazygames.com')">Games</button>
+      <button type="button" onclick="openQuickNav('https://www.google.com/search?q=web+proxy')">Proxies</button>
+      <button type="button" onclick="openQuickNav('https://tlk.io')">Live Chat</button>
+      <button type="button" onclick="openQuickNav('https://www.wikipedia.org')">Information</button>
+      <button type="button" onclick="toggleSettings()">Settings</button>
     </div>
   </div>
 
+  <div class="page">
+    <section class="hero">
+      <div class="hero-card" id="main-menu">
+        <img src="logo.svg" alt="DoxyEdu" class="logo-img">
+        <h1>Fast. Clean. Private browsing.</h1>
+        <p>Search the web, open links in the proxy, save bookmarks, and keep everything synced in your browser.</p>
+
+        <form id="sj-form">
+          <input id="sj-search-engine" value="https://www.google.com/search?q=%s" type="hidden" />
+          <input id="sj-address" type="text" placeholder="Loading..." autocomplete="off" disabled />
+          <button type="submit" class="primary-btn" id="sj-btn" disabled>Go</button>
+        </form>
+
+        <div class="chip-row" id="quick-links">
+          <button class="chip-btn" type="button" data-url="https://google.com">Google</button>
+          <button class="chip-btn" type="button" data-url="https://youtube.com">YouTube</button>
+          <button class="chip-btn" type="button" data-url="https://wikipedia.org">Wikipedia</button>
+          <button class="chip-btn" type="button" data-url="https://reddit.com">Reddit</button>
+          <button class="chip-btn" type="button" data-url="https://discord.com/app">Discord</button>
+          <button class="chip-btn" type="button" data-url="https://crazygames.com">CrazyGames</button>
+        </div>
+
+        <div id="error-msg"></div>
+      </div>
+
+      <aside class="hero-card side-card">
+        <div>
+          <div class="mini-title">Saved Bookmarks</div>
+          <div id="home-bookmarks-preview" class="list-links">
+            <a href="#" onclick="return false;">No bookmarks yet</a>
+          </div>
+        </div>
+        <div>
+          <div class="mini-title">Quick Actions</div>
+          <div class="list-links">
+            <a href="#" onclick="toggleBookmarks(); return false;">Open Bookmarks</a>
+            <a href="#" onclick="toggleSettings(); return false;">Open Settings</a>
+            <a href="#" onclick="openQuickNav(loadSettings().homeUrl || 'https://google.com'); return false;">Open Home Page</a>
+          </div>
+        </div>
+      </aside>
+    </section>
+
+    <section class="grid">
+      <div class="panel">
+        <div class="section-head">
+          <h3>Sports Center</h3>
+          <div class="segmented">
+            <button id="sports-news-btn" class="active" type="button">Sports News</button>
+            <button id="sports-scores-btn" type="button">Scores</button>
+          </div>
+        </div>
+        <div id="sports-content">
+          <div id="learning-news" class="news-grid">
+            <p style="width:100%; text-align:center; color: var(--muted);">Loading sports news...</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="section-head">
+          <h3>Saved Tabs</h3>
+        </div>
+        <div id="saved-tabs-preview" class="list-links">
+          <a href="#" onclick="return false;">No tabs saved</a>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- Proxy Overlay -->
+  <div id="proxy-overlay">
+    <div class="proxy-tabs" id="proxy-tabs">
+      <button class="tab-add" type="button" onclick="addTab()">＋ New Tab</button>
+    </div>
+
+    <div class="proxy-bar">
+      <div class="proxy-bar-left">
+        <button class="ghost-btn" onclick="exitProxy()">Exit</button>
+        <button class="ghost-btn" onclick="toggleBookmarks()">Bookmarks</button>
+        <button class="ghost-btn" onclick="bookmarkCurrentTab()">★ Save</button>
+        <button class="ghost-btn" onclick="toggleSettings()">Settings</button>
+      </div>
+
+      <form id="proxy-nav-form">
+        <input id="proxy-nav-input" type="text" placeholder="Type URL here..." />
+        <button class="primary-btn" type="submit">Go</button>
+      </form>
+
+      <div class="proxy-bar-right">
+        <button class="ghost-btn" onclick="reloadActiveTab()">Reload</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bookmarks Drawer -->
+  <div class="drawer" id="bookmarks-drawer">
+    <h4>Bookmarks</h4>
+    <div class="setting-row">
+      <label>Name</label>
+      <input id="bookmark-name" type="text" placeholder="Bookmark name">
+    </div>
+    <div class="setting-row">
+      <label>URL</label>
+      <input id="bookmark-url" type="text" placeholder="https://example.com">
+    </div>
+    <div class="bookmark-row">
+      <button class="primary-btn" type="button" onclick="addBookmarkFromForm()">Add Bookmark</button>
+      <button class="ghost-btn" type="button" onclick="toggleBookmarks()">Close</button>
+    </div>
+    <div id="bookmark-list" class="bookmark-list"></div>
+  </div>
+
+  <!-- Settings Drawer -->
+  <div class="drawer" id="settings-drawer">
+    <h4>Settings</h4>
+
+    <div class="setting-row">
+      <label>Theme</label>
+      <select id="style-select">
+        <option value="default">Default Blue</option>
+        <option value="midnight">Midnight</option>
+        <option value="forest">Forest</option>
+        <option value="sunset">Sunset</option>
+      </select>
+    </div>
+
+    <div class="setting-row">
+      <label>Default Home URL</label>
+      <input id="home-url" type="text" placeholder="https://google.com">
+    </div>
+
+    <div class="setting-row">
+      <label>Search Engine Template</label>
+      <input id="search-engine-input" type="text" placeholder="https://www.google.com/search?q=%s">
+    </div>
+
+    <div class="bookmark-row">
+      <button class="primary-btn" type="button" onclick="saveSettings()">Save Settings</button>
+      <button class="ghost-btn" type="button" onclick="toggleSettings()">Close</button>
+    </div>
+  </div>
+
+  <!-- Logs -->
+  <div id="logs-window">
+    <div class="logs-header" id="logs-header">
+      <span>Update Logs</span>
+      <div class="logs-controls">
+        <button onclick="toggleLogs()">-</button>
+        <button onclick="closeLogs()">×</button>
+      </div>
+    </div>
+    <iframe id="update-logs-frame" src="/assets/2.html"></iframe>
+  </div>
+
   <script>
-    const tabsBar = document.getElementById("tabs-bar");
-    const newTabBtn = document.getElementById("new-tab-btn");
-    const tabCount = document.getElementById("tab-count");
-    const themeSelect = document.getElementById("theme-select");
-    const themeName = document.getElementById("theme-name");
+    "use strict";
 
-    let tabs = [
-      { id: 1, title: "Home", active: true },
-      { id: 2, title: "Sports", active: false }
-    ];
-    let nextTabId = 3;
+    let scramjet = null;
+    let connection = null;
 
-    function renderTabs() {
-      tabsBar.innerHTML = "";
-      tabs.forEach(tab => {
-        const tabEl = document.createElement("div");
-        tabEl.className = "tab" + (tab.active ? " active" : "");
-        tabEl.innerHTML = `
-          <span class="tab-title">${tab.title}</span>
-          <button class="tab-close" data-close="${tab.id}">×</button>
-        `;
-        tabEl.addEventListener("click", (e) => {
-          if (e.target.dataset.close) return;
-          tabs = tabs.map(t => ({ ...t, active: t.id === tab.id }));
-          renderTabs();
-        });
+    const STORAGE_KEYS = {
+      theme: "doxy-theme",
+      bookmarks: "doxy-bookmarks",
+      tabs: "doxy-tabs",
+      activeTab: "doxy-active-tab",
+      settings: "doxy-settings",
+      logsClosed: "doxy-logs-closed",
+      logsMinimized: "doxy-logs-minimized",
+      logsPos: "doxy-logs-pos",
+      sportsMode: "doxy-sports-mode"
+    };
 
-        tabEl.querySelector(".tab-close").addEventListener("click", (e) => {
-          e.stopPropagation();
-          if (tabs.length === 1) return;
-          const wasActive = tab.active;
-          tabs = tabs.filter(t => t.id !== tab.id);
-          if (wasActive) tabs[0].active = true;
-          renderTabs();
-        });
+    const DEFAULT_SETTINGS = {
+      homeUrl: "https://google.com",
+      searchEngine: "https://www.google.com/search?q=%s"
+    };
 
-        tabsBar.appendChild(tabEl);
-      });
-      tabCount.textContent = tabs.length;
+    let tabs = [];
+    let activeTabId = null;
+
+    function qs(id) { return document.getElementById(id); }
+
+    function saveJSON(key, value) {
+      localStorage.setItem(key, JSON.stringify(value));
     }
 
-    newTabBtn.addEventListener("click", () => {
-      tabs = tabs.map(t => ({ ...t, active: false }));
-      tabs.push({
-        id: nextTabId++,
-        title: "New Tab",
-        active: true
-      });
-      renderTabs();
-    });
+    function loadJSON(key, fallback) {
+      try {
+        const raw = localStorage.getItem(key);
+        return raw ? JSON.parse(raw) : fallback;
+      } catch {
+        return fallback;
+      }
+    }
+
+    function loadSettings() {
+      return { ...DEFAULT_SETTINGS, ...loadJSON(STORAGE_KEYS.settings, {}) };
+    }
+
+    function saveSettings() {
+      const settings = {
+        homeUrl: qs("home-url").value.trim() || DEFAULT_SETTINGS.homeUrl,
+        searchEngine: qs("search-engine-input").value.trim() || DEFAULT_SETTINGS.searchEngine
+      };
+      saveJSON(STORAGE_KEYS.settings, settings);
+      qs("sj-search-engine").value = settings.searchEngine;
+      alert("Settings saved.");
+      renderHomeBookmarksPreview();
+    }
 
     function applyTheme(theme) {
-      document.body.classList.remove("theme-aero", "theme-dark", "theme-retro");
-      if (theme === "aero") document.body.classList.add("theme-aero");
-      if (theme === "dark") document.body.classList.add("theme-dark");
-      if (theme === "retro") document.body.classList.add("theme-retro");
-
-      localStorage.setItem("mad-theme", theme);
-
-      const names = {
-        default: "Default",
-        aero: "Frutiger Aero",
-        dark: "Dark Neon",
-        retro: "Retro Terminal"
-      };
-      themeName.textContent = names[theme] || "Default";
+      document.body.classList.remove("theme-midnight", "theme-forest", "theme-sunset");
+      if (theme === "midnight") document.body.classList.add("theme-midnight");
+      if (theme === "forest") document.body.classList.add("theme-forest");
+      if (theme === "sunset") document.body.classList.add("theme-sunset");
+      localStorage.setItem(STORAGE_KEYS.theme, theme);
+      qs("style-select").value = theme;
     }
 
-    const savedTheme = localStorage.getItem("mad-theme") || "default";
-    themeSelect.value = savedTheme;
-    applyTheme(savedTheme);
+    function initTheme() {
+      const theme = localStorage.getItem(STORAGE_KEYS.theme) || "default";
+      applyTheme(theme);
+      qs("style-select").addEventListener("change", e => applyTheme(e.target.value));
+    }
 
-    themeSelect.addEventListener("change", e => applyTheme(e.target.value));
+    function search(input, template) {
+      try { return new URL(input).toString(); } catch (err) {}
+      try {
+        const url = new URL(`http://${input}`);
+        if (url.hostname.includes(".")) return url.toString();
+      } catch (err) {}
+      return template.replace("%s", encodeURIComponent(input));
+    }
 
-    document.getElementById("search-btn").addEventListener("click", () => {
-      const q = document.getElementById("home-search").value.trim();
-      if (!q) return;
-      window.open(`https://www.google.com/search?q=${encodeURIComponent(q)}`, "_blank");
-    });
-
-    document.getElementById("home-search").addEventListener("keydown", (e) => {
-      if (e.key === "Enter") {
-        document.getElementById("search-btn").click();
+    async function manualRegisterSW() {
+      if ("serviceWorker" in navigator) {
+        return navigator.serviceWorker.register("/scram/sw.js", { scope: "/scram/service/" });
       }
-    });
+      throw new Error("Service Workers not supported.");
+    }
+
+    async function ensureProxyReady() {
+      if (typeof BareMux === "undefined" || typeof $scramjetLoadController === "undefined") {
+        throw new Error("Failed to load proxy libraries.");
+      }
+
+      if (!scramjet) {
+        const { ScramjetController } = $scramjetLoadController();
+        scramjet = new ScramjetController({
+          files: {
+            wasm: "/scram/scramjet.wasm.wasm",
+            all: "/scram/scramjet.all.js",
+            sync: "/scram/scramjet.sync.js",
+          },
+        });
+        scramjet.init();
+      }
+
+      if (!connection) {
+        connection = new BareMux.BareMuxConnection("/baremux/worker.js");
+      }
+
+      try {
+        if (typeof registerSW === "function") await registerSW();
+        else await manualRegisterSW();
+      } catch {
+        throw new Error("Failed to register Service Worker.");
+      }
+
+      const wispUrl = (location.protocol === "https:" ? "wss" : "ws") + "://" + location.host + "/wisp/";
+      if ((await connection.getTransport()) !== "/epoxy/index.mjs") {
+        await connection.setTransport("/epoxy/index.mjs", [{ wisp: wispUrl }]);
+      }
+    }
+
+    function getBookmarks() {
+      return loadJSON(STORAGE_KEYS.bookmarks, []);
+    }
+
+    function setBookmarks(items) {
+      saveJSON(STORAGE_KEYS.bookmarks, items);
+      renderBookmarks();
+      renderHomeBookmarksPreview();
+    }
+
+    function addBookmark(name, url) {
+      const items = getBookmarks();
+      items.unshift({
+        id: Date.now().toString(),
+        name: name || url,
+        url
+      });
+      setBookmarks(items);
+    }
+
+    function removeBookmark(id) {
+      setBookmarks(getBookmarks().filter(b => b.id !== id));
+    }
+
+    function renderBookmarks() {
+      const wrap = qs("bookmark-list");
+      const items = getBookmarks();
+      if (!items.length) {
+        wrap.innerHTML = `<div class="bookmark-item">No bookmarks saved.</div>`;
+        return;
+      }
+
+      wrap.innerHTML = items.map(item => `
+        <div class="bookmark-item">
+          <strong>${escapeHtml(item.name)}</strong>
+          <div style="font-size:12px;color:var(--muted);word-break:break-all;">${escapeHtml(item.url)}</div>
+          <div class="bookmark-row">
+            <button class="small-btn" onclick="openQuickNav('${encodeURIComponent(item.url)}', true)">Open</button>
+            <button class="small-btn" onclick="openInCurrentTab('${encodeURIComponent(item.url)}')">Open in Tab</button>
+            <button class="small-btn small-danger" onclick="removeBookmark('${item.id}')">Delete</button>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    function renderHomeBookmarksPreview() {
+      const wrap = qs("home-bookmarks-preview");
+      const items = getBookmarks().slice(0, 4);
+      if (!items.length) {
+        wrap.innerHTML = `<a href="#" onclick="toggleBookmarks(); return false;">No bookmarks yet</a>`;
+        return;
+      }
+      wrap.innerHTML = items.map(item => `
+        <a href="#" onclick="openQuickNav('${encodeURIComponent(item.url)}', true); return false;">${escapeHtml(item.name)}</a>
+      `).join("");
+    }
+
+    function addBookmarkFromForm() {
+      const name = qs("bookmark-name").value.trim();
+      const url = qs("bookmark-url").value.trim();
+      if (!url) return;
+      addBookmark(name || url, url);
+      qs("bookmark-name").value = "";
+      qs("bookmark-url").value = "";
+    }
+
+    function bookmarkCurrentTab() {
+      const tab = tabs.find(t => t.id === activeTabId);
+      if (!tab || !tab.url) return;
+      addBookmark(tab.title || tab.url, tab.url);
+    }
+
+    function toggleBookmarks() {
+      const el = qs("bookmarks-drawer");
+      const other = qs("settings-drawer");
+      other.style.display = "none";
+      el.style.display = el.style.display === "block" ? "none" : "block";
+      renderBookmarks();
+    }
+
+    function toggleSettings() {
+      const el = qs("settings-drawer");
+      const other = qs("bookmarks-drawer");
+      other.style.display = "none";
+      el.style.display = el.style.display === "block" ? "none" : "block";
+    }
+
+    function saveTabs() {
+      saveJSON(STORAGE_KEYS.tabs, tabs);
+      localStorage.setItem(STORAGE_KEYS.activeTab, activeTabId || "");
+      renderTabs();
+      renderSavedTabsPreview();
+    }
+
+    function loadTabs() {
+      tabs = loadJSON(STORAGE_KEYS.tabs, []);
+      activeTabId = localStorage.getItem(STORAGE_KEYS.activeTab) || null;
+
+      if (!tabs.length) {
+        const settings = loadSettings();
+        const id = Date.now().toString();
+        tabs = [{ id, title: "New Tab", url: settings.homeUrl }];
+        activeTabId = id;
+        saveTabs();
+      }
+
+      if (!tabs.find(t => t.id === activeTabId)) {
+        activeTabId = tabs[0].id;
+      }
+    }
+
+    function addTab(url = "") {
+      const settings = loadSettings();
+      const id = Date.now().toString();
+      tabs.push({
+        id,
+        title: "New Tab",
+        url: url || settings.homeUrl
+      });
+      activeTabId = id;
+      saveTabs();
+      if (qs("proxy-overlay").style.display === "flex") {
+        navigateActiveTab(tabs.find(t => t.id === id).url);
+      }
+    }
+
+    function closeTab(id) {
+      if (tabs.length === 1) {
+        tabs[0] = { ...tabs[0], title: "New Tab", url: loadSettings().homeUrl };
+        activeTabId = tabs[0].id;
+        saveTabs();
+        navigateActiveTab(tabs[0].url);
+        return;
+      }
+
+      const idx = tabs.findIndex(t => t.id === id);
+      tabs = tabs.filter(t => t.id !== id);
+      if (activeTabId === id) {
+        const next = tabs[idx] || tabs[idx - 1] || tabs[0];
+        activeTabId = next.id;
+      }
+      saveTabs();
+
+      if (qs("proxy-overlay").style.display === "flex") {
+        const active = tabs.find(t => t.id === activeTabId);
+        navigateActiveTab(active.url);
+      }
+    }
+
+    function switchTab(id) {
+      activeTabId = id;
+      saveTabs();
+      const tab = tabs.find(t => t.id === id);
+      if (tab && qs("proxy-overlay").style.display === "flex") {
+        navigateActiveTab(tab.url);
+      }
+    }
+
+    function updateTab(id, patch) {
+      const idx = tabs.findIndex(t => t.id === id);
+      if (idx === -1) return;
+      tabs[idx] = { ...tabs[idx], ...patch };
+      saveTabs();
+    }
+
+    function renderTabs() {
+      const wrap = qs("proxy-tabs");
+      const addBtn = `<button class="tab-add" type="button" onclick="addTab()">＋ New Tab</button>`;
+      const html = tabs.map(tab => `
+        <div class="tab ${tab.id === activeTabId ? "active" : ""}" onclick="switchTab('${tab.id}')">
+          <span class="tab-title">${escapeHtml(tab.title || "New Tab")}</span>
+          <button class="tab-close" onclick="event.stopPropagation(); closeTab('${tab.id}')">×</button>
+        </div>
+      `).join("");
+      wrap.innerHTML = addBtn + html;
+    }
+
+    function renderSavedTabsPreview() {
+      const wrap = qs("saved-tabs-preview");
+      if (!tabs.length) {
+        wrap.innerHTML = `<a href="#" onclick="return false;">No tabs saved</a>`;
+        return;
+      }
+      wrap.innerHTML = tabs.slice(0, 6).map(tab => `
+        <a href="#" onclick="openQuickNav('${encodeURIComponent(tab.url)}', true); return false;">${escapeHtml(tab.title || tab.url || "New Tab")}</a>
+      `).join("");
+    }
+
+    async function navigateActiveTab(input) {
+      const settings = loadSettings();
+      const url = search(input, settings.searchEngine);
+
+      updateTab(activeTabId, {
+        url,
+        title: deriveTitle(url)
+      });
+
+      qs("proxy-nav-input").value = url;
+
+      document.body.style.overflow = "hidden";
+      qs("proxy-overlay").style.display = "flex";
+
+      const existingFrame = document.getElementById("sj-frame");
+      if (existingFrame) existingFrame.remove();
+
+      const frame = scramjet.createFrame();
+      frame.frame.id = "sj-frame";
+      qs("proxy-overlay").appendChild(frame.frame);
+      frame.go(url);
+    }
+
+    function deriveTitle(url) {
+      try {
+        const u = new URL(url);
+        return u.hostname.replace(/^www\./, "");
+      } catch {
+        return "New Tab";
+      }
+    }
+
+    async function openQuickNav(url, direct = false) {
+      try {
+        await ensureProxyReady();
+        if (!tabs.length) loadTabs();
+
+        if (!activeTabId) activeTabId = tabs[0].id;
+        if (!direct) {
+          updateTab(activeTabId, { url, title: deriveTitle(url) });
+          await navigateActiveTab(url);
+        } else {
+          updateTab(activeTabId, { url, title: deriveTitle(url) });
+          await navigateActiveTab(decodeURIComponent(url));
+        }
+      } catch (err) {
+        showError(err.message || String(err));
+      }
+    }
+
+    async function openInCurrentTab(encodedUrl) {
+      try {
+        await ensureProxyReady();
+        await navigateActiveTab(decodeURIComponent(encodedUrl));
+      } catch (err) {
+        showError(err.message || String(err));
+      }
+    }
+
+    async function reloadActiveTab() {
+      const tab = tabs.find(t => t.id === activeTabId);
+      if (!tab) return;
+      try {
+        await ensureProxyReady();
+        await navigateActiveTab(tab.url);
+      } catch (err) {
+        showError(err.message || String(err));
+      }
+    }
+
+    function showError(msg) {
+      const errorMsg = qs("error-msg");
+      errorMsg.textContent = msg;
+      errorMsg.style.display = "block";
+    }
+
+    function hideError() {
+      qs("error-msg").style.display = "none";
+    }
+
+    window.exitProxy = function () {
+      document.body.style.overflow = "auto";
+      qs("proxy-overlay").style.display = "none";
+      const f = document.getElementById("sj-frame");
+      if (f) f.remove();
+      qs("sj-address").value = "";
+      qs("proxy-nav-input").value = "";
+    };
+
+    function escapeHtml(str) {
+      return String(str).replace(/[&<>"']/g, s => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;"
+      }[s]));
+    }
 
     async function loadSportsNews() {
-      try {
-        const feedUrl = "https://www.espn.com/espn/rss/news";
-        const res = await fetch(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(feedUrl)}`);
-        const data = await res.json();
-        const container = document.getElementById("sports-news");
+      const container = qs("learning-news");
+      container.innerHTML = `<p style="width:100%;text-align:center;color:var(--muted);">Loading sports news...</p>`;
 
-        if (!data.items || !data.items.length) {
-          container.innerHTML = "<p>No sports news found.</p>";
-          return;
-        }
+      try {
+        const rssUrl = "https://www.espn.com/espn/rss/news";
+        const res = await fetch(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(rssUrl)}`);
+        const data = await res.json();
+
+        if (!data.items || !data.items.length) throw new Error("No sports news found.");
 
         container.innerHTML = "";
         data.items.slice(0, 8).forEach(item => {
           let imgUrl = item.thumbnail || "/placeholder.jpg";
-          const date = new Date(item.pubDate).toLocaleDateString();
+          if (!imgUrl || imgUrl === "") imgUrl = "/placeholder.jpg";
+          const date = item.pubDate ? new Date(item.pubDate).toLocaleDateString() : "";
 
           const card = document.createElement("a");
-          card.className = "sports-card";
-          card.href = item.link;
-          card.target = "_blank";
-          card.rel = "noopener noreferrer";
+          card.className = "news-card";
+          card.href = "#";
+          card.onclick = (e) => {
+            e.preventDefault();
+            openQuickNav(item.link);
+          };
+
           card.innerHTML = `
-            <img class="sports-thumb" src="${imgUrl}" alt="Sports" onerror="this.src='/placeholder.jpg'">
-            <div class="sports-body">
-              <div class="sports-title">${item.title}</div>
-              <div class="sports-date">${date}</div>
+            <img src="${imgUrl}" class="news-thumb" alt="News" onerror="this.src='/placeholder.jpg'">
+            <div class="news-content">
+              <div class="news-title">${escapeHtml(item.title)}</div>
+              <div class="news-date">${escapeHtml(date)}</div>
             </div>
           `;
           container.appendChild(card);
         });
-      } catch (err) {
-        document.getElementById("sports-news").innerHTML = "<p>Failed to load sports news.</p>";
-        console.error(err);
+      } catch (e) {
+        container.innerHTML = `<p style="color:var(--muted);">Failed to load sports news.</p>`;
       }
     }
 
-    renderTabs();
-    loadSportsNews();
+    async function loadSportsScores() {
+      const container = qs("learning-news");
+      container.innerHTML = `<p style="width:100%;text-align:center;color:var(--muted);">Loading scores...</p>`;
+
+      try {
+        const res = await fetch("https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard");
+        const data = await res.json();
+
+        if (!data.events || !data.events.length) throw new Error("No scores found.");
+
+        container.innerHTML = `<div class="score-list"></div>`;
+        const list = container.firstElementChild;
+
+        data.events.slice(0, 10).forEach(event => {
+          const c = event.competitions?.[0]?.competitors || [];
+          const home = c.find(x => x.homeAway === "home");
+          const away = c.find(x => x.homeAway === "away");
+          const status = event.status?.type?.description || "Scheduled";
+          const league = data.leagues?.[0]?.name || "League";
+          const date = event.date ? new Date(event.date).toLocaleString() : "";
+
+          const div = document.createElement("div");
+          div.className = "score-card";
+          div.innerHTML = `
+            <div class="score-top">
+              <span>${escapeHtml(league)}</span>
+              <span>${escapeHtml(status)}</span>
+            </div>
+            <div class="score-match">
+              ${escapeHtml(away?.team?.shortDisplayName || "Away")} ${escapeHtml(away?.score || "0")}
+              -
+              ${escapeHtml(home?.score || "0")} ${escapeHtml(home?.team?.shortDisplayName || "Home")}
+            </div>
+            <div class="news-date" style="margin-top:8px;">${escapeHtml(date)}</div>
+          `;
+          list.appendChild(div);
+        });
+      } catch (e) {
+        container.innerHTML = `<p style="color:var(--muted);">Failed to load scores.</p>`;
+      }
+    }
+
+    function setSportsMode(mode) {
+      localStorage.setItem(STORAGE_KEYS.sportsMode, mode);
+      qs("sports-news-btn").classList.toggle("active", mode === "news");
+      qs("sports-scores-btn").classList.toggle("active", mode === "scores");
+      if (mode === "news") loadSportsNews();
+      else loadSportsScores();
+    }
+
+    window.addEventListener("load", async () => {
+      const form = qs("sj-form");
+      const address = qs("sj-address");
+      const searchEngine = qs("sj-search-engine");
+      const btn = qs("sj-btn");
+      const proxyNavForm = qs("proxy-nav-form");
+
+      const settings = loadSettings();
+      qs("home-url").value = settings.homeUrl;
+      qs("search-engine-input").value = settings.searchEngine;
+      searchEngine.value = settings.searchEngine;
+
+      initTheme();
+      loadTabs();
+      renderTabs();
+      renderSavedTabsPreview();
+      renderBookmarks();
+      renderHomeBookmarksPreview();
+
+      address.disabled = false;
+      address.placeholder = "Search or enter URL...";
+      btn.disabled = false;
+
+      const sportsMode = localStorage.getItem(STORAGE_KEYS.sportsMode) || "news";
+      setSportsMode(sportsMode);
+
+      qs("sports-news-btn").addEventListener("click", () => setSportsMode("news"));
+      qs("sports-scores-btn").addEventListener("click", () => setSportsMode("scores"));
+
+      document.querySelectorAll("#quick-links .chip-btn").forEach(btn => {
+        btn.addEventListener("click", async () => {
+          const url = btn.dataset.url;
+          await openQuickNav(url);
+        });
+      });
+
+      form.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        hideError();
+        const val = address.value.trim();
+        if (!val) return;
+
+        btn.disabled = true;
+        btn.textContent = "Loading...";
+
+        try {
+          await ensureProxyReady();
+          if (!tabs.length) loadTabs();
+          await navigateActiveTab(val);
+        } catch (err) {
+          showError(err.message || err.toString());
+          document.body.style.overflow = "auto";
+        } finally {
+          btn.disabled = false;
+          btn.textContent = "Go";
+        }
+      });
+
+      proxyNavForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const val = qs("proxy-nav-input").value.trim();
+        if (!val) return;
+        try {
+          await ensureProxyReady();
+          await navigateActiveTab(val);
+        } catch (err) {
+          showError(err.message || err.toString());
+        }
+      });
+
+      const logsClosed = localStorage.getItem(STORAGE_KEYS.logsClosed) === "1";
+      const logsMinimized = localStorage.getItem(STORAGE_KEYS.logsMinimized) === "1";
+      if (logsClosed) qs("logs-window").style.display = "none";
+      if (logsMinimized) {
+        qs("update-logs-frame").style.height = "0px";
+        isMinimized = true;
+      }
+
+      const savedPos = loadJSON(STORAGE_KEYS.logsPos, null);
+      if (savedPos) {
+        xOffset = savedPos.x || 0;
+        yOffset = savedPos.y || 0;
+        setTranslate(xOffset, yOffset, qs("logs-window"));
+      }
+    });
+
+    // Logs drag
+    const logsWindow = document.getElementById("logs-window");
+    const logsHeader = document.getElementById("logs-header");
+    let isDragging = false, currentX, currentY, initialX, initialY, xOffset = 0, yOffset = 0;
+
+    logsHeader.addEventListener("mousedown", dragStart);
+    document.addEventListener("mouseup", dragEnd);
+    document.addEventListener("mousemove", drag);
+
+    function dragStart(e) {
+      initialX = e.clientX - xOffset;
+      initialY = e.clientY - yOffset;
+      if (e.target === logsHeader || e.target.parentNode === logsHeader) isDragging = true;
+    }
+
+    function dragEnd() {
+      initialX = currentX;
+      initialY = currentY;
+      isDragging = false;
+      saveJSON(STORAGE_KEYS.logsPos, { x: xOffset, y: yOffset });
+    }
+
+    function drag(e) {
+      if (isDragging) {
+        e.preventDefault();
+        currentX = e.clientX - initialX;
+        currentY = e.clientY - initialY;
+        xOffset = currentX;
+        yOffset = currentY;
+        setTranslate(currentX, currentY, logsWindow);
+      }
+    }
+
+    function setTranslate(xPos, yPos, el) {
+      el.style.transform = `translate3d(${xPos}px, ${yPos}px, 0)`;
+    }
+
+    const logsFrame = document.getElementById("update-logs-frame");
+    let isMinimized = false;
+
+    window.toggleLogs = function () {
+      if (!isMinimized) {
+        logsFrame.style.height = "0px";
+        isMinimized = true;
+        localStorage.setItem(STORAGE_KEYS.logsMinimized, "1");
+      } else {
+        logsFrame.style.height = "300px";
+        isMinimized = false;
+        localStorage.setItem(STORAGE_KEYS.logsMinimized, "0");
+      }
+    };
+
+    window.closeLogs = function () {
+      logsWindow.style.display = "none";
+      localStorage.setItem(STORAGE_KEYS.logsClosed, "1");
+    };
   </script>
 </body>
 </html>
