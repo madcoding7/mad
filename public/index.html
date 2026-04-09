@@ -23,8 +23,6 @@
       --shadow: 0 10px 25px rgba(0,0,0,0.08);
       --radius: 16px;
       --topbar-height: 72px;
-      --proxy-tabs-height: 52px;
-      --proxy-bar-height: 60px;
     }
 
     * { box-sizing: border-box; }
@@ -186,8 +184,7 @@
       margin-top: 18px;
     }
 
-    #sj-address, #proxy-nav-input, #bookmark-name, #bookmark-url, #home-url, #search-engine-input, #cloak-select,
-    #style-select, #bookmark-display-select {
+    #sj-address, #proxy-nav-input, #bookmark-name, #bookmark-url, #home-url, #search-engine-input, #cloak-select {
       flex: 1;
       min-width: 240px;
       padding: 13px 14px;
@@ -198,10 +195,16 @@
       outline: none;
       font-size: 15px;
       width: 100%;
-      min-height: 46px;
     }
 
     #style-select, #bookmark-display-select {
+      width: 100%;
+      padding: 13px 14px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: #fff;
+      color: var(--text);
+      font-size: 15px;
       appearance: none;
     }
 
@@ -216,7 +219,6 @@
       padding: 12px 16px;
       font-weight: 700;
       cursor: pointer;
-      min-height: 44px;
     }
 
     .primary-btn {
@@ -242,9 +244,14 @@
       justify-content: center;
       width: 42px;
       height: 42px;
-      min-height: 42px;
       padding: 0;
       line-height: 1;
+    }
+
+    .icon-btn svg {
+      width: 19px;
+      height: 19px;
+      fill: currentColor;
     }
 
     .chip-row {
@@ -378,7 +385,6 @@
       border-radius: 10px;
       cursor: pointer;
       font-weight: 700;
-      min-height: 40px;
     }
 
     .segmented button.active {
@@ -462,27 +468,11 @@
       font-size: .8rem;
       color: var(--muted);
       margin-bottom: 8px;
-      flex-wrap: wrap;
     }
 
     .score-match {
       font-weight: 800;
       font-size: .95rem;
-    }
-
-    .status-live {
-      color: #dc2626;
-      font-weight: 800;
-    }
-
-    .status-final {
-      color: #059669;
-      font-weight: 800;
-    }
-
-    .status-scheduled {
-      color: #2563eb;
-      font-weight: 800;
     }
 
     #error-msg {
@@ -544,7 +534,6 @@
       border-bottom: 1px solid #c9d5e6;
       overflow-x: auto;
       flex-shrink: 0;
-      min-height: var(--proxy-tabs-height);
     }
 
     body.theme-midnight .proxy-tabs {
@@ -608,7 +597,6 @@
       padding: 8px 12px;
       cursor: pointer;
       font-weight: 800;
-      min-height: 36px;
     }
 
     body.theme-midnight .tab-add {
@@ -617,7 +605,7 @@
     }
 
     .proxy-bar {
-      min-height: var(--proxy-bar-height);
+      min-height: 56px;
       background: white;
       display: flex;
       align-items: center;
@@ -649,40 +637,10 @@
     #sj-frame {
       border: none;
       width: 100%;
-      height: calc(100vh - var(--proxy-tabs-height) - var(--proxy-bar-height));
+      height: calc(100% - 112px);
       background: white;
       display: block;
       animation: fadeIn .2s ease;
-      flex: 1;
-    }
-
-    body.browser-bar-hidden .proxy-tabs,
-    body.browser-bar-hidden .proxy-bar {
-      display: none !important;
-    }
-
-    body.browser-bar-hidden #sj-frame {
-      height: 100vh !important;
-    }
-
-    .proxy-showbar-floating {
-      position: fixed;
-      top: 12px;
-      right: 12px;
-      z-index: 10060;
-      display: none;
-      border: 1px solid var(--border);
-      background: var(--card);
-      color: var(--text);
-      border-radius: 12px;
-      padding: 10px 12px;
-      box-shadow: var(--shadow);
-      cursor: pointer;
-      font-weight: 700;
-    }
-
-    body.browser-bar-hidden #proxy-overlay .proxy-showbar-floating {
-      display: block;
     }
 
     .drawer {
@@ -782,8 +740,7 @@
     body.theme-midnight #cloak-select,
     body.theme-midnight .segmented button,
     body.theme-midnight .bookmark-pill,
-    body.theme-midnight .topbar-toggle-floating,
-    body.theme-midnight .proxy-showbar-floating {
+    body.theme-midnight .topbar-toggle-floating {
       background-color: #0f172a;
       color: #e5e7eb;
     }
@@ -874,7 +831,7 @@
         flex-direction: column;
       }
       #sj-frame {
-        height: calc(100vh - var(--proxy-tabs-height) - var(--proxy-bar-height));
+        height: calc(100% - 150px);
       }
     }
   </style>
@@ -988,19 +945,27 @@
   </div>
 
   <div id="proxy-overlay">
-    <button class="proxy-showbar-floating" onclick="toggleBrowserBar()">Show Bar</button>
-
     <div class="proxy-tabs" id="proxy-tabs">
       <button class="tab-add" type="button" onclick="addTab()">＋ New Tab</button>
     </div>
 
     <div class="proxy-bar">
       <div class="proxy-bar-left">
-        <button class="icon-btn" onclick="exitProxy()" title="Exit">✕</button>
-        <button class="icon-btn" onclick="toggleBookmarks()" title="Bookmarks">★</button>
-        <button class="icon-btn" onclick="bookmarkCurrentTab()" title="Save Bookmark">☆</button>
-        <button class="icon-btn" onclick="toggleSettings()" title="Settings">⚙</button>
-        <button class="icon-btn" onclick="toggleCompactMode()" title="Focus Mode">⛶</button>
+        <button class="icon-btn" onclick="exitProxy()" title="Exit">
+          <svg viewBox="0 0 24 24"><path d="M18.3 5.71a1 1 0 0 0-1.41 0L12 10.59 7.11 5.7A1 1 0 0 0 5.7 7.11L10.59 12 5.7 16.89a1 1 0 1 0 1.41 1.41L12 13.41l4.89 4.89a1 1 0 0 0 1.41-1.41L13.41 12l4.89-4.89a1 1 0 0 0 0-1.4Z"/></svg>
+        </button>
+        <button class="icon-btn" onclick="toggleBookmarks()" title="Bookmarks">
+          <svg viewBox="0 0 24 24"><path d="M6 3a2 2 0 0 0-2 2v16l8-4 8 4V5a2 2 0 0 0-2-2H6z"/></svg>
+        </button>
+        <button class="icon-btn" onclick="bookmarkCurrentTab()" title="Save Bookmark">
+          <svg viewBox="0 0 24 24"><path d="m12 17.27 6.18 3.73-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+        </button>
+        <button class="icon-btn" onclick="toggleSettings()" title="Settings">
+          <svg viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.31.06-.63.06-.94s-.02-.63-.06-.94l2.03-1.58a.5.5 0 0 0 .12-.64l-1.92-3.32a.5.5 0 0 0-.6-.22l-2.39.96a7.03 7.03 0 0 0-1.63-.94l-.36-2.54A.5.5 0 0 0 13.9 2h-3.8a.5.5 0 0 0-.49.42l-.36 2.54c-.58.22-1.12.54-1.63.94l-2.39-.96a.5.5 0 0 0-.6.22L2.71 8.48a.5.5 0 0 0 .12.64l2.03 1.58c-.04.31-.06.63-.06.94s.02.63.06.94l-2.03 1.58a.5.5 0 0 0-.12.64l1.92 3.32a.5.5 0 0 0 .6.22l2.39-.96c.51.4 1.05.72 1.63.94l.36 2.54a.5.5 0 0 0 .49.42h3.8a.5.5 0 0 0 .49-.42l.36-2.54c.58-.22 1.12-.54 1.63-.94l2.39.96a.5.5 0 0 0 .6-.22l1.92-3.32a.5.5 0 0 0-.12-.64l-2.03-1.58ZM12 15.5A3.5 3.5 0 1 1 12 8a3.5 3.5 0 0 1 0 7.5Z"/></svg>
+        </button>
+        <button class="icon-btn" onclick="toggleCompactMode()" title="Focus Mode">
+          <svg viewBox="0 0 24 24"><path d="M7 14H5v5h5v-2H7v-3zm0-4h2V7h3V5H5v5zm10 7h-3v2h5v-5h-2v3zm0-12V5h-5v2h3v3h2V5z"/></svg>
+        </button>
       </div>
 
       <form id="proxy-nav-form">
@@ -1009,8 +974,12 @@
       </form>
 
       <div class="proxy-bar-right">
-        <button class="icon-btn" onclick="reloadActiveTab()" title="Reload">↻</button>
-        <button class="icon-btn" onclick="toggleBrowserBar()" title="Hide/Show Browser Bar">☰</button>
+        <button class="icon-btn" onclick="reloadActiveTab()" title="Reload">
+          <svg viewBox="0 0 24 24"><path d="M17.65 6.35A7.95 7.95 0 0 0 12 4V1L7 6l5 5V7a5 5 0 1 1-4.9 6h-2.02A7 7 0 1 0 17.65 6.35z"/></svg>
+        </button>
+        <button class="icon-btn" onclick="toggleTopbar()" title="Toggle Bar">
+          <svg viewBox="0 0 24 24"><path d="M4 6h16v2H4zm0 5h16v2H4zm0 5h16v2H4z"/></svg>
+        </button>
       </div>
     </div>
   </div>
@@ -1066,6 +1035,11 @@
     </div>
 
     <div class="setting-row">
+      <label>about:blank</label>
+      <button class="ghost-btn" type="button" onclick="openAboutBlankPage()">Open about:blank</button>
+    </div>
+
+    <div class="setting-row">
       <label>Tab Cloak</label>
       <select id="cloak-select">
         <option value="none">None</option>
@@ -1086,7 +1060,6 @@
     let connection = null;
     let sportsTimerInterval = null;
     let sportsSecondsLeft = 60;
-    let currentScramFrame = null;
 
     const STORAGE_KEYS = {
       theme: "mad-theme",
@@ -1096,8 +1069,7 @@
       settings: "mad-settings",
       sportsMode: "mad-sports-mode",
       topbarHidden: "mad-topbar-hidden",
-      compactMode: "mad-compact-mode",
-      browserBarHidden: "mad-browser-bar-hidden"
+      compactMode: "mad-compact-mode"
     };
 
     const DEFAULT_SETTINGS = {
@@ -1195,77 +1167,52 @@
     }
 
     function search(input, template) {
-      const value = input.trim();
-      try { return new URL(value).toString(); } catch {}
+      try { return new URL(input).toString(); } catch (err) {}
       try {
-        const url = new URL(`http://${value}`);
+        const url = new URL(`http://${input}`);
         if (url.hostname.includes(".")) return url.toString();
-      } catch {}
-      return template.replace("%s", encodeURIComponent(value));
+      } catch (err) {}
+      return template.replace("%s", encodeURIComponent(input));
     }
 
     async function manualRegisterSW() {
-      if (!("serviceWorker" in navigator)) {
-        throw new Error("Service workers are not supported in this browser.");
+      if ("serviceWorker" in navigator) {
+        return navigator.serviceWorker.register("/scram/sw.js", { scope: "/scram/service/" });
       }
-      const reg = await navigator.serviceWorker.register("/scram/sw.js", { scope: "/scram/service/" });
-      await navigator.serviceWorker.ready;
-      return reg;
+      throw new Error("Service Workers not supported.");
     }
 
     async function ensureProxyReady() {
+      if (typeof BareMux === "undefined" || typeof $scramjetLoadController === "undefined") {
+        throw new Error("Failed to load proxy libraries.");
+      }
+
+      if (!scramjet) {
+        const { ScramjetController } = $scramjetLoadController();
+        scramjet = new ScramjetController({
+          files: {
+            wasm: "/scram/scramjet.wasm.wasm",
+            all: "/scram/scramjet.all.js",
+            sync: "/scram/scramjet.sync.js",
+          },
+        });
+        scramjet.init();
+      }
+
+      if (!connection) {
+        connection = new BareMux.BareMuxConnection("/baremux/worker.js");
+      }
+
       try {
-        if (typeof BareMux === "undefined") {
-          throw new Error("BareMux failed to load.");
-        }
+        if (typeof registerSW === "function") await registerSW();
+        else await manualRegisterSW();
+      } catch {
+        throw new Error("Failed to register Service Worker.");
+      }
 
-        if (typeof $scramjetLoadController === "undefined") {
-          throw new Error("Scramjet failed to load.");
-        }
-
-        if (!scramjet) {
-          const loader = $scramjetLoadController();
-          if (!loader || !loader.ScramjetController) {
-            throw new Error("Scramjet controller missing.");
-          }
-
-          const { ScramjetController } = loader;
-          scramjet = new ScramjetController({
-            files: {
-              wasm: "/scram/scramjet.wasm.wasm",
-              all: "/scram/scramjet.all.js",
-              sync: "/scram/scramjet.sync.js"
-            }
-          });
-
-          await scramjet.init();
-        }
-
-        if (!connection) {
-          connection = new BareMux.BareMuxConnection("/baremux/worker.js");
-        }
-
-        if (typeof registerSW === "function") {
-          await registerSW();
-        } else {
-          await manualRegisterSW();
-        }
-
-        const wispUrl = `${location.protocol === "https:" ? "wss" : "ws"}://${location.host}/wisp/`;
-
-        let currentTransport = "";
-        try {
-          currentTransport = await connection.getTransport();
-        } catch {}
-
-        if (currentTransport !== "/epoxy/index.mjs") {
-          await connection.setTransport("/epoxy/index.mjs", [{ wisp: wispUrl }]);
-        }
-
-        return true;
-      } catch (err) {
-        console.error("Proxy init error:", err);
-        throw new Error("Proxy failed to start. Check /scram, /baremux, /epoxy, service worker, and /wisp routes.");
+      const wispUrl = (location.protocol === "https:" ? "wss" : "ws") + "://" + location.host + "/wisp/";
+      if ((await connection.getTransport()) !== "/epoxy/index.mjs") {
+        await connection.setTransport("/epoxy/index.mjs", [{ wisp: wispUrl }]);
       }
     }
 
@@ -1487,6 +1434,28 @@
       `).join("");
     }
 
+    async function navigateActiveTab(input) {
+      const settings = loadSettings();
+      const url = search(input, settings.searchEngine);
+
+      updateTab(activeTabId, {
+        url,
+        title: tabs.find(t => t.id === activeTabId)?.title === "New Tab" ? deriveTitle(url) : (tabs.find(t => t.id === activeTabId)?.title || deriveTitle(url))
+      });
+
+      qs("proxy-nav-input").value = url;
+      document.body.style.overflow = "hidden";
+      qs("proxy-overlay").style.display = "flex";
+
+      const existingFrame = document.getElementById("sj-frame");
+      if (existingFrame) existingFrame.remove();
+
+      const frame = scramjet.createFrame();
+      frame.frame.id = "sj-frame";
+      qs("proxy-overlay").appendChild(frame.frame);
+      frame.go(url);
+    }
+
     function deriveTitle(url) {
       try {
         const u = new URL(url);
@@ -1496,44 +1465,19 @@
       }
     }
 
-    async function navigateActiveTab(input) {
-      await ensureProxyReady();
-
-      const settings = loadSettings();
-      const url = search(input, settings.searchEngine);
-
-      updateTab(activeTabId, {
-        url,
-        title: tabs.find(t => t.id === activeTabId)?.title === "New Tab"
-          ? deriveTitle(url)
-          : (tabs.find(t => t.id === activeTabId)?.title || deriveTitle(url))
-      });
-
-      qs("proxy-nav-input").value = url;
-      document.body.style.overflow = "hidden";
-      qs("proxy-overlay").style.display = "flex";
-
-      const existingFrame = document.getElementById("sj-frame");
-      if (existingFrame) existingFrame.remove();
-      currentScramFrame = null;
-
-      const frame = scramjet.createFrame();
-      currentScramFrame = frame;
-      frame.frame.id = "sj-frame";
-      qs("proxy-overlay").appendChild(frame.frame);
-
-      await frame.go(url);
-    }
-
     async function openQuickNav(url, direct = false) {
       try {
-        hideError();
+        await ensureProxyReady();
         if (!tabs.length) loadTabs();
         if (!activeTabId) activeTabId = tabs[0].id;
 
-        const decoded = direct ? decodeURIComponent(url) : url;
-        updateTab(activeTabId, { url: decoded, title: deriveTitle(decoded) });
-        await navigateActiveTab(decoded);
+        if (!direct) {
+          updateTab(activeTabId, { url, title: deriveTitle(url) });
+          await navigateActiveTab(url);
+        } else {
+          updateTab(activeTabId, { url, title: deriveTitle(url) });
+          await navigateActiveTab(decodeURIComponent(url));
+        }
       } catch (err) {
         showError(err.message || String(err));
       }
@@ -1541,7 +1485,7 @@
 
     async function openInCurrentTab(encodedUrl) {
       try {
-        hideError();
+        await ensureProxyReady();
         await navigateActiveTab(decodeURIComponent(encodedUrl));
       } catch (err) {
         showError(err.message || String(err));
@@ -1552,7 +1496,7 @@
       const tab = tabs.find(t => t.id === activeTabId);
       if (!tab) return;
       try {
-        hideError();
+        await ensureProxyReady();
         await navigateActiveTab(tab.url);
       } catch (err) {
         showError(err.message || String(err));
@@ -1582,37 +1526,18 @@
       qs("topbar-floating-btn").textContent = hidden ? "Show Bar" : "Hide Bar";
     }
 
-    function toggleBrowserBar(force) {
-      let hidden;
-      if (typeof force === "boolean") {
-        hidden = force;
-        document.body.classList.toggle("browser-bar-hidden", force);
-      } else {
-        document.body.classList.toggle("browser-bar-hidden");
-        hidden = document.body.classList.contains("browser-bar-hidden");
-      }
-      localStorage.setItem(STORAGE_KEYS.browserBarHidden, hidden ? "1" : "0");
-    }
-
-    function applyBrowserBarState() {
-      const hidden = localStorage.getItem(STORAGE_KEYS.browserBarHidden) === "1";
-      document.body.classList.toggle("browser-bar-hidden", hidden);
-    }
-
     async function toggleCompactMode() {
       const enabled = !document.body.classList.contains("compact-browser");
       document.body.classList.toggle("compact-browser", enabled);
       localStorage.setItem(STORAGE_KEYS.compactMode, enabled ? "1" : "0");
 
       if (enabled) {
-        toggleBrowserBar(true);
         try {
           if (document.fullscreenElement == null && document.documentElement.requestFullscreen) {
             await document.documentElement.requestFullscreen();
           }
         } catch {}
       } else {
-        toggleBrowserBar(false);
         try {
           if (document.fullscreenElement && document.exitFullscreen) {
             await document.exitFullscreen();
@@ -1629,18 +1554,12 @@
     window.exitProxy = function () {
       document.body.style.overflow = "auto";
       document.body.classList.remove("compact-browser");
-      document.body.classList.remove("browser-bar-hidden");
       localStorage.setItem(STORAGE_KEYS.compactMode, "0");
-      localStorage.setItem(STORAGE_KEYS.browserBarHidden, "0");
       qs("proxy-overlay").style.display = "none";
-
       const f = document.getElementById("sj-frame");
       if (f) f.remove();
-      currentScramFrame = null;
-
       qs("sj-address").value = "";
       qs("proxy-nav-input").value = "";
-
       try {
         if (document.fullscreenElement && document.exitFullscreen) {
           document.exitFullscreen();
@@ -1682,59 +1601,15 @@
       return (data.items || []).slice(0, limit);
     }
 
-    function formatGameStatus(event) {
-      const type = event.status?.type;
-      if (!type) return { text: "Scheduled", cls: "status-scheduled" };
-
-      if (type.state === "in") {
-        return { text: type.shortDetail || "Live", cls: "status-live" };
-      }
-      if (type.completed) {
-        return { text: "Final", cls: "status-final" };
-      }
-      return { text: type.shortDetail || "Scheduled", cls: "status-scheduled" };
-    }
-
-    function formatGameDate(dateStr) {
-      const d = new Date(dateStr);
-      return d.toLocaleDateString(undefined, {
-        month: "short",
-        day: "numeric",
-        year: "numeric"
-      });
-    }
-
-    function formatGameTime(dateStr) {
-      const d = new Date(dateStr);
-      return d.toLocaleTimeString(undefined, {
-        hour: "numeric",
-        minute: "2-digit"
-      });
-    }
-
-    async function fetchScoreItems(apiUrl, limit = 20) {
-      const res = await fetch(apiUrl, { cache: "no-store" });
+    async function fetchScoreItems(apiUrl, limit = 6) {
+      const res = await fetch(apiUrl);
       const data = await res.json();
-
-      return (data.events || []).slice(0, limit).map(event => {
-        const competitors = event.competitions?.[0]?.competitors || [];
-        const home = competitors.find(x => x.homeAway === "home");
-        const away = competitors.find(x => x.homeAway === "away");
-        const status = formatGameStatus(event);
-
-        return {
-          id: event.id,
-          league: data.leagues?.[0]?.name || "League",
-          statusText: status.text,
-          statusClass: status.cls,
-          date: event.date || "",
-          displayDate: event.date ? formatGameDate(event.date) : "",
-          displayTime: event.date ? formatGameTime(event.date) : "",
-          competitors,
-          home,
-          away
-        };
-      });
+      return (data.events || []).slice(0, limit).map(event => ({
+        league: data.leagues?.[0]?.name || "League",
+        status: event.status?.type?.description || "Scheduled",
+        date: event.date ? new Date(event.date).toLocaleString() : "",
+        competitors: event.competitions?.[0]?.competitors || []
+      }));
     }
 
     function renderNewsCards(items) {
@@ -1772,7 +1647,7 @@
     function renderScoreCards(items) {
       const container = qs("learning-news");
       if (!items.length) {
-        container.innerHTML = `<p style="color:var(--muted);">No games found for today.</p>`;
+        container.innerHTML = `<p style="color:var(--muted);">No scores found.</p>`;
         return;
       }
 
@@ -1781,21 +1656,22 @@
       const list = container.firstElementChild;
 
       items.forEach(event => {
+        const home = event.competitors.find(x => x.homeAway === "home");
+        const away = event.competitors.find(x => x.homeAway === "away");
+
         const div = document.createElement("div");
         div.className = "score-card";
         div.innerHTML = `
           <div class="score-top">
             <span>${escapeHtml(event.league)}</span>
-            <span class="${escapeHtml(event.statusClass)}">${escapeHtml(event.statusText)}</span>
+            <span>${escapeHtml(event.status)}</span>
           </div>
           <div class="score-match">
-            ${escapeHtml(event.away?.team?.shortDisplayName || "Away")} ${escapeHtml(event.away?.score ?? "0")}
+            ${escapeHtml(away?.team?.shortDisplayName || "Away")} ${escapeHtml(away?.score || "0")}
             -
-            ${escapeHtml(event.home?.score ?? "0")} ${escapeHtml(event.home?.team?.shortDisplayName || "Home")}
+            ${escapeHtml(home?.score || "0")} ${escapeHtml(home?.team?.shortDisplayName || "Home")}
           </div>
-          <div class="news-date" style="margin-top:8px;">
-            ${escapeHtml(event.displayDate)} • ${escapeHtml(event.displayTime)}
-          </div>
+          <div class="news-date" style="margin-top:8px;">${escapeHtml(event.date)}</div>
         `;
         list.appendChild(div);
       });
@@ -1824,12 +1700,11 @@
         }
 
         if (type === "scores") {
-          const scores = await fetchScoreItems(config.scoreboard, 20);
+          const scores = await fetchScoreItems(config.scoreboard, 6);
           renderScoreCards(scores);
           return;
         }
-      } catch (err) {
-        console.error(err);
+      } catch {
         container.innerHTML = `<p style="color:var(--muted);">Failed to load sports content.</p>`;
       }
     }
@@ -1850,6 +1725,17 @@
       }, 1000);
     }
 
+    function openAboutBlankPage() {
+      const newWin = window.open("about:blank", "_blank");
+      if (!newWin) return;
+      newWin.document.write(`
+        <title>Loading...</title>
+        <style>html,body,iframe{margin:0;padding:0;width:100%;height:100%;border:0;overflow:hidden;background:#fff;}</style>
+        <iframe src="https://mad4watching.onrender.com"></iframe>
+      `);
+      newWin.document.close();
+    }
+
     window.addEventListener("load", async () => {
       const form = qs("sj-form");
       const address = qs("sj-address");
@@ -1867,7 +1753,6 @@
       initTheme();
       applyTopbarState();
       applyCompactMode();
-      applyBrowserBarState();
       applyCloak(settings.cloak);
       bindAutoSaveSettings();
       loadTabs();
@@ -1882,20 +1767,20 @@
       btn.disabled = false;
 
       const sportsMode = loadJSON(STORAGE_KEYS.sportsMode, { type: "scores", league: "mlb" });
-      await setSportsMode(sportsMode.type, sportsMode.league);
+      setSportsMode(sportsMode.type, sportsMode.league);
       startSportsTimer();
 
       document.querySelectorAll("#scores-buttons button, #news-buttons button").forEach(button => {
-        button.addEventListener("click", async () => {
-          await setSportsMode(button.dataset.type, button.dataset.league);
+        button.addEventListener("click", () => {
+          setSportsMode(button.dataset.type, button.dataset.league);
           sportsSecondsLeft = 60;
           qs("sports-timer").textContent = sportsSecondsLeft;
         });
       });
 
-      document.querySelectorAll("#quick-links .chip-btn").forEach(chip => {
-        chip.addEventListener("click", async () => {
-          const url = chip.dataset.url;
+      document.querySelectorAll("#quick-links .chip-btn").forEach(btn => {
+        btn.addEventListener("click", async () => {
+          const url = btn.dataset.url;
           await openQuickNav(url);
         });
       });
@@ -1910,6 +1795,7 @@
         btn.textContent = "Loading...";
 
         try {
+          await ensureProxyReady();
           if (!tabs.length) loadTabs();
           await navigateActiveTab(val);
         } catch (err) {
@@ -1923,10 +1809,10 @@
 
       proxyNavForm.addEventListener("submit", async (e) => {
         e.preventDefault();
-        hideError();
         const val = qs("proxy-nav-input").value.trim();
         if (!val) return;
         try {
+          await ensureProxyReady();
           await navigateActiveTab(val);
         } catch (err) {
           showError(err.message || err.toString());
