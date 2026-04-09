@@ -79,6 +79,7 @@
       box-shadow: var(--shadow);
       cursor: pointer;
       display: none;
+      font-weight: 700;
     }
 
     body.topbar-hidden .topbar-toggle-floating {
@@ -183,7 +184,7 @@
       margin-top: 18px;
     }
 
-    #sj-address, #proxy-nav-input, #bookmark-name, #bookmark-url, #home-url, #search-engine-input, #tab-rename-input, #cloak-select, #blank-page-url {
+    #sj-address, #proxy-nav-input, #bookmark-name, #bookmark-url, #home-url, #search-engine-input, #cloak-select {
       flex: 1;
       min-width: 240px;
       padding: 13px 14px;
@@ -196,7 +197,7 @@
       width: 100%;
     }
 
-    #style-select, #bookmark-display-select, #blank-mode-select {
+    #style-select, #bookmark-display-select {
       width: 100%;
       padding: 13px 14px;
       border: 1px solid var(--border);
@@ -207,7 +208,7 @@
       appearance: none;
     }
 
-    #sj-address:focus, #proxy-nav-input:focus, #bookmark-name:focus, #bookmark-url:focus, #home-url:focus, #search-engine-input:focus, #tab-rename-input:focus, #cloak-select:focus, #blank-page-url:focus, #style-select:focus, #bookmark-display-select:focus, #blank-mode-select:focus {
+    #sj-address:focus, #proxy-nav-input:focus, #bookmark-name:focus, #bookmark-url:focus, #home-url:focus, #search-engine-input:focus, #cloak-select:focus, #style-select:focus, #bookmark-display-select:focus {
       border-color: var(--primary);
       box-shadow: 0 0 0 3px rgba(37,99,235,.12);
     }
@@ -245,7 +246,12 @@
       height: 42px;
       padding: 0;
       line-height: 1;
-      font-size: 18px;
+    }
+
+    .icon-btn svg {
+      width: 19px;
+      height: 19px;
+      fill: currentColor;
     }
 
     .chip-row {
@@ -349,6 +355,20 @@
       font-size: .85rem;
       color: var(--muted);
       font-weight: 700;
+    }
+
+    .sports-group {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .sports-group-label {
+      font-size: .85rem;
+      font-weight: 800;
+      color: var(--muted);
+      margin-right: 2px;
     }
 
     .segmented {
@@ -557,6 +577,7 @@
       text-overflow: ellipsis;
       font-size: 13px;
       font-weight: 700;
+      flex: 1;
     }
 
     .tab-close, .tab-rename {
@@ -566,6 +587,7 @@
       color: #64748b;
       font-weight: 700;
       padding: 0;
+      font-size: 14px;
     }
 
     .tab-add {
@@ -689,13 +711,6 @@
       color: var(--muted);
     }
 
-    .setting-inline {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      align-items: center;
-    }
-
     body.theme-midnight {
       --bg: #020617;
       --bg2: #0f172a;
@@ -720,11 +735,8 @@
     body.theme-midnight #bookmark-url,
     body.theme-midnight #home-url,
     body.theme-midnight #search-engine-input,
-    body.theme-midnight #tab-rename-input,
     body.theme-midnight #style-select,
     body.theme-midnight #bookmark-display-select,
-    body.theme-midnight #blank-mode-select,
-    body.theme-midnight #blank-page-url,
     body.theme-midnight #cloak-select,
     body.theme-midnight .segmented button,
     body.theme-midnight .bookmark-pill,
@@ -739,11 +751,8 @@
     body.theme-midnight #bookmark-url,
     body.theme-midnight #home-url,
     body.theme-midnight #search-engine-input,
-    body.theme-midnight #tab-rename-input,
     body.theme-midnight #style-select,
     body.theme-midnight #bookmark-display-select,
-    body.theme-midnight #blank-mode-select,
-    body.theme-midnight #blank-page-url,
     body.theme-midnight #cloak-select {
       background: #111827;
       border-color: #223146;
@@ -849,7 +858,7 @@
       <div class="hero-card" id="main-menu">
         <div class="hero-label">mad</div>
         <h1>Fast. Clean. Private.</h1>
-        <p>Search the web, open links in the proxy, save bookmarks, rename tabs, and customize your browser experience.</p>
+        <p>Search the web, open links in the proxy, save bookmarks, and customize your browser experience.</p>
 
         <form id="sj-form">
           <input id="sj-search-engine" value="https://www.google.com/search?q=%s" type="hidden" />
@@ -897,14 +906,23 @@
               <h3>Sports Center</h3>
               <div class="sports-refresh">Refresh in <span id="sports-timer">60</span>s</div>
             </div>
-            <div class="mini-title">News & Scores</div>
-            <div class="segmented" id="sports-type-buttons">
-              <button type="button" data-mode="all" class="active">All</button>
-              <button type="button" data-mode="news">News</button>
-              <button type="button" data-mode="scores">Scores</button>
-              <button type="button" data-mode="nba">NBA</button>
-              <button type="button" data-mode="nfl">NFL</button>
-              <button type="button" data-mode="mlb">MLB</button>
+
+            <div class="sports-group">
+              <span class="sports-group-label">Scores</span>
+              <div class="segmented" id="scores-buttons">
+                <button type="button" data-type="scores" data-league="mlb">MLB</button>
+                <button type="button" data-type="scores" data-league="nba">NBA</button>
+                <button type="button" data-type="scores" data-league="nfl">NFL</button>
+              </div>
+            </div>
+
+            <div class="sports-group">
+              <span class="sports-group-label">News</span>
+              <div class="segmented" id="news-buttons">
+                <button type="button" data-type="news" data-league="mlb">MLB</button>
+                <button type="button" data-type="news" data-league="nba">NBA</button>
+                <button type="button" data-type="news" data-league="nfl">NFL</button>
+              </div>
             </div>
           </div>
         </div>
@@ -933,11 +951,21 @@
 
     <div class="proxy-bar">
       <div class="proxy-bar-left">
-        <button class="icon-btn" onclick="exitProxy()" title="Exit">✕</button>
-        <button class="icon-btn" onclick="toggleBookmarks()" title="Bookmarks">🔖</button>
-        <button class="icon-btn" onclick="bookmarkCurrentTab()" title="Save Bookmark">⭐</button>
-        <button class="icon-btn" onclick="toggleSettings()" title="Settings">⚙</button>
-        <button class="icon-btn" onclick="toggleCompactMode()" title="Focus Mode">⛶</button>
+        <button class="icon-btn" onclick="exitProxy()" title="Exit">
+          <svg viewBox="0 0 24 24"><path d="M18.3 5.71a1 1 0 0 0-1.41 0L12 10.59 7.11 5.7A1 1 0 0 0 5.7 7.11L10.59 12 5.7 16.89a1 1 0 1 0 1.41 1.41L12 13.41l4.89 4.89a1 1 0 0 0 1.41-1.41L13.41 12l4.89-4.89a1 1 0 0 0 0-1.4Z"/></svg>
+        </button>
+        <button class="icon-btn" onclick="toggleBookmarks()" title="Bookmarks">
+          <svg viewBox="0 0 24 24"><path d="M6 3a2 2 0 0 0-2 2v16l8-4 8 4V5a2 2 0 0 0-2-2H6z"/></svg>
+        </button>
+        <button class="icon-btn" onclick="bookmarkCurrentTab()" title="Save Bookmark">
+          <svg viewBox="0 0 24 24"><path d="m12 17.27 6.18 3.73-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+        </button>
+        <button class="icon-btn" onclick="toggleSettings()" title="Settings">
+          <svg viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.31.06-.63.06-.94s-.02-.63-.06-.94l2.03-1.58a.5.5 0 0 0 .12-.64l-1.92-3.32a.5.5 0 0 0-.6-.22l-2.39.96a7.03 7.03 0 0 0-1.63-.94l-.36-2.54A.5.5 0 0 0 13.9 2h-3.8a.5.5 0 0 0-.49.42l-.36 2.54c-.58.22-1.12.54-1.63.94l-2.39-.96a.5.5 0 0 0-.6.22L2.71 8.48a.5.5 0 0 0 .12.64l2.03 1.58c-.04.31-.06.63-.06.94s.02.63.06.94l-2.03 1.58a.5.5 0 0 0-.12.64l1.92 3.32a.5.5 0 0 0 .6.22l2.39-.96c.51.4 1.05.72 1.63.94l.36 2.54a.5.5 0 0 0 .49.42h3.8a.5.5 0 0 0 .49-.42l.36-2.54c.58-.22 1.12-.54 1.63-.94l2.39.96a.5.5 0 0 0 .6-.22l1.92-3.32a.5.5 0 0 0-.12-.64l-2.03-1.58ZM12 15.5A3.5 3.5 0 1 1 12 8a3.5 3.5 0 0 1 0 7.5Z"/></svg>
+        </button>
+        <button class="icon-btn" onclick="toggleCompactMode()" title="Focus Mode">
+          <svg viewBox="0 0 24 24"><path d="M7 14H5v5h5v-2H7v-3zm0-4h2V7h3V5H5v5zm10 7h-3v2h5v-5h-2v3zm0-12V5h-5v2h3v3h2V5z"/></svg>
+        </button>
       </div>
 
       <form id="proxy-nav-form">
@@ -946,8 +974,12 @@
       </form>
 
       <div class="proxy-bar-right">
-        <button class="icon-btn" onclick="reloadActiveTab()" title="Reload">↻</button>
-        <button class="icon-btn" onclick="toggleTopbar()" title="Toggle Bar">☰</button>
+        <button class="icon-btn" onclick="reloadActiveTab()" title="Reload">
+          <svg viewBox="0 0 24 24"><path d="M17.65 6.35A7.95 7.95 0 0 0 12 4V1L7 6l5 5V7a5 5 0 1 1-4.9 6h-2.02A7 7 0 1 0 17.65 6.35z"/></svg>
+        </button>
+        <button class="icon-btn" onclick="toggleTopbar()" title="Toggle Bar">
+          <svg viewBox="0 0 24 24"><path d="M4 6h16v2H4zm0 5h16v2H4zm0 5h16v2H4z"/></svg>
+        </button>
       </div>
     </div>
   </div>
@@ -1003,16 +1035,8 @@
     </div>
 
     <div class="setting-row">
-      <label>about:blank Open Page</label>
-      <select id="blank-mode-select">
-        <option value="off">Off</option>
-        <option value="on">Open mad4watching.onrender.com in about:blank</option>
-      </select>
-    </div>
-
-    <div class="setting-row">
-      <label>about:blank URL</label>
-      <input id="blank-page-url" type="text" value="https://mad4watching.onrender.com">
+      <label>about:blank</label>
+      <button class="ghost-btn" type="button" onclick="openAboutBlankPage()">Open about:blank</button>
     </div>
 
     <div class="setting-row">
@@ -1022,14 +1046,6 @@
         <option value="classroom">Google Classroom</option>
         <option value="drive">Google Drive</option>
       </select>
-    </div>
-
-    <div class="setting-row">
-      <label>Rename Active Tab</label>
-      <input id="tab-rename-input" type="text" placeholder="New tab name">
-      <div class="setting-inline">
-        <button class="ghost-btn" type="button" onclick="renameActiveTab()">Rename Tab</button>
-      </div>
     </div>
 
     <div class="bookmark-row">
@@ -1060,8 +1076,6 @@
       homeUrl: "https://google.com",
       searchEngine: "https://www.google.com/search?q=%s",
       bookmarkDisplay: "folder",
-      blankMode: "off",
-      blankPageUrl: "https://mad4watching.onrender.com",
       cloak: "none"
     };
 
@@ -1092,8 +1106,6 @@
         homeUrl: qs("home-url").value.trim() || DEFAULT_SETTINGS.homeUrl,
         searchEngine: qs("search-engine-input").value.trim() || DEFAULT_SETTINGS.searchEngine,
         bookmarkDisplay: qs("bookmark-display-select").value || DEFAULT_SETTINGS.bookmarkDisplay,
-        blankMode: qs("blank-mode-select").value || DEFAULT_SETTINGS.blankMode,
-        blankPageUrl: qs("blank-page-url").value.trim() || DEFAULT_SETTINGS.blankPageUrl,
         cloak: qs("cloak-select").value || DEFAULT_SETTINGS.cloak
       };
       saveJSON(STORAGE_KEYS.settings, settings);
@@ -1104,7 +1116,7 @@
     }
 
     function bindAutoSaveSettings() {
-      ["style-select","home-url","search-engine-input","bookmark-display-select","blank-mode-select","blank-page-url","cloak-select"].forEach(id => {
+      ["style-select","home-url","search-engine-input","bookmark-display-select","cloak-select"].forEach(id => {
         qs(id).addEventListener("input", () => saveSettings());
         qs(id).addEventListener("change", () => saveSettings());
       });
@@ -1140,12 +1152,13 @@
       if (theme === "sunset") document.body.classList.add("theme-sunset");
       if (theme === "lavender") document.body.classList.add("theme-lavender");
       if (theme === "rose") document.body.classList.add("theme-rose");
-      localStorage.setItem(STORAGE_KEYS.theme, theme);
-      qs("style-select").value = theme;
+      localStorage.setItem(STORAGE_KEYS.theme, theme || "default");
+      qs("style-select").value = theme || "default";
     }
 
     function initTheme() {
-      const theme = localStorage.getItem(STORAGE_KEYS.theme) || "default";
+      const savedTheme = localStorage.getItem(STORAGE_KEYS.theme);
+      const theme = savedTheme && savedTheme !== "null" ? savedTheme : "default";
       applyTheme(theme);
       qs("style-select").addEventListener("change", e => {
         applyTheme(e.target.value);
@@ -1389,13 +1402,6 @@
       saveTabs();
     }
 
-    function renameActiveTab() {
-      const input = qs("tab-rename-input").value.trim();
-      if (!input || !activeTabId) return;
-      updateTab(activeTabId, { title: input });
-      qs("tab-rename-input").value = "";
-    }
-
     function renameTabPrompt(id) {
       const tab = tabs.find(t => t.id === id);
       if (!tab) return;
@@ -1410,8 +1416,8 @@
       const html = tabs.map(tab => `
         <div class="tab ${tab.id === activeTabId ? "active" : ""}" onclick="switchTab('${tab.id}')">
           <span class="tab-title">${escapeHtml(tab.title || "New Tab")}</span>
-          <button class="tab-rename" title="Rename" onclick="event.stopPropagation(); renameTabPrompt('${tab.id}')">✎</button>
           <button class="tab-close" title="Close" onclick="event.stopPropagation(); closeTab('${tab.id}')">×</button>
+          <button class="tab-rename" title="Rename" onclick="event.stopPropagation(); renameTabPrompt('${tab.id}')">✎</button>
         </div>
       `).join("");
       wrap.innerHTML = addBtn + html;
@@ -1438,7 +1444,6 @@
       });
 
       qs("proxy-nav-input").value = url;
-
       document.body.style.overflow = "hidden";
       qs("proxy-overlay").style.display = "flex";
 
@@ -1672,11 +1677,12 @@
       });
     }
 
-    async function setSportsMode(mode) {
-      localStorage.setItem(STORAGE_KEYS.sportsMode, mode);
+    async function setSportsMode(type, league) {
+      const mode = { type, league };
+      saveJSON(STORAGE_KEYS.sportsMode, mode);
 
-      document.querySelectorAll("#sports-type-buttons button").forEach(btn => {
-        btn.classList.toggle("active", btn.dataset.mode === mode);
+      document.querySelectorAll("#scores-buttons button, #news-buttons button").forEach(btn => {
+        btn.classList.toggle("active", btn.dataset.type === type && btn.dataset.league === league);
       });
 
       const container = qs("learning-news");
@@ -1684,46 +1690,19 @@
       container.innerHTML = `<p style="width:100%;text-align:center;color:var(--muted);">Loading sports content...</p>`;
 
       try {
-        if (mode === "news") {
-          const all = await Promise.all([
-            fetchRssItems(SPORT_CONFIG.nba.rss, 3),
-            fetchRssItems(SPORT_CONFIG.nfl.rss, 3),
-            fetchRssItems(SPORT_CONFIG.mlb.rss, 3)
-          ]);
-          renderNewsCards(all.flat().slice(0, 9));
-          return;
-        }
+        const config = SPORT_CONFIG[league];
+        if (!config) return;
 
-        if (mode === "scores") {
-          const all = await Promise.all([
-            fetchScoreItems(SPORT_CONFIG.nba.scoreboard, 3),
-            fetchScoreItems(SPORT_CONFIG.nfl.scoreboard, 3),
-            fetchScoreItems(SPORT_CONFIG.mlb.scoreboard, 3)
-          ]);
-          renderScoreCards(all.flat().slice(0, 9));
-          return;
-        }
-
-        if (mode === "all") {
-          const news = await fetchRssItems(SPORT_CONFIG.nba.rss, 6);
+        if (type === "news") {
+          const news = await fetchRssItems(config.rss, 6);
           renderNewsCards(news);
           return;
         }
 
-        if (SPORT_CONFIG[mode]) {
-          const league = SPORT_CONFIG[mode];
-          const [news, scores] = await Promise.allSettled([
-            fetchRssItems(league.rss, 6),
-            fetchScoreItems(league.scoreboard, 6)
-          ]);
-
-          if (scores.status === "fulfilled" && scores.value.length) {
-            renderScoreCards(scores.value);
-          } else if (news.status === "fulfilled" && news.value.length) {
-            renderNewsCards(news.value);
-          } else {
-            container.innerHTML = `<p style="color:var(--muted);">No ${escapeHtml(league.label)} content found.</p>`;
-          }
+        if (type === "scores") {
+          const scores = await fetchScoreItems(config.scoreboard, 6);
+          renderScoreCards(scores);
+          return;
         }
       } catch {
         container.innerHTML = `<p style="color:var(--muted);">Failed to load sports content.</p>`;
@@ -1738,23 +1717,21 @@
       sportsTimerInterval = setInterval(async () => {
         sportsSecondsLeft--;
         if (sportsSecondsLeft <= 0) {
-          const sportsMode = localStorage.getItem(STORAGE_KEYS.sportsMode) || "all";
-          await setSportsMode(sportsMode);
+          const sportsMode = loadJSON(STORAGE_KEYS.sportsMode, { type: "scores", league: "mlb" });
+          await setSportsMode(sportsMode.type, sportsMode.league);
           sportsSecondsLeft = 60;
         }
         qs("sports-timer").textContent = sportsSecondsLeft;
       }, 1000);
     }
 
-    function openBlankPageIfEnabled() {
-      const settings = loadSettings();
-      if (settings.blankMode !== "on") return;
+    function openAboutBlankPage() {
       const newWin = window.open("about:blank", "_blank");
       if (!newWin) return;
       newWin.document.write(`
         <title>Loading...</title>
         <style>html,body,iframe{margin:0;padding:0;width:100%;height:100%;border:0;overflow:hidden;background:#fff;}</style>
-        <iframe src="${settings.blankPageUrl}"></iframe>
+        <iframe src="https://mad4watching.onrender.com"></iframe>
       `);
       newWin.document.close();
     }
@@ -1770,8 +1747,6 @@
       qs("home-url").value = settings.homeUrl;
       qs("search-engine-input").value = settings.searchEngine;
       qs("bookmark-display-select").value = settings.bookmarkDisplay;
-      qs("blank-mode-select").value = settings.blankMode;
-      qs("blank-page-url").value = settings.blankPageUrl;
       qs("cloak-select").value = settings.cloak;
       searchEngine.value = settings.searchEngine;
 
@@ -1786,19 +1761,18 @@
       renderBookmarks();
       renderHomeBookmarksPreview();
       renderBookmarkBar();
-      openBlankPageIfEnabled();
 
       address.disabled = false;
       address.placeholder = "Search or enter URL...";
       btn.disabled = false;
 
-      const sportsMode = localStorage.getItem(STORAGE_KEYS.sportsMode) || "all";
-      setSportsMode(sportsMode);
+      const sportsMode = loadJSON(STORAGE_KEYS.sportsMode, { type: "scores", league: "mlb" });
+      setSportsMode(sportsMode.type, sportsMode.league);
       startSportsTimer();
 
-      document.querySelectorAll("#sports-type-buttons button").forEach(button => {
+      document.querySelectorAll("#scores-buttons button, #news-buttons button").forEach(button => {
         button.addEventListener("click", () => {
-          setSportsMode(button.dataset.mode);
+          setSportsMode(button.dataset.type, button.dataset.league);
           sportsSecondsLeft = 60;
           qs("sports-timer").textContent = sportsSecondsLeft;
         });
