@@ -10,28 +10,6 @@
   <script src="/epoxy/index.js"></script>
   <script src="/register-sw.js"></script>
 
-  <script>
-    window.addEventListener("DOMContentLoaded", () => {
-      const style = document.createElement("style");
-      style.textContent = `* { cursor: none !important; }`;
-      document.head.appendChild(style);
-
-      const cursor = document.createElement("img");
-      cursor.src = "/cursor.gif";
-      cursor.style.position = "fixed";
-      cursor.style.width = "17px";
-      cursor.style.height = "21px";
-      cursor.style.pointerEvents = "none";
-      cursor.style.zIndex = "9999999";
-      document.body.appendChild(cursor);
-
-      document.addEventListener("mousemove", e => {
-        cursor.style.left = e.clientX + "px";
-        cursor.style.top = e.clientY + "px";
-      });
-    });
-  </script>
-
   <style>
     :root {
       --bg: #f4f7fb;
@@ -48,10 +26,7 @@
     }
 
     * { box-sizing: border-box; }
-
-    html {
-      scroll-behavior: smooth;
-    }
+    html { scroll-behavior: smooth; }
 
     body {
       font-family: Inter, Arial, sans-serif;
@@ -60,13 +35,14 @@
       margin: 0;
       min-height: 100vh;
       overflow-y: auto;
-      transition: background .25s, color .25s;
+      transition: background .3s ease, color .3s ease;
+      cursor: auto !important;
     }
 
     a { color: inherit; }
 
     button, input, select, .tab, .news-card, .bookmark-item, .list-links a, .chip-btn, .panel, .hero-card, .drawer {
-      transition: all .22s ease;
+      transition: all .25s ease;
     }
 
     .topbar {
@@ -79,11 +55,11 @@
       gap: 12px;
       padding: 14px 22px;
       min-height: var(--topbar-height);
-      background: rgba(255,255,255,0.75);
-      backdrop-filter: blur(10px);
+      background: rgba(255,255,255,0.78);
+      backdrop-filter: blur(12px);
       border-bottom: 1px solid var(--border);
       transform: translateY(0);
-      transition: transform .3s ease, background .25s ease, border-color .25s ease;
+      transition: transform .35s ease, background .25s ease, border-color .25s ease;
     }
 
     body.topbar-hidden .topbar {
@@ -111,8 +87,8 @@
 
     .brand {
       display: flex;
-      align-items: center;
-      gap: 12px;
+      flex-direction: column;
+      line-height: 1;
       font-weight: 800;
       color: var(--primary);
       font-size: 1.1rem;
@@ -139,12 +115,13 @@
     .nav-links a:hover, .nav-links button:hover {
       background: rgba(37,99,235,0.08);
       color: var(--primary);
+      transform: translateY(-1px);
     }
 
     .page {
       width: min(1150px, 92%);
       margin: 28px auto;
-      animation: fadeUp .35s ease;
+      animation: fadeUp .45s ease;
     }
 
     .hero {
@@ -165,6 +142,7 @@
       padding: 34px;
       position: relative;
       overflow: hidden;
+      animation: fadeUp .5s ease;
     }
 
     .hero-card::before {
@@ -175,6 +153,15 @@
       height: 240px;
       background: radial-gradient(circle, rgba(37,99,235,.16), transparent 65%);
       border-radius: 50%;
+    }
+
+    .hero-label {
+      font-size: .95rem;
+      font-weight: 800;
+      color: var(--primary);
+      margin-bottom: 10px;
+      text-transform: lowercase;
+      letter-spacing: .08em;
     }
 
     h1 {
@@ -196,7 +183,7 @@
       margin-top: 18px;
     }
 
-    #sj-address, #proxy-nav-input, #bookmark-name, #bookmark-url, #home-url, #search-engine-input, #tab-rename-input {
+    #sj-address, #proxy-nav-input, #bookmark-name, #bookmark-url, #home-url, #search-engine-input, #tab-rename-input, #cloak-select, #blank-page-url {
       flex: 1;
       min-width: 240px;
       padding: 13px 14px;
@@ -206,9 +193,21 @@
       color: var(--text);
       outline: none;
       font-size: 15px;
+      width: 100%;
     }
 
-    #sj-address:focus, #proxy-nav-input:focus, #bookmark-name:focus, #bookmark-url:focus, #home-url:focus, #search-engine-input:focus, #tab-rename-input:focus {
+    #style-select, #bookmark-display-select, #blank-mode-select {
+      width: 100%;
+      padding: 13px 14px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: #fff;
+      color: var(--text);
+      font-size: 15px;
+      appearance: none;
+    }
+
+    #sj-address:focus, #proxy-nav-input:focus, #bookmark-name:focus, #bookmark-url:focus, #home-url:focus, #search-engine-input:focus, #tab-rename-input:focus, #cloak-select:focus, #blank-page-url:focus, #style-select:focus, #bookmark-display-select:focus, #blank-mode-select:focus {
       border-color: var(--primary);
       box-shadow: 0 0 0 3px rgba(37,99,235,.12);
     }
@@ -226,21 +225,27 @@
       color: white;
     }
 
-    .primary-btn:hover { filter: brightness(1.03); }
+    .primary-btn:hover { filter: brightness(1.05); transform: translateY(-1px); }
 
     .ghost-btn, .icon-btn {
       background: #eef4ff;
       color: var(--primary);
     }
 
-    .ghost-btn:hover, .icon-btn:hover { background: #e3edff; }
+    .ghost-btn:hover, .icon-btn:hover {
+      background: #e3edff;
+      transform: translateY(-1px);
+    }
 
     .icon-btn {
       display: inline-flex;
       align-items: center;
-      gap: 8px;
-      padding: 10px 12px;
+      justify-content: center;
+      width: 42px;
+      height: 42px;
+      padding: 0;
       line-height: 1;
+      font-size: 18px;
     }
 
     .chip-row {
@@ -261,6 +266,7 @@
       border-color: var(--primary);
       color: var(--primary);
       background: #f8fbff;
+      transform: translateY(-1px);
     }
 
     .side-card {
@@ -307,6 +313,7 @@
 
     .panel {
       padding: 20px;
+      animation: fadeUp .55s ease;
     }
 
     .section-head {
@@ -321,6 +328,27 @@
     .section-head h3 {
       margin: 0;
       font-size: 1.05rem;
+    }
+
+    .sports-header-block {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      width: 100%;
+    }
+
+    .sports-topline {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .sports-refresh {
+      font-size: .85rem;
+      color: var(--muted);
+      font-weight: 700;
     }
 
     .segmented {
@@ -358,15 +386,14 @@
       border: 1px solid var(--border);
       text-decoration: none;
       background: white;
-      transition: .18s ease;
       border-radius: 14px;
       overflow: hidden;
       min-height: 100%;
     }
 
     .news-card:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 10px 18px rgba(0,0,0,.08);
+      transform: translateY(-4px) scale(1.01);
+      box-shadow: 0 12px 20px rgba(0,0,0,.08);
       border-color: #bfd4ff;
     }
 
@@ -463,7 +490,6 @@
       color: var(--primary);
     }
 
-    /* PROXY OVERLAY */
     #proxy-overlay {
       position: fixed;
       inset: 0;
@@ -472,7 +498,7 @@
       display: none;
       flex-direction: column;
       overflow: hidden;
-      animation: fadeIn .22s ease;
+      animation: fadeIn .25s ease;
     }
 
     body.theme-midnight #proxy-overlay {
@@ -595,7 +621,6 @@
       animation: fadeIn .2s ease;
     }
 
-    /* drawers */
     .drawer {
       position: fixed;
       top: 76px;
@@ -671,52 +696,6 @@
       align-items: center;
     }
 
-    /* logs */
-    #logs-window {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      width: 320px;
-      background: white;
-      border: 1px solid var(--border);
-      box-shadow: var(--shadow);
-      border-radius: 14px;
-      overflow: hidden;
-      z-index: 10000;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .logs-header {
-      background: var(--primary);
-      color: white;
-      padding: 10px 14px;
-      font-weight: bold;
-      cursor: move;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      user-select: none;
-    }
-
-    .logs-controls button {
-      background: transparent;
-      border: none;
-      color: white;
-      cursor: pointer;
-      margin-left: 5px;
-      font-size: 16px;
-    }
-
-    #update-logs-frame {
-      width: 100%;
-      height: 300px;
-      border: none;
-      background: #f9f9f9;
-      transition: height .25s;
-    }
-
-    /* themes */
     body.theme-midnight {
       --bg: #020617;
       --bg2: #0f172a;
@@ -731,7 +710,6 @@
 
     body.theme-midnight .topbar,
     body.theme-midnight .drawer,
-    body.theme-midnight #logs-window,
     body.theme-midnight .news-card,
     body.theme-midnight .score-card,
     body.theme-midnight .bookmark-item,
@@ -743,6 +721,11 @@
     body.theme-midnight #home-url,
     body.theme-midnight #search-engine-input,
     body.theme-midnight #tab-rename-input,
+    body.theme-midnight #style-select,
+    body.theme-midnight #bookmark-display-select,
+    body.theme-midnight #blank-mode-select,
+    body.theme-midnight #blank-page-url,
+    body.theme-midnight #cloak-select,
     body.theme-midnight .segmented button,
     body.theme-midnight .bookmark-pill,
     body.theme-midnight .topbar-toggle-floating {
@@ -756,8 +739,14 @@
     body.theme-midnight #bookmark-url,
     body.theme-midnight #home-url,
     body.theme-midnight #search-engine-input,
-    body.theme-midnight #tab-rename-input {
+    body.theme-midnight #tab-rename-input,
+    body.theme-midnight #style-select,
+    body.theme-midnight #bookmark-display-select,
+    body.theme-midnight #blank-mode-select,
+    body.theme-midnight #blank-page-url,
+    body.theme-midnight #cloak-select {
       background: #111827;
+      border-color: #223146;
     }
 
     body.theme-forest {
@@ -820,14 +809,8 @@
     }
 
     @keyframes fadeUp {
-      from {
-        opacity: 0;
-        transform: translateY(8px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     @media (max-width: 920px) {
@@ -845,7 +828,7 @@
   </style>
 </head>
 <body>
-  <button class="topbar-toggle-floating" id="topbar-floating-btn" onclick="toggleTopbar()">⬇ Show Bar</button>
+  <button class="topbar-toggle-floating" id="topbar-floating-btn" onclick="toggleTopbar()">Show Bar</button>
 
   <div class="topbar">
     <div class="brand">
@@ -864,6 +847,7 @@
   <div class="page">
     <section class="hero">
       <div class="hero-card" id="main-menu">
+        <div class="hero-label">mad</div>
         <h1>Fast. Clean. Private.</h1>
         <p>Search the web, open links in the proxy, save bookmarks, rename tabs, and customize your browser experience.</p>
 
@@ -908,14 +892,20 @@
     <section class="grid">
       <div class="panel">
         <div class="section-head">
-          <h3>Sports Center</h3>
-          <div class="segmented" id="sports-type-buttons">
-            <button type="button" data-mode="all" class="active">All</button>
-            <button type="button" data-mode="news">News</button>
-            <button type="button" data-mode="scores">Scores</button>
-            <button type="button" data-mode="nba">NBA</button>
-            <button type="button" data-mode="nfl">NFL</button>
-            <button type="button" data-mode="mlb">MLB</button>
+          <div class="sports-header-block">
+            <div class="sports-topline">
+              <h3>Sports Center</h3>
+              <div class="sports-refresh">Refresh in <span id="sports-timer">60</span>s</div>
+            </div>
+            <div class="mini-title">News & Scores</div>
+            <div class="segmented" id="sports-type-buttons">
+              <button type="button" data-mode="all" class="active">All</button>
+              <button type="button" data-mode="news">News</button>
+              <button type="button" data-mode="scores">Scores</button>
+              <button type="button" data-mode="nba">NBA</button>
+              <button type="button" data-mode="nfl">NFL</button>
+              <button type="button" data-mode="mlb">MLB</button>
+            </div>
           </div>
         </div>
         <div id="sports-content">
@@ -936,7 +926,6 @@
     </section>
   </div>
 
-  <!-- Proxy Overlay -->
   <div id="proxy-overlay">
     <div class="proxy-tabs" id="proxy-tabs">
       <button class="tab-add" type="button" onclick="addTab()">＋ New Tab</button>
@@ -944,11 +933,11 @@
 
     <div class="proxy-bar">
       <div class="proxy-bar-left">
-        <button class="icon-btn" onclick="exitProxy()" title="Exit">⨯ Exit</button>
-        <button class="icon-btn" onclick="toggleBookmarks()" title="Bookmarks">🔖 Bookmarks</button>
-        <button class="icon-btn" onclick="bookmarkCurrentTab()" title="Save">💾 Save</button>
-        <button class="icon-btn" onclick="toggleSettings()" title="Settings">⚙ Settings</button>
-        <button class="icon-btn" onclick="toggleCompactMode()" title="Focus Mode">⛶ Focus</button>
+        <button class="icon-btn" onclick="exitProxy()" title="Exit">✕</button>
+        <button class="icon-btn" onclick="toggleBookmarks()" title="Bookmarks">🔖</button>
+        <button class="icon-btn" onclick="bookmarkCurrentTab()" title="Save Bookmark">⭐</button>
+        <button class="icon-btn" onclick="toggleSettings()" title="Settings">⚙</button>
+        <button class="icon-btn" onclick="toggleCompactMode()" title="Focus Mode">⛶</button>
       </div>
 
       <form id="proxy-nav-form">
@@ -957,13 +946,12 @@
       </form>
 
       <div class="proxy-bar-right">
-        <button class="icon-btn" onclick="reloadActiveTab()" title="Reload">↻ Reload</button>
-        <button class="icon-btn" onclick="toggleTopbar()" title="Toggle Top Bar">⬆ Bar</button>
+        <button class="icon-btn" onclick="reloadActiveTab()" title="Reload">↻</button>
+        <button class="icon-btn" onclick="toggleTopbar()" title="Toggle Bar">☰</button>
       </div>
     </div>
   </div>
 
-  <!-- Bookmarks Drawer -->
   <div class="drawer" id="bookmarks-drawer">
     <h4>Bookmarks</h4>
     <div class="setting-row">
@@ -981,7 +969,6 @@
     <div id="bookmark-list" class="bookmark-list"></div>
   </div>
 
-  <!-- Settings Drawer -->
   <div class="drawer" id="settings-drawer">
     <h4>Settings</h4>
 
@@ -1016,6 +1003,28 @@
     </div>
 
     <div class="setting-row">
+      <label>about:blank Open Page</label>
+      <select id="blank-mode-select">
+        <option value="off">Off</option>
+        <option value="on">Open mad4watching.onrender.com in about:blank</option>
+      </select>
+    </div>
+
+    <div class="setting-row">
+      <label>about:blank URL</label>
+      <input id="blank-page-url" type="text" value="https://mad4watching.onrender.com">
+    </div>
+
+    <div class="setting-row">
+      <label>Tab Cloak</label>
+      <select id="cloak-select">
+        <option value="none">None</option>
+        <option value="classroom">Google Classroom</option>
+        <option value="drive">Google Drive</option>
+      </select>
+    </div>
+
+    <div class="setting-row">
       <label>Rename Active Tab</label>
       <input id="tab-rename-input" type="text" placeholder="New tab name">
       <div class="setting-inline">
@@ -1024,21 +1033,8 @@
     </div>
 
     <div class="bookmark-row">
-      <button class="primary-btn" type="button" onclick="saveSettings()">Save Settings</button>
       <button class="ghost-btn" type="button" onclick="toggleSettings()">Close</button>
     </div>
-  </div>
-
-  <!-- Logs -->
-  <div id="logs-window">
-    <div class="logs-header" id="logs-header">
-      <span>Update Logs</span>
-      <div class="logs-controls">
-        <button onclick="toggleLogs()">-</button>
-        <button onclick="closeLogs()">×</button>
-      </div>
-    </div>
-    <iframe id="update-logs-frame" src="/assets/2.html"></iframe>
   </div>
 
   <script>
@@ -1046,6 +1042,8 @@
 
     let scramjet = null;
     let connection = null;
+    let sportsTimerInterval = null;
+    let sportsSecondsLeft = 60;
 
     const STORAGE_KEYS = {
       theme: "mad-theme",
@@ -1053,9 +1051,6 @@
       tabs: "mad-tabs",
       activeTab: "mad-active-tab",
       settings: "mad-settings",
-      logsClosed: "mad-logs-closed",
-      logsMinimized: "mad-logs-minimized",
-      logsPos: "mad-logs-pos",
       sportsMode: "mad-sports-mode",
       topbarHidden: "mad-topbar-hidden",
       compactMode: "mad-compact-mode"
@@ -1064,7 +1059,10 @@
     const DEFAULT_SETTINGS = {
       homeUrl: "https://google.com",
       searchEngine: "https://www.google.com/search?q=%s",
-      bookmarkDisplay: "folder"
+      bookmarkDisplay: "folder",
+      blankMode: "off",
+      blankPageUrl: "https://mad4watching.onrender.com",
+      cloak: "none"
     };
 
     let tabs = [];
@@ -1093,13 +1091,46 @@
       const settings = {
         homeUrl: qs("home-url").value.trim() || DEFAULT_SETTINGS.homeUrl,
         searchEngine: qs("search-engine-input").value.trim() || DEFAULT_SETTINGS.searchEngine,
-        bookmarkDisplay: qs("bookmark-display-select").value || DEFAULT_SETTINGS.bookmarkDisplay
+        bookmarkDisplay: qs("bookmark-display-select").value || DEFAULT_SETTINGS.bookmarkDisplay,
+        blankMode: qs("blank-mode-select").value || DEFAULT_SETTINGS.blankMode,
+        blankPageUrl: qs("blank-page-url").value.trim() || DEFAULT_SETTINGS.blankPageUrl,
+        cloak: qs("cloak-select").value || DEFAULT_SETTINGS.cloak
       };
       saveJSON(STORAGE_KEYS.settings, settings);
       qs("sj-search-engine").value = settings.searchEngine;
       renderHomeBookmarksPreview();
       renderBookmarkBar();
-      alert("Settings saved.");
+      applyCloak(settings.cloak);
+    }
+
+    function bindAutoSaveSettings() {
+      ["style-select","home-url","search-engine-input","bookmark-display-select","blank-mode-select","blank-page-url","cloak-select"].forEach(id => {
+        qs(id).addEventListener("input", () => saveSettings());
+        qs(id).addEventListener("change", () => saveSettings());
+      });
+    }
+
+    function applyCloak(cloak) {
+      if (cloak === "classroom") {
+        document.title = "Classes";
+        setFavicon("https://ssl.gstatic.com/classroom/favicon.png");
+      } else if (cloak === "drive") {
+        document.title = "My Drive";
+        setFavicon("https://ssl.gstatic.com/images/branding/product/2x/drive_2020q4_32dp.png");
+      } else {
+        document.title = "mad";
+        setFavicon("");
+      }
+    }
+
+    function setFavicon(url) {
+      let link = document.querySelector("link[rel='icon']");
+      if (!link) {
+        link = document.createElement("link");
+        link.rel = "icon";
+        document.head.appendChild(link);
+      }
+      link.href = url || "";
     }
 
     function applyTheme(theme) {
@@ -1116,7 +1147,10 @@
     function initTheme() {
       const theme = localStorage.getItem(STORAGE_KEYS.theme) || "default";
       applyTheme(theme);
-      qs("style-select").addEventListener("change", e => applyTheme(e.target.value));
+      qs("style-select").addEventListener("change", e => {
+        applyTheme(e.target.value);
+        saveSettings();
+      });
     }
 
     function search(input, template) {
@@ -1321,10 +1355,7 @@
 
     function closeTab(id) {
       if (tabs.length === 1) {
-        tabs[0] = { ...tabs[0], title: "New Tab", url: loadSettings().homeUrl };
-        activeTabId = tabs[0].id;
-        saveTabs();
-        navigateActiveTab(tabs[0].url);
+        exitProxy();
         return;
       }
 
@@ -1481,13 +1512,13 @@
       document.body.classList.toggle("topbar-hidden");
       const hidden = document.body.classList.contains("topbar-hidden");
       localStorage.setItem(STORAGE_KEYS.topbarHidden, hidden ? "1" : "0");
-      qs("topbar-floating-btn").textContent = hidden ? "⬇ Show Bar" : "⬆ Hide Bar";
+      qs("topbar-floating-btn").textContent = hidden ? "Show Bar" : "Hide Bar";
     }
 
     function applyTopbarState() {
       const hidden = localStorage.getItem(STORAGE_KEYS.topbarHidden) === "1";
       document.body.classList.toggle("topbar-hidden", hidden);
-      qs("topbar-floating-btn").textContent = hidden ? "⬇ Show Bar" : "⬆ Hide Bar";
+      qs("topbar-floating-btn").textContent = hidden ? "Show Bar" : "Hide Bar";
     }
 
     async function toggleCompactMode() {
@@ -1517,11 +1548,18 @@
 
     window.exitProxy = function () {
       document.body.style.overflow = "auto";
+      document.body.classList.remove("compact-browser");
+      localStorage.setItem(STORAGE_KEYS.compactMode, "0");
       qs("proxy-overlay").style.display = "none";
       const f = document.getElementById("sj-frame");
       if (f) f.remove();
       qs("sj-address").value = "";
       qs("proxy-nav-input").value = "";
+      try {
+        if (document.fullscreenElement && document.exitFullscreen) {
+          document.exitFullscreen();
+        }
+      } catch {}
     };
 
     function escapeHtml(str) {
@@ -1692,6 +1730,35 @@
       }
     }
 
+    function startSportsTimer() {
+      if (sportsTimerInterval) clearInterval(sportsTimerInterval);
+      sportsSecondsLeft = 60;
+      qs("sports-timer").textContent = sportsSecondsLeft;
+
+      sportsTimerInterval = setInterval(async () => {
+        sportsSecondsLeft--;
+        if (sportsSecondsLeft <= 0) {
+          const sportsMode = localStorage.getItem(STORAGE_KEYS.sportsMode) || "all";
+          await setSportsMode(sportsMode);
+          sportsSecondsLeft = 60;
+        }
+        qs("sports-timer").textContent = sportsSecondsLeft;
+      }, 1000);
+    }
+
+    function openBlankPageIfEnabled() {
+      const settings = loadSettings();
+      if (settings.blankMode !== "on") return;
+      const newWin = window.open("about:blank", "_blank");
+      if (!newWin) return;
+      newWin.document.write(`
+        <title>Loading...</title>
+        <style>html,body,iframe{margin:0;padding:0;width:100%;height:100%;border:0;overflow:hidden;background:#fff;}</style>
+        <iframe src="${settings.blankPageUrl}"></iframe>
+      `);
+      newWin.document.close();
+    }
+
     window.addEventListener("load", async () => {
       const form = qs("sj-form");
       const address = qs("sj-address");
@@ -1703,17 +1770,23 @@
       qs("home-url").value = settings.homeUrl;
       qs("search-engine-input").value = settings.searchEngine;
       qs("bookmark-display-select").value = settings.bookmarkDisplay;
+      qs("blank-mode-select").value = settings.blankMode;
+      qs("blank-page-url").value = settings.blankPageUrl;
+      qs("cloak-select").value = settings.cloak;
       searchEngine.value = settings.searchEngine;
 
       initTheme();
       applyTopbarState();
       applyCompactMode();
+      applyCloak(settings.cloak);
+      bindAutoSaveSettings();
       loadTabs();
       renderTabs();
       renderSavedTabsPreview();
       renderBookmarks();
       renderHomeBookmarksPreview();
       renderBookmarkBar();
+      openBlankPageIfEnabled();
 
       address.disabled = false;
       address.placeholder = "Search or enter URL...";
@@ -1721,9 +1794,14 @@
 
       const sportsMode = localStorage.getItem(STORAGE_KEYS.sportsMode) || "all";
       setSportsMode(sportsMode);
+      startSportsTimer();
 
       document.querySelectorAll("#sports-type-buttons button").forEach(button => {
-        button.addEventListener("click", () => setSportsMode(button.dataset.mode));
+        button.addEventListener("click", () => {
+          setSportsMode(button.dataset.mode);
+          sportsSecondsLeft = 60;
+          qs("sports-timer").textContent = sportsSecondsLeft;
+        });
       });
 
       document.querySelectorAll("#quick-links .chip-btn").forEach(btn => {
@@ -1766,79 +1844,7 @@
           showError(err.message || err.toString());
         }
       });
-
-      const logsClosed = localStorage.getItem(STORAGE_KEYS.logsClosed) === "1";
-      const logsMinimized = localStorage.getItem(STORAGE_KEYS.logsMinimized) === "1";
-      if (logsClosed) qs("logs-window").style.display = "none";
-      if (logsMinimized) {
-        qs("update-logs-frame").style.height = "0px";
-        isMinimized = true;
-      }
-
-      const savedPos = loadJSON(STORAGE_KEYS.logsPos, null);
-      if (savedPos) {
-        xOffset = savedPos.x || 0;
-        yOffset = savedPos.y || 0;
-        setTranslate(xOffset, yOffset, qs("logs-window"));
-      }
     });
-
-    // Logs drag
-    const logsWindow = document.getElementById("logs-window");
-    const logsHeader = document.getElementById("logs-header");
-    let isDragging = false, currentX, currentY, initialX, initialY, xOffset = 0, yOffset = 0;
-
-    logsHeader.addEventListener("mousedown", dragStart);
-    document.addEventListener("mouseup", dragEnd);
-    document.addEventListener("mousemove", drag);
-
-    function dragStart(e) {
-      initialX = e.clientX - xOffset;
-      initialY = e.clientY - yOffset;
-      if (e.target === logsHeader || e.target.parentNode === logsHeader) isDragging = true;
-    }
-
-    function dragEnd() {
-      initialX = currentX;
-      initialY = currentY;
-      isDragging = false;
-      saveJSON(STORAGE_KEYS.logsPos, { x: xOffset, y: yOffset });
-    }
-
-    function drag(e) {
-      if (isDragging) {
-        e.preventDefault();
-        currentX = e.clientX - initialX;
-        currentY = e.clientY - initialY;
-        xOffset = currentX;
-        yOffset = currentY;
-        setTranslate(currentX, currentY, logsWindow);
-      }
-    }
-
-    function setTranslate(xPos, yPos, el) {
-      el.style.transform = `translate3d(${xPos}px, ${yPos}px, 0)`;
-    }
-
-    const logsFrame = document.getElementById("update-logs-frame");
-    let isMinimized = false;
-
-    window.toggleLogs = function () {
-      if (!isMinimized) {
-        logsFrame.style.height = "0px";
-        isMinimized = true;
-        localStorage.setItem(STORAGE_KEYS.logsMinimized, "1");
-      } else {
-        logsFrame.style.height = "300px";
-        isMinimized = false;
-        localStorage.setItem(STORAGE_KEYS.logsMinimized, "0");
-      }
-    };
-
-    window.closeLogs = function () {
-      logsWindow.style.display = "none";
-      localStorage.setItem(STORAGE_KEYS.logsClosed, "1");
-    };
   </script>
 </body>
-</html> 
+</html>
