@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DoxyEdu</title>
+  <title>mad</title>
 
   <script src="/scram/scramjet.all.js"></script>
   <script src="/baremux/index.js"></script>
@@ -44,9 +44,14 @@
       --border: #dbe3ef;
       --shadow: 0 10px 25px rgba(0,0,0,0.08);
       --radius: 16px;
+      --topbar-height: 72px;
     }
 
     * { box-sizing: border-box; }
+
+    html {
+      scroll-behavior: smooth;
+    }
 
     body {
       font-family: Inter, Arial, sans-serif;
@@ -60,6 +65,10 @@
 
     a { color: inherit; }
 
+    button, input, select, .tab, .news-card, .bookmark-item, .list-links a, .chip-btn, .panel, .hero-card, .drawer {
+      transition: all .22s ease;
+    }
+
     .topbar {
       position: sticky;
       top: 0;
@@ -69,9 +78,35 @@
       justify-content: space-between;
       gap: 12px;
       padding: 14px 22px;
+      min-height: var(--topbar-height);
       background: rgba(255,255,255,0.75);
       backdrop-filter: blur(10px);
       border-bottom: 1px solid var(--border);
+      transform: translateY(0);
+      transition: transform .3s ease, background .25s ease, border-color .25s ease;
+    }
+
+    body.topbar-hidden .topbar {
+      transform: translateY(calc(-1 * var(--topbar-height) - 12px));
+    }
+
+    .topbar-toggle-floating {
+      position: fixed;
+      top: 10px;
+      right: 14px;
+      z-index: 10050;
+      border: 1px solid var(--border);
+      background: var(--card);
+      color: var(--text);
+      border-radius: 12px;
+      padding: 10px 12px;
+      box-shadow: var(--shadow);
+      cursor: pointer;
+      display: none;
+    }
+
+    body.topbar-hidden .topbar-toggle-floating {
+      display: block;
     }
 
     .brand {
@@ -80,12 +115,7 @@
       gap: 12px;
       font-weight: 800;
       color: var(--primary);
-    }
-
-    .brand img {
-      width: 34px;
-      height: 34px;
-      object-fit: contain;
+      font-size: 1.1rem;
     }
 
     .nav-links {
@@ -114,6 +144,7 @@
     .page {
       width: min(1150px, 92%);
       margin: 28px auto;
+      animation: fadeUp .35s ease;
     }
 
     .hero {
@@ -146,14 +177,6 @@
       border-radius: 50%;
     }
 
-    .logo-img {
-      width: 88px;
-      height: 88px;
-      object-fit: contain;
-      display: block;
-      margin-bottom: 18px;
-    }
-
     h1 {
       margin: 0 0 10px;
       font-size: 2.3rem;
@@ -173,7 +196,7 @@
       margin-top: 18px;
     }
 
-    #sj-address, #proxy-nav-input, #bookmark-name, #bookmark-url, #home-url, #search-engine-input {
+    #sj-address, #proxy-nav-input, #bookmark-name, #bookmark-url, #home-url, #search-engine-input, #tab-rename-input {
       flex: 1;
       min-width: 240px;
       padding: 13px 14px;
@@ -185,12 +208,12 @@
       font-size: 15px;
     }
 
-    #sj-address:focus, #proxy-nav-input:focus, #bookmark-name:focus, #bookmark-url:focus, #home-url:focus, #search-engine-input:focus {
+    #sj-address:focus, #proxy-nav-input:focus, #bookmark-name:focus, #bookmark-url:focus, #home-url:focus, #search-engine-input:focus, #tab-rename-input:focus {
       border-color: var(--primary);
       box-shadow: 0 0 0 3px rgba(37,99,235,.12);
     }
 
-    .primary-btn, .ghost-btn, .chip-btn {
+    .primary-btn, .ghost-btn, .chip-btn, .icon-btn {
       border: none;
       border-radius: 12px;
       padding: 12px 16px;
@@ -205,12 +228,20 @@
 
     .primary-btn:hover { filter: brightness(1.03); }
 
-    .ghost-btn {
+    .ghost-btn, .icon-btn {
       background: #eef4ff;
       color: var(--primary);
     }
 
-    .ghost-btn:hover { background: #e3edff; }
+    .ghost-btn:hover, .icon-btn:hover { background: #e3edff; }
+
+    .icon-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 12px;
+      line-height: 1;
+    }
 
     .chip-row {
       display: flex;
@@ -264,6 +295,7 @@
     .list-links a:hover {
       border-color: var(--primary);
       color: var(--primary);
+      transform: translateY(-1px);
     }
 
     .grid {
@@ -283,6 +315,7 @@
       justify-content: space-between;
       gap: 12px;
       margin-bottom: 14px;
+      flex-wrap: wrap;
     }
 
     .section-head h3 {
@@ -316,6 +349,7 @@
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
       gap: 14px;
+      animation: fadeUp .25s ease;
     }
 
     .news-card {
@@ -370,6 +404,7 @@
     .score-list {
       display: grid;
       gap: 12px;
+      animation: fadeUp .25s ease;
     }
 
     .score-card {
@@ -403,6 +438,31 @@
       border-radius: 12px;
     }
 
+    .bookmark-bar {
+      display: none;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 16px;
+      padding-top: 14px;
+      border-top: 1px solid var(--border);
+      animation: fadeUp .25s ease;
+    }
+
+    .bookmark-pill {
+      border: 1px solid var(--border);
+      background: #f8fafc;
+      color: var(--text);
+      border-radius: 999px;
+      padding: 9px 12px;
+      cursor: pointer;
+      font-weight: 700;
+    }
+
+    .bookmark-pill:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
     /* PROXY OVERLAY */
     #proxy-overlay {
       position: fixed;
@@ -412,6 +472,11 @@
       display: none;
       flex-direction: column;
       overflow: hidden;
+      animation: fadeIn .22s ease;
+    }
+
+    body.theme-midnight #proxy-overlay {
+      background: #0a0f1a;
     }
 
     .proxy-tabs {
@@ -425,12 +490,17 @@
       flex-shrink: 0;
     }
 
+    body.theme-midnight .proxy-tabs {
+      background: #111827;
+      border-bottom-color: #233044;
+    }
+
     .tab {
       display: inline-flex;
       align-items: center;
       gap: 8px;
       min-width: 140px;
-      max-width: 220px;
+      max-width: 240px;
       padding: 9px 12px;
       border: 1px solid #bfd0e6;
       background: #f7faff;
@@ -442,6 +512,18 @@
     .tab.active {
       background: white;
       border-color: #8bb4ff;
+      transform: translateY(-1px);
+    }
+
+    body.theme-midnight .tab {
+      background: #0f172a;
+      border-color: #263246;
+      color: #e5e7eb;
+    }
+
+    body.theme-midnight .tab.active {
+      background: #172033;
+      border-color: #60a5fa;
     }
 
     .tab-title {
@@ -451,12 +533,13 @@
       font-weight: 700;
     }
 
-    .tab-close {
+    .tab-close, .tab-rename {
       border: none;
       background: transparent;
       cursor: pointer;
       color: #64748b;
       font-weight: 700;
+      padding: 0;
     }
 
     .tab-add {
@@ -468,6 +551,11 @@
       font-weight: 800;
     }
 
+    body.theme-midnight .tab-add {
+      background: #172033;
+      color: #e5e7eb;
+    }
+
     .proxy-bar {
       min-height: 56px;
       background: white;
@@ -477,12 +565,19 @@
       padding: 10px 14px;
       border-bottom: 1px solid #d9e3ef;
       flex-shrink: 0;
+      flex-wrap: wrap;
+    }
+
+    body.theme-midnight .proxy-bar {
+      background: #0f172a;
+      border-bottom-color: #223146;
     }
 
     .proxy-bar-left, .proxy-bar-right {
       display: flex;
       align-items: center;
       gap: 8px;
+      flex-wrap: wrap;
     }
 
     #proxy-nav-form {
@@ -497,6 +592,7 @@
       height: calc(100% - 112px);
       background: white;
       display: block;
+      animation: fadeIn .2s ease;
     }
 
     /* drawers */
@@ -514,6 +610,7 @@
       z-index: 10010;
       display: none;
       padding: 16px;
+      animation: fadeUp .22s ease;
     }
 
     .drawer h4 {
@@ -567,6 +664,13 @@
       color: var(--muted);
     }
 
+    .setting-inline {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
     /* logs */
     #logs-window {
       position: fixed;
@@ -614,16 +718,48 @@
 
     /* themes */
     body.theme-midnight {
-      --bg: #0b1220;
-      --bg2: #131c2f;
-      --card: #111827;
+      --bg: #020617;
+      --bg2: #0f172a;
+      --card: #0f172a;
       --text: #e5e7eb;
       --muted: #94a3b8;
       --primary: #60a5fa;
       --primary2: #3b82f6;
-      --border: #243041;
-      --shadow: 0 10px 25px rgba(0,0,0,0.35);
+      --border: #223146;
+      --shadow: 0 10px 25px rgba(0,0,0,0.45);
     }
+
+    body.theme-midnight .topbar,
+    body.theme-midnight .drawer,
+    body.theme-midnight #logs-window,
+    body.theme-midnight .news-card,
+    body.theme-midnight .score-card,
+    body.theme-midnight .bookmark-item,
+    body.theme-midnight .list-links a,
+    body.theme-midnight #sj-address,
+    body.theme-midnight #proxy-nav-input,
+    body.theme-midnight #bookmark-name,
+    body.theme-midnight #bookmark-url,
+    body.theme-midnight #home-url,
+    body.theme-midnight #search-engine-input,
+    body.theme-midnight #tab-rename-input,
+    body.theme-midnight .segmented button,
+    body.theme-midnight .bookmark-pill,
+    body.theme-midnight .topbar-toggle-floating {
+      background-color: #0f172a;
+      color: #e5e7eb;
+    }
+
+    body.theme-midnight #sj-address,
+    body.theme-midnight #proxy-nav-input,
+    body.theme-midnight #bookmark-name,
+    body.theme-midnight #bookmark-url,
+    body.theme-midnight #home-url,
+    body.theme-midnight #search-engine-input,
+    body.theme-midnight #tab-rename-input {
+      background: #111827;
+    }
+
     body.theme-forest {
       --bg: #eef7f0;
       --bg2: #dfeee4;
@@ -634,6 +770,7 @@
       --primary2: #276749;
       --border: #d2e6d8;
     }
+
     body.theme-sunset {
       --bg: #fff3eb;
       --bg2: #ffe4d6;
@@ -645,6 +782,54 @@
       --border: #f2d6c8;
     }
 
+    body.theme-lavender {
+      --bg: #f7f3ff;
+      --bg2: #eee7ff;
+      --card: #ffffff;
+      --text: #312e46;
+      --muted: #756d8c;
+      --primary: #7c3aed;
+      --primary2: #6d28d9;
+      --border: #e2d8ff;
+    }
+
+    body.theme-rose {
+      --bg: #fff1f5;
+      --bg2: #ffe4ec;
+      --card: #ffffff;
+      --text: #3f1d2e;
+      --muted: #8d5f76;
+      --primary: #e11d48;
+      --primary2: #be123c;
+      --border: #f6cede;
+    }
+
+    body.compact-browser .page {
+      display: none;
+    }
+
+    body.compact-browser #proxy-overlay {
+      display: flex !important;
+      inset: 0;
+      z-index: 9999;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
     @media (max-width: 920px) {
       .hero, .grid {
         grid-template-columns: 1fr;
@@ -654,16 +839,17 @@
         flex-direction: column;
       }
       #sj-frame {
-        height: calc(100% - 122px);
+        height: calc(100% - 150px);
       }
     }
   </style>
 </head>
 <body>
+  <button class="topbar-toggle-floating" id="topbar-floating-btn" onclick="toggleTopbar()">⬇ Show Bar</button>
+
   <div class="topbar">
     <div class="brand">
-      <img src="logo.svg" alt="DoxyEdu">
-      <span>DoxyEdu</span>
+      <span>mad</span>
     </div>
     <div class="nav-links">
       <a href="/">Home</a>
@@ -678,9 +864,8 @@
   <div class="page">
     <section class="hero">
       <div class="hero-card" id="main-menu">
-        <img src="logo.svg" alt="DoxyEdu" class="logo-img">
-        <h1>Fast. Clean. Private browsing.</h1>
-        <p>Search the web, open links in the proxy, save bookmarks, and keep everything synced in your browser.</p>
+        <h1>Fast. Clean. Private.</h1>
+        <p>Search the web, open links in the proxy, save bookmarks, rename tabs, and customize your browser experience.</p>
 
         <form id="sj-form">
           <input id="sj-search-engine" value="https://www.google.com/search?q=%s" type="hidden" />
@@ -697,6 +882,7 @@
           <button class="chip-btn" type="button" data-url="https://crazygames.com">CrazyGames</button>
         </div>
 
+        <div id="bookmark-bar" class="bookmark-bar"></div>
         <div id="error-msg"></div>
       </div>
 
@@ -713,6 +899,7 @@
             <a href="#" onclick="toggleBookmarks(); return false;">Open Bookmarks</a>
             <a href="#" onclick="toggleSettings(); return false;">Open Settings</a>
             <a href="#" onclick="openQuickNav(loadSettings().homeUrl || 'https://google.com'); return false;">Open Home Page</a>
+            <a href="#" onclick="toggleCompactMode(); return false;">Toggle Browser Focus Mode</a>
           </div>
         </div>
       </aside>
@@ -722,14 +909,18 @@
       <div class="panel">
         <div class="section-head">
           <h3>Sports Center</h3>
-          <div class="segmented">
-            <button id="sports-news-btn" class="active" type="button">Sports News</button>
-            <button id="sports-scores-btn" type="button">Scores</button>
+          <div class="segmented" id="sports-type-buttons">
+            <button type="button" data-mode="all" class="active">All</button>
+            <button type="button" data-mode="news">News</button>
+            <button type="button" data-mode="scores">Scores</button>
+            <button type="button" data-mode="nba">NBA</button>
+            <button type="button" data-mode="nfl">NFL</button>
+            <button type="button" data-mode="mlb">MLB</button>
           </div>
         </div>
         <div id="sports-content">
           <div id="learning-news" class="news-grid">
-            <p style="width:100%; text-align:center; color: var(--muted);">Loading sports news...</p>
+            <p style="width:100%; text-align:center; color: var(--muted);">Loading sports content...</p>
           </div>
         </div>
       </div>
@@ -753,10 +944,11 @@
 
     <div class="proxy-bar">
       <div class="proxy-bar-left">
-        <button class="ghost-btn" onclick="exitProxy()">Exit</button>
-        <button class="ghost-btn" onclick="toggleBookmarks()">Bookmarks</button>
-        <button class="ghost-btn" onclick="bookmarkCurrentTab()">★ Save</button>
-        <button class="ghost-btn" onclick="toggleSettings()">Settings</button>
+        <button class="icon-btn" onclick="exitProxy()" title="Exit">⨯ Exit</button>
+        <button class="icon-btn" onclick="toggleBookmarks()" title="Bookmarks">🔖 Bookmarks</button>
+        <button class="icon-btn" onclick="bookmarkCurrentTab()" title="Save">💾 Save</button>
+        <button class="icon-btn" onclick="toggleSettings()" title="Settings">⚙ Settings</button>
+        <button class="icon-btn" onclick="toggleCompactMode()" title="Focus Mode">⛶ Focus</button>
       </div>
 
       <form id="proxy-nav-form">
@@ -765,7 +957,8 @@
       </form>
 
       <div class="proxy-bar-right">
-        <button class="ghost-btn" onclick="reloadActiveTab()">Reload</button>
+        <button class="icon-btn" onclick="reloadActiveTab()" title="Reload">↻ Reload</button>
+        <button class="icon-btn" onclick="toggleTopbar()" title="Toggle Top Bar">⬆ Bar</button>
       </div>
     </div>
   </div>
@@ -799,6 +992,8 @@
         <option value="midnight">Midnight</option>
         <option value="forest">Forest</option>
         <option value="sunset">Sunset</option>
+        <option value="lavender">Lavender</option>
+        <option value="rose">Rose</option>
       </select>
     </div>
 
@@ -810,6 +1005,22 @@
     <div class="setting-row">
       <label>Search Engine Template</label>
       <input id="search-engine-input" type="text" placeholder="https://www.google.com/search?q=%s">
+    </div>
+
+    <div class="setting-row">
+      <label>Bookmark Display</label>
+      <select id="bookmark-display-select">
+        <option value="folder">Inside bookmark button/folder</option>
+        <option value="bar">Show bookmark bar on home page</option>
+      </select>
+    </div>
+
+    <div class="setting-row">
+      <label>Rename Active Tab</label>
+      <input id="tab-rename-input" type="text" placeholder="New tab name">
+      <div class="setting-inline">
+        <button class="ghost-btn" type="button" onclick="renameActiveTab()">Rename Tab</button>
+      </div>
     </div>
 
     <div class="bookmark-row">
@@ -837,20 +1048,23 @@
     let connection = null;
 
     const STORAGE_KEYS = {
-      theme: "doxy-theme",
-      bookmarks: "doxy-bookmarks",
-      tabs: "doxy-tabs",
-      activeTab: "doxy-active-tab",
-      settings: "doxy-settings",
-      logsClosed: "doxy-logs-closed",
-      logsMinimized: "doxy-logs-minimized",
-      logsPos: "doxy-logs-pos",
-      sportsMode: "doxy-sports-mode"
+      theme: "mad-theme",
+      bookmarks: "mad-bookmarks",
+      tabs: "mad-tabs",
+      activeTab: "mad-active-tab",
+      settings: "mad-settings",
+      logsClosed: "mad-logs-closed",
+      logsMinimized: "mad-logs-minimized",
+      logsPos: "mad-logs-pos",
+      sportsMode: "mad-sports-mode",
+      topbarHidden: "mad-topbar-hidden",
+      compactMode: "mad-compact-mode"
     };
 
     const DEFAULT_SETTINGS = {
       homeUrl: "https://google.com",
-      searchEngine: "https://www.google.com/search?q=%s"
+      searchEngine: "https://www.google.com/search?q=%s",
+      bookmarkDisplay: "folder"
     };
 
     let tabs = [];
@@ -878,19 +1092,23 @@
     function saveSettings() {
       const settings = {
         homeUrl: qs("home-url").value.trim() || DEFAULT_SETTINGS.homeUrl,
-        searchEngine: qs("search-engine-input").value.trim() || DEFAULT_SETTINGS.searchEngine
+        searchEngine: qs("search-engine-input").value.trim() || DEFAULT_SETTINGS.searchEngine,
+        bookmarkDisplay: qs("bookmark-display-select").value || DEFAULT_SETTINGS.bookmarkDisplay
       };
       saveJSON(STORAGE_KEYS.settings, settings);
       qs("sj-search-engine").value = settings.searchEngine;
-      alert("Settings saved.");
       renderHomeBookmarksPreview();
+      renderBookmarkBar();
+      alert("Settings saved.");
     }
 
     function applyTheme(theme) {
-      document.body.classList.remove("theme-midnight", "theme-forest", "theme-sunset");
+      document.body.classList.remove("theme-midnight", "theme-forest", "theme-sunset", "theme-lavender", "theme-rose");
       if (theme === "midnight") document.body.classList.add("theme-midnight");
       if (theme === "forest") document.body.classList.add("theme-forest");
       if (theme === "sunset") document.body.classList.add("theme-sunset");
+      if (theme === "lavender") document.body.classList.add("theme-lavender");
+      if (theme === "rose") document.body.classList.add("theme-rose");
       localStorage.setItem(STORAGE_KEYS.theme, theme);
       qs("style-select").value = theme;
     }
@@ -959,6 +1177,7 @@
       saveJSON(STORAGE_KEYS.bookmarks, items);
       renderBookmarks();
       renderHomeBookmarksPreview();
+      renderBookmarkBar();
     }
 
     function addBookmark(name, url) {
@@ -1005,6 +1224,29 @@
       }
       wrap.innerHTML = items.map(item => `
         <a href="#" onclick="openQuickNav('${encodeURIComponent(item.url)}', true); return false;">${escapeHtml(item.name)}</a>
+      `).join("");
+    }
+
+    function renderBookmarkBar() {
+      const settings = loadSettings();
+      const bar = qs("bookmark-bar");
+      const items = getBookmarks().slice(0, 10);
+
+      if (settings.bookmarkDisplay !== "bar") {
+        bar.style.display = "none";
+        bar.innerHTML = "";
+        return;
+      }
+
+      if (!items.length) {
+        bar.style.display = "flex";
+        bar.innerHTML = `<button class="bookmark-pill" onclick="toggleBookmarks()">No bookmarks yet</button>`;
+        return;
+      }
+
+      bar.style.display = "flex";
+      bar.innerHTML = items.map(item => `
+        <button class="bookmark-pill" onclick="openQuickNav('${encodeURIComponent(item.url)}', true)">${escapeHtml(item.name)}</button>
       `).join("");
     }
 
@@ -1116,13 +1358,29 @@
       saveTabs();
     }
 
+    function renameActiveTab() {
+      const input = qs("tab-rename-input").value.trim();
+      if (!input || !activeTabId) return;
+      updateTab(activeTabId, { title: input });
+      qs("tab-rename-input").value = "";
+    }
+
+    function renameTabPrompt(id) {
+      const tab = tabs.find(t => t.id === id);
+      if (!tab) return;
+      const name = prompt("Rename tab:", tab.title || "New Tab");
+      if (name === null) return;
+      updateTab(id, { title: name.trim() || "New Tab" });
+    }
+
     function renderTabs() {
       const wrap = qs("proxy-tabs");
       const addBtn = `<button class="tab-add" type="button" onclick="addTab()">＋ New Tab</button>`;
       const html = tabs.map(tab => `
         <div class="tab ${tab.id === activeTabId ? "active" : ""}" onclick="switchTab('${tab.id}')">
           <span class="tab-title">${escapeHtml(tab.title || "New Tab")}</span>
-          <button class="tab-close" onclick="event.stopPropagation(); closeTab('${tab.id}')">×</button>
+          <button class="tab-rename" title="Rename" onclick="event.stopPropagation(); renameTabPrompt('${tab.id}')">✎</button>
+          <button class="tab-close" title="Close" onclick="event.stopPropagation(); closeTab('${tab.id}')">×</button>
         </div>
       `).join("");
       wrap.innerHTML = addBtn + html;
@@ -1145,7 +1403,7 @@
 
       updateTab(activeTabId, {
         url,
-        title: deriveTitle(url)
+        title: tabs.find(t => t.id === activeTabId)?.title === "New Tab" ? deriveTitle(url) : (tabs.find(t => t.id === activeTabId)?.title || deriveTitle(url))
       });
 
       qs("proxy-nav-input").value = url;
@@ -1175,8 +1433,8 @@
       try {
         await ensureProxyReady();
         if (!tabs.length) loadTabs();
-
         if (!activeTabId) activeTabId = tabs[0].id;
+
         if (!direct) {
           updateTab(activeTabId, { url, title: deriveTitle(url) });
           await navigateActiveTab(url);
@@ -1219,6 +1477,44 @@
       qs("error-msg").style.display = "none";
     }
 
+    function toggleTopbar() {
+      document.body.classList.toggle("topbar-hidden");
+      const hidden = document.body.classList.contains("topbar-hidden");
+      localStorage.setItem(STORAGE_KEYS.topbarHidden, hidden ? "1" : "0");
+      qs("topbar-floating-btn").textContent = hidden ? "⬇ Show Bar" : "⬆ Hide Bar";
+    }
+
+    function applyTopbarState() {
+      const hidden = localStorage.getItem(STORAGE_KEYS.topbarHidden) === "1";
+      document.body.classList.toggle("topbar-hidden", hidden);
+      qs("topbar-floating-btn").textContent = hidden ? "⬇ Show Bar" : "⬆ Hide Bar";
+    }
+
+    async function toggleCompactMode() {
+      const enabled = !document.body.classList.contains("compact-browser");
+      document.body.classList.toggle("compact-browser", enabled);
+      localStorage.setItem(STORAGE_KEYS.compactMode, enabled ? "1" : "0");
+
+      if (enabled) {
+        try {
+          if (document.fullscreenElement == null && document.documentElement.requestFullscreen) {
+            await document.documentElement.requestFullscreen();
+          }
+        } catch {}
+      } else {
+        try {
+          if (document.fullscreenElement && document.exitFullscreen) {
+            await document.exitFullscreen();
+          }
+        } catch {}
+      }
+    }
+
+    function applyCompactMode() {
+      const enabled = localStorage.getItem(STORAGE_KEYS.compactMode) === "1";
+      document.body.classList.toggle("compact-browser", enabled);
+    }
+
     window.exitProxy = function () {
       document.body.style.overflow = "auto";
       qs("proxy-overlay").style.display = "none";
@@ -1238,93 +1534,162 @@
       }[s]));
     }
 
-    async function loadSportsNews() {
-      const container = qs("learning-news");
-      container.innerHTML = `<p style="width:100%;text-align:center;color:var(--muted);">Loading sports news...</p>`;
-
-      try {
-        const rssUrl = "https://www.espn.com/espn/rss/news";
-        const res = await fetch(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(rssUrl)}`);
-        const data = await res.json();
-
-        if (!data.items || !data.items.length) throw new Error("No sports news found.");
-
-        container.innerHTML = "";
-        data.items.slice(0, 8).forEach(item => {
-          let imgUrl = item.thumbnail || "/placeholder.jpg";
-          if (!imgUrl || imgUrl === "") imgUrl = "/placeholder.jpg";
-          const date = item.pubDate ? new Date(item.pubDate).toLocaleDateString() : "";
-
-          const card = document.createElement("a");
-          card.className = "news-card";
-          card.href = "#";
-          card.onclick = (e) => {
-            e.preventDefault();
-            openQuickNav(item.link);
-          };
-
-          card.innerHTML = `
-            <img src="${imgUrl}" class="news-thumb" alt="News" onerror="this.src='/placeholder.jpg'">
-            <div class="news-content">
-              <div class="news-title">${escapeHtml(item.title)}</div>
-              <div class="news-date">${escapeHtml(date)}</div>
-            </div>
-          `;
-          container.appendChild(card);
-        });
-      } catch (e) {
-        container.innerHTML = `<p style="color:var(--muted);">Failed to load sports news.</p>`;
+    const SPORT_CONFIG = {
+      nba: {
+        label: "NBA",
+        scoreboard: "https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard",
+        rss: "https://www.espn.com/espn/rss/nba/news"
+      },
+      nfl: {
+        label: "NFL",
+        scoreboard: "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard",
+        rss: "https://www.espn.com/espn/rss/nfl/news"
+      },
+      mlb: {
+        label: "MLB",
+        scoreboard: "https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard",
+        rss: "https://www.espn.com/espn/rss/mlb/news"
       }
+    };
+
+    async function fetchRssItems(rssUrl, limit = 6) {
+      const res = await fetch(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(rssUrl)}`);
+      const data = await res.json();
+      return (data.items || []).slice(0, limit);
     }
 
-    async function loadSportsScores() {
-      const container = qs("learning-news");
-      container.innerHTML = `<p style="width:100%;text-align:center;color:var(--muted);">Loading scores...</p>`;
-
-      try {
-        const res = await fetch("https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard");
-        const data = await res.json();
-
-        if (!data.events || !data.events.length) throw new Error("No scores found.");
-
-        container.innerHTML = `<div class="score-list"></div>`;
-        const list = container.firstElementChild;
-
-        data.events.slice(0, 10).forEach(event => {
-          const c = event.competitions?.[0]?.competitors || [];
-          const home = c.find(x => x.homeAway === "home");
-          const away = c.find(x => x.homeAway === "away");
-          const status = event.status?.type?.description || "Scheduled";
-          const league = data.leagues?.[0]?.name || "League";
-          const date = event.date ? new Date(event.date).toLocaleString() : "";
-
-          const div = document.createElement("div");
-          div.className = "score-card";
-          div.innerHTML = `
-            <div class="score-top">
-              <span>${escapeHtml(league)}</span>
-              <span>${escapeHtml(status)}</span>
-            </div>
-            <div class="score-match">
-              ${escapeHtml(away?.team?.shortDisplayName || "Away")} ${escapeHtml(away?.score || "0")}
-              -
-              ${escapeHtml(home?.score || "0")} ${escapeHtml(home?.team?.shortDisplayName || "Home")}
-            </div>
-            <div class="news-date" style="margin-top:8px;">${escapeHtml(date)}</div>
-          `;
-          list.appendChild(div);
-        });
-      } catch (e) {
-        container.innerHTML = `<p style="color:var(--muted);">Failed to load scores.</p>`;
-      }
+    async function fetchScoreItems(apiUrl, limit = 6) {
+      const res = await fetch(apiUrl);
+      const data = await res.json();
+      return (data.events || []).slice(0, limit).map(event => ({
+        league: data.leagues?.[0]?.name || "League",
+        status: event.status?.type?.description || "Scheduled",
+        date: event.date ? new Date(event.date).toLocaleString() : "",
+        competitors: event.competitions?.[0]?.competitors || []
+      }));
     }
 
-    function setSportsMode(mode) {
+    function renderNewsCards(items) {
+      const container = qs("learning-news");
+      if (!items.length) {
+        container.innerHTML = `<p style="color:var(--muted);">No news found.</p>`;
+        return;
+      }
+
+      container.className = "news-grid";
+      container.innerHTML = "";
+      items.forEach(item => {
+        let imgUrl = item.thumbnail || "/placeholder.jpg";
+        const date = item.pubDate ? new Date(item.pubDate).toLocaleDateString() : "";
+
+        const card = document.createElement("a");
+        card.className = "news-card";
+        card.href = "#";
+        card.onclick = (e) => {
+          e.preventDefault();
+          openQuickNav(item.link);
+        };
+
+        card.innerHTML = `
+          <img src="${imgUrl}" class="news-thumb" alt="News" onerror="this.src='/placeholder.jpg'">
+          <div class="news-content">
+            <div class="news-title">${escapeHtml(item.title)}</div>
+            <div class="news-date">${escapeHtml(date)}</div>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function renderScoreCards(items) {
+      const container = qs("learning-news");
+      if (!items.length) {
+        container.innerHTML = `<p style="color:var(--muted);">No scores found.</p>`;
+        return;
+      }
+
+      container.className = "";
+      container.innerHTML = `<div class="score-list"></div>`;
+      const list = container.firstElementChild;
+
+      items.forEach(event => {
+        const home = event.competitors.find(x => x.homeAway === "home");
+        const away = event.competitors.find(x => x.homeAway === "away");
+
+        const div = document.createElement("div");
+        div.className = "score-card";
+        div.innerHTML = `
+          <div class="score-top">
+            <span>${escapeHtml(event.league)}</span>
+            <span>${escapeHtml(event.status)}</span>
+          </div>
+          <div class="score-match">
+            ${escapeHtml(away?.team?.shortDisplayName || "Away")} ${escapeHtml(away?.score || "0")}
+            -
+            ${escapeHtml(home?.score || "0")} ${escapeHtml(home?.team?.shortDisplayName || "Home")}
+          </div>
+          <div class="news-date" style="margin-top:8px;">${escapeHtml(event.date)}</div>
+        `;
+        list.appendChild(div);
+      });
+    }
+
+    async function setSportsMode(mode) {
       localStorage.setItem(STORAGE_KEYS.sportsMode, mode);
-      qs("sports-news-btn").classList.toggle("active", mode === "news");
-      qs("sports-scores-btn").classList.toggle("active", mode === "scores");
-      if (mode === "news") loadSportsNews();
-      else loadSportsScores();
+
+      document.querySelectorAll("#sports-type-buttons button").forEach(btn => {
+        btn.classList.toggle("active", btn.dataset.mode === mode);
+      });
+
+      const container = qs("learning-news");
+      container.className = "news-grid";
+      container.innerHTML = `<p style="width:100%;text-align:center;color:var(--muted);">Loading sports content...</p>`;
+
+      try {
+        if (mode === "news") {
+          const all = await Promise.all([
+            fetchRssItems(SPORT_CONFIG.nba.rss, 3),
+            fetchRssItems(SPORT_CONFIG.nfl.rss, 3),
+            fetchRssItems(SPORT_CONFIG.mlb.rss, 3)
+          ]);
+          renderNewsCards(all.flat().slice(0, 9));
+          return;
+        }
+
+        if (mode === "scores") {
+          const all = await Promise.all([
+            fetchScoreItems(SPORT_CONFIG.nba.scoreboard, 3),
+            fetchScoreItems(SPORT_CONFIG.nfl.scoreboard, 3),
+            fetchScoreItems(SPORT_CONFIG.mlb.scoreboard, 3)
+          ]);
+          renderScoreCards(all.flat().slice(0, 9));
+          return;
+        }
+
+        if (mode === "all") {
+          const news = await fetchRssItems(SPORT_CONFIG.nba.rss, 6);
+          renderNewsCards(news);
+          return;
+        }
+
+        if (SPORT_CONFIG[mode]) {
+          const league = SPORT_CONFIG[mode];
+          const [news, scores] = await Promise.allSettled([
+            fetchRssItems(league.rss, 6),
+            fetchScoreItems(league.scoreboard, 6)
+          ]);
+
+          if (scores.status === "fulfilled" && scores.value.length) {
+            renderScoreCards(scores.value);
+          } else if (news.status === "fulfilled" && news.value.length) {
+            renderNewsCards(news.value);
+          } else {
+            container.innerHTML = `<p style="color:var(--muted);">No ${escapeHtml(league.label)} content found.</p>`;
+          }
+        }
+      } catch {
+        container.innerHTML = `<p style="color:var(--muted);">Failed to load sports content.</p>`;
+      }
     }
 
     window.addEventListener("load", async () => {
@@ -1337,24 +1702,29 @@
       const settings = loadSettings();
       qs("home-url").value = settings.homeUrl;
       qs("search-engine-input").value = settings.searchEngine;
+      qs("bookmark-display-select").value = settings.bookmarkDisplay;
       searchEngine.value = settings.searchEngine;
 
       initTheme();
+      applyTopbarState();
+      applyCompactMode();
       loadTabs();
       renderTabs();
       renderSavedTabsPreview();
       renderBookmarks();
       renderHomeBookmarksPreview();
+      renderBookmarkBar();
 
       address.disabled = false;
       address.placeholder = "Search or enter URL...";
       btn.disabled = false;
 
-      const sportsMode = localStorage.getItem(STORAGE_KEYS.sportsMode) || "news";
+      const sportsMode = localStorage.getItem(STORAGE_KEYS.sportsMode) || "all";
       setSportsMode(sportsMode);
 
-      qs("sports-news-btn").addEventListener("click", () => setSportsMode("news"));
-      qs("sports-scores-btn").addEventListener("click", () => setSportsMode("scores"));
+      document.querySelectorAll("#sports-type-buttons button").forEach(button => {
+        button.addEventListener("click", () => setSportsMode(button.dataset.mode));
+      });
 
       document.querySelectorAll("#quick-links .chip-btn").forEach(btn => {
         btn.addEventListener("click", async () => {
@@ -1471,4 +1841,4 @@
     };
   </script>
 </body>
-</html>
+</html> 
