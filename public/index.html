@@ -247,12 +247,6 @@
       line-height: 1;
     }
 
-    .icon-btn svg {
-      width: 19px;
-      height: 19px;
-      fill: currentColor;
-    }
-
     .chip-row {
       display: flex;
       flex-wrap: wrap;
@@ -468,11 +462,27 @@
       font-size: .8rem;
       color: var(--muted);
       margin-bottom: 8px;
+      flex-wrap: wrap;
     }
 
     .score-match {
       font-weight: 800;
       font-size: .95rem;
+    }
+
+    .status-live {
+      color: #dc2626;
+      font-weight: 800;
+    }
+
+    .status-final {
+      color: #059669;
+      font-weight: 800;
+    }
+
+    .status-scheduled {
+      color: #2563eb;
+      font-weight: 800;
     }
 
     #error-msg {
@@ -1076,6 +1086,7 @@
     let connection = null;
     let sportsTimerInterval = null;
     let sportsSecondsLeft = 60;
+    let currentScramFrame = null;
 
     const STORAGE_KEYS = {
       theme: "mad-theme",
@@ -1184,52 +1195,77 @@
     }
 
     function search(input, template) {
-      try { return new URL(input).toString(); } catch {}
+      const value = input.trim();
+      try { return new URL(value).toString(); } catch {}
       try {
-        const url = new URL(`http://${input}`);
+        const url = new URL(`http://${value}`);
         if (url.hostname.includes(".")) return url.toString();
       } catch {}
-      return template.replace("%s", encodeURIComponent(input));
+      return template.replace("%s", encodeURIComponent(value));
     }
 
     async function manualRegisterSW() {
-      if ("serviceWorker" in navigator) {
-        return navigator.serviceWorker.register("/scram/sw.js", { scope: "/scram/service/" });
+      if (!("serviceWorker" in navigator)) {
+        throw new Error("Service workers are not supported in this browser.");
       }
-      throw new Error("Service Workers not supported.");
+      const reg = await navigator.serviceWorker.register("/scram/sw.js", { scope: "/scram/service/" });
+      await navigator.serviceWorker.ready;
+      return reg;
     }
 
     async function ensureProxyReady() {
-      if (typeof BareMux === "undefined" || typeof $scramjetLoadController === "undefined") {
-        throw new Error("Failed to load proxy libraries.");
-      }
-
-      if (!scramjet) {
-        const { ScramjetController } = $scramjetLoadController();
-        scramjet = new ScramjetController({
-          files: {
-            wasm: "/scram/scramjet.wasm.wasm",
-            all: "/scram/scramjet.all.js",
-            sync: "/scram/scramjet.sync.js",
-          },
-        });
-        scramjet.init();
-      }
-
-      if (!connection) {
-        connection = new BareMux.BareMuxConnection("/baremux/worker.js");
-      }
-
       try {
-        if (typeof registerSW === "function") await registerSW();
-        else await manualRegisterSW();
-      } catch {
-        throw new Error("Failed to register Service Worker.");
-      }
+        if (typeof BareMux === "undefined") {
+          throw new Error("BareMux failed to load.");
+        }
 
-      const wispUrl = (location.protocol === "https:" ? "wss" : "ws") + "://" + location.host + "/wisp/";
-      if ((await connection.getTransport()) !== "/epoxy/index.mjs") {
-        await connection.setTransport("/epoxy/index.mjs", [{ wisp: wispUrl }]);
+        if (typeof $scramjetLoadController === "undefined") {
+          throw new Error("Scramjet failed to load.");
+        }
+
+        if (!scramjet) {
+          const loader = $scramjetLoadController();
+          if (!loader || !loader.ScramjetController) {
+            throw new Error("Scramjet controller missing.");
+          }
+
+          const { ScramjetController } = loader;
+          scramjet = new ScramjetController({
+            files: {
+              wasm: "/scram/scramjet.wasm.wasm",
+              all: "/scram/scramjet.all.js",
+              sync: "/scram/scramjet.sync.js"
+            }
+          });
+
+          await scramjet.init();
+        }
+
+        if (!connection) {
+          connection = new BareMux.BareMuxConnection("/baremux/worker.js");
+        }
+
+        if (typeof registerSW === "function") {
+          await registerSW();
+        } else {
+          await manualRegisterSW();
+        }
+
+        const wispUrl = `${location.protocol === "https:" ? "wss" : "ws"}://${location.host}/wisp/`;
+
+        let currentTransport = "";
+        try {
+          currentTransport = await connection.getTransport();
+        } catch {}
+
+        if (currentTransport !== "/epoxy/index.mjs") {
+          await connection.setTransport("/epoxy/index.mjs", [{ wisp: wispUrl }]);
+        }
+
+        return true;
+      } catch (err) {
+        console.error("Proxy init error:", err);
+        throw new Error("Proxy failed to start. Check /scram, /baremux, /epoxy, service worker, and /wisp routes.");
       }
     }
 
@@ -1451,7 +1487,18 @@
       `).join("");
     }
 
+    function deriveTitle(url) {
+      try {
+        const u = new URL(url);
+        return u.hostname.replace(/^www\./, "");
+      } catch {
+        return "New Tab";
+      }
+    }
+
     async function navigateActiveTab(input) {
+      await ensureProxyReady();
+
       const settings = loadSettings();
       const url = search(input, settings.searchEngine);
 
@@ -1468,35 +1515,25 @@
 
       const existingFrame = document.getElementById("sj-frame");
       if (existingFrame) existingFrame.remove();
+      currentScramFrame = null;
 
       const frame = scramjet.createFrame();
+      currentScramFrame = frame;
       frame.frame.id = "sj-frame";
       qs("proxy-overlay").appendChild(frame.frame);
-      frame.go(url);
-    }
 
-    function deriveTitle(url) {
-      try {
-        const u = new URL(url);
-        return u.hostname.replace(/^www\./, "");
-      } catch {
-        return "New Tab";
-      }
+      await frame.go(url);
     }
 
     async function openQuickNav(url, direct = false) {
       try {
-        await ensureProxyReady();
+        hideError();
         if (!tabs.length) loadTabs();
         if (!activeTabId) activeTabId = tabs[0].id;
 
-        if (!direct) {
-          updateTab(activeTabId, { url, title: deriveTitle(url) });
-          await navigateActiveTab(url);
-        } else {
-          updateTab(activeTabId, { url, title: deriveTitle(url) });
-          await navigateActiveTab(decodeURIComponent(url));
-        }
+        const decoded = direct ? decodeURIComponent(url) : url;
+        updateTab(activeTabId, { url: decoded, title: deriveTitle(decoded) });
+        await navigateActiveTab(decoded);
       } catch (err) {
         showError(err.message || String(err));
       }
@@ -1504,7 +1541,7 @@
 
     async function openInCurrentTab(encodedUrl) {
       try {
-        await ensureProxyReady();
+        hideError();
         await navigateActiveTab(decodeURIComponent(encodedUrl));
       } catch (err) {
         showError(err.message || String(err));
@@ -1515,7 +1552,7 @@
       const tab = tabs.find(t => t.id === activeTabId);
       if (!tab) return;
       try {
-        await ensureProxyReady();
+        hideError();
         await navigateActiveTab(tab.url);
       } catch (err) {
         showError(err.message || String(err));
@@ -1596,10 +1633,14 @@
       localStorage.setItem(STORAGE_KEYS.compactMode, "0");
       localStorage.setItem(STORAGE_KEYS.browserBarHidden, "0");
       qs("proxy-overlay").style.display = "none";
+
       const f = document.getElementById("sj-frame");
       if (f) f.remove();
+      currentScramFrame = null;
+
       qs("sj-address").value = "";
       qs("proxy-nav-input").value = "";
+
       try {
         if (document.fullscreenElement && document.exitFullscreen) {
           document.exitFullscreen();
@@ -1641,15 +1682,59 @@
       return (data.items || []).slice(0, limit);
     }
 
-    async function fetchScoreItems(apiUrl, limit = 6) {
-      const res = await fetch(apiUrl);
+    function formatGameStatus(event) {
+      const type = event.status?.type;
+      if (!type) return { text: "Scheduled", cls: "status-scheduled" };
+
+      if (type.state === "in") {
+        return { text: type.shortDetail || "Live", cls: "status-live" };
+      }
+      if (type.completed) {
+        return { text: "Final", cls: "status-final" };
+      }
+      return { text: type.shortDetail || "Scheduled", cls: "status-scheduled" };
+    }
+
+    function formatGameDate(dateStr) {
+      const d = new Date(dateStr);
+      return d.toLocaleDateString(undefined, {
+        month: "short",
+        day: "numeric",
+        year: "numeric"
+      });
+    }
+
+    function formatGameTime(dateStr) {
+      const d = new Date(dateStr);
+      return d.toLocaleTimeString(undefined, {
+        hour: "numeric",
+        minute: "2-digit"
+      });
+    }
+
+    async function fetchScoreItems(apiUrl, limit = 20) {
+      const res = await fetch(apiUrl, { cache: "no-store" });
       const data = await res.json();
-      return (data.events || []).slice(0, limit).map(event => ({
-        league: data.leagues?.[0]?.name || "League",
-        status: event.status?.type?.description || "Scheduled",
-        date: event.date ? new Date(event.date).toLocaleString() : "",
-        competitors: event.competitions?.[0]?.competitors || []
-      }));
+
+      return (data.events || []).slice(0, limit).map(event => {
+        const competitors = event.competitions?.[0]?.competitors || [];
+        const home = competitors.find(x => x.homeAway === "home");
+        const away = competitors.find(x => x.homeAway === "away");
+        const status = formatGameStatus(event);
+
+        return {
+          id: event.id,
+          league: data.leagues?.[0]?.name || "League",
+          statusText: status.text,
+          statusClass: status.cls,
+          date: event.date || "",
+          displayDate: event.date ? formatGameDate(event.date) : "",
+          displayTime: event.date ? formatGameTime(event.date) : "",
+          competitors,
+          home,
+          away
+        };
+      });
     }
 
     function renderNewsCards(items) {
@@ -1687,7 +1772,7 @@
     function renderScoreCards(items) {
       const container = qs("learning-news");
       if (!items.length) {
-        container.innerHTML = `<p style="color:var(--muted);">No scores found.</p>`;
+        container.innerHTML = `<p style="color:var(--muted);">No games found for today.</p>`;
         return;
       }
 
@@ -1696,22 +1781,21 @@
       const list = container.firstElementChild;
 
       items.forEach(event => {
-        const home = event.competitors.find(x => x.homeAway === "home");
-        const away = event.competitors.find(x => x.homeAway === "away");
-
         const div = document.createElement("div");
         div.className = "score-card";
         div.innerHTML = `
           <div class="score-top">
             <span>${escapeHtml(event.league)}</span>
-            <span>${escapeHtml(event.status)}</span>
+            <span class="${escapeHtml(event.statusClass)}">${escapeHtml(event.statusText)}</span>
           </div>
           <div class="score-match">
-            ${escapeHtml(away?.team?.shortDisplayName || "Away")} ${escapeHtml(away?.score || "0")}
+            ${escapeHtml(event.away?.team?.shortDisplayName || "Away")} ${escapeHtml(event.away?.score ?? "0")}
             -
-            ${escapeHtml(home?.score || "0")} ${escapeHtml(home?.team?.shortDisplayName || "Home")}
+            ${escapeHtml(event.home?.score ?? "0")} ${escapeHtml(event.home?.team?.shortDisplayName || "Home")}
           </div>
-          <div class="news-date" style="margin-top:8px;">${escapeHtml(event.date)}</div>
+          <div class="news-date" style="margin-top:8px;">
+            ${escapeHtml(event.displayDate)} • ${escapeHtml(event.displayTime)}
+          </div>
         `;
         list.appendChild(div);
       });
@@ -1740,11 +1824,12 @@
         }
 
         if (type === "scores") {
-          const scores = await fetchScoreItems(config.scoreboard, 6);
+          const scores = await fetchScoreItems(config.scoreboard, 20);
           renderScoreCards(scores);
           return;
         }
-      } catch {
+      } catch (err) {
+        console.error(err);
         container.innerHTML = `<p style="color:var(--muted);">Failed to load sports content.</p>`;
       }
     }
@@ -1797,20 +1882,20 @@
       btn.disabled = false;
 
       const sportsMode = loadJSON(STORAGE_KEYS.sportsMode, { type: "scores", league: "mlb" });
-      setSportsMode(sportsMode.type, sportsMode.league);
+      await setSportsMode(sportsMode.type, sportsMode.league);
       startSportsTimer();
 
       document.querySelectorAll("#scores-buttons button, #news-buttons button").forEach(button => {
-        button.addEventListener("click", () => {
-          setSportsMode(button.dataset.type, button.dataset.league);
+        button.addEventListener("click", async () => {
+          await setSportsMode(button.dataset.type, button.dataset.league);
           sportsSecondsLeft = 60;
           qs("sports-timer").textContent = sportsSecondsLeft;
         });
       });
 
-      document.querySelectorAll("#quick-links .chip-btn").forEach(btn => {
-        btn.addEventListener("click", async () => {
-          const url = btn.dataset.url;
+      document.querySelectorAll("#quick-links .chip-btn").forEach(chip => {
+        chip.addEventListener("click", async () => {
+          const url = chip.dataset.url;
           await openQuickNav(url);
         });
       });
@@ -1825,7 +1910,6 @@
         btn.textContent = "Loading...";
 
         try {
-          await ensureProxyReady();
           if (!tabs.length) loadTabs();
           await navigateActiveTab(val);
         } catch (err) {
@@ -1839,10 +1923,10 @@
 
       proxyNavForm.addEventListener("submit", async (e) => {
         e.preventDefault();
+        hideError();
         const val = qs("proxy-nav-input").value.trim();
         if (!val) return;
         try {
-          await ensureProxyReady();
           await navigateActiveTab(val);
         } catch (err) {
           showError(err.message || err.toString());
