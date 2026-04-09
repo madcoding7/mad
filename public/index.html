@@ -1,685 +1,536 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>mad</title>
 
-    <script src="/scram/scramjet.all.js"></script>
-    <script src="/baremux/index.js"></script>
-    <script src="/epoxy/index.js"></script>
-    <script src="/register-sw.js"></script>
-    <script>
-    window.addEventListener("DOMContentLoaded", () => {
-      const style = document.createElement("style");
-      style.textContent = `* { cursor: none !important; }`;
-      document.head.appendChild(style);
-    
-      const cursor = document.createElement("img");
-      cursor.src = "/cursor.gif";
-      cursor.style.position = "fixed";
-      cursor.style.width = "17px";
-      cursor.style.height = "21px";
-      cursor.style.imageRendering = "auto";
-      cursor.style.pointerEvents = "none";
-      cursor.style.zIndex = "9999999";
-      cursor.style.transform = "translate(0, 0)";
-    
-      document.body.appendChild(cursor);
-    
-      document.addEventListener("mousemove", e => {
-        cursor.style.left = e.clientX + "px";
-        cursor.style.top = e.clientY + "px";
-      });
-    });
-    </script>
+  <style>
+    :root {
+      --bg: #f4f7fb;
+      --panel: #ffffff;
+      --panel-2: #eef3f9;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --accent: #3b82f6;
+      --accent-2: #2563eb;
+      --border: #dbe3ee;
+      --shadow: 0 10px 30px rgba(0,0,0,0.08);
+      --radius: 18px;
+    }
 
-    <style>
-        /* ============================
-           DEFAULT THEME (Minimalist)
-           ============================ */
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f5f5f5;
-            margin: 0;
-            padding: 0;
-            /* Allow scrolling */
-            overflow-y: auto;
-            min-height: 100vh;
-            transition: background 0.3s;
-        }
+    body.theme-aero {
+      --bg: linear-gradient(135deg, #003366 0%, #0d5cab 50%, #37d5d6 100%);
+      --panel: rgba(255,255,255,0.82);
+      --panel-2: rgba(255,255,255,0.65);
+      --text: #102033;
+      --muted: #3d556e;
+      --accent: #0078ff;
+      --accent-2: #00a2ff;
+      --border: rgba(255,255,255,0.55);
+      --shadow: 0 20px 45px rgba(0,0,0,0.28);
+    }
 
-        .main-ui-container {
-            width: 80%;
-            max-width: 800px;
-            margin: 80px auto;
-            padding: 30px;
-            background: #fff;
-            border: 1px solid #ccc;
-            box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.3);
-            border-radius: 0;
-            text-align: center;
-            position: relative;
-            z-index: 1;
-            transition: all 0.3s;
-        }
+    body.theme-dark {
+      --bg: linear-gradient(135deg, #0b1020 0%, #111827 60%, #0f172a 100%);
+      --panel: #111827;
+      --panel-2: #1f2937;
+      --text: #f3f4f6;
+      --muted: #9ca3af;
+      --accent: #60a5fa;
+      --accent-2: #22d3ee;
+      --border: #263244;
+      --shadow: 0 16px 40px rgba(0,0,0,0.45);
+    }
 
-        .logo-img {
-            max-width: 200px;
-            height: auto;
-            margin-bottom: 20px;
-            display: block;
-            margin: 0 auto 20px auto;
-        }
+    body.theme-retro {
+      --bg: #08110a;
+      --panel: #0d1a0f;
+      --panel-2: #102515;
+      --text: #8cff8c;
+      --muted: #4caf50;
+      --accent: #8cff8c;
+      --accent-2: #56ff56;
+      --border: #1f4a24;
+      --shadow: 0 0 18px rgba(80,255,80,0.15);
+    }
 
-        h1 {
-            color: #4a90e2;
-            text-align: center;
-            margin-top: 0;
-        }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Inter, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      transition: all .25s ease;
+    }
 
-        p {
-            color: #7b7b7b;
-            line-height: 1.5em;
-            margin-bottom: 20px;
-        }
+    .app {
+      width: min(1200px, 94%);
+      margin: 24px auto;
+    }
 
-        .nav-links {
-            margin-bottom: 20px;
-            border-bottom: 1px solid #eee;
-            padding-bottom: 15px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 15px;
-        }
+    .topbar {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      justify-content: space-between;
+      margin-bottom: 18px;
+      padding: 14px 18px;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(14px);
+    }
 
-        .nav-links a {
-            color: #4a90e2;
-            text-decoration: none;
-            font-weight: bold;
-        }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 800;
+      font-size: 1.2rem;
+      letter-spacing: .4px;
+    }
 
-        .nav-links a:hover {
-            text-decoration: underline;
-        }
+    .brand-badge {
+      width: 36px;
+      height: 36px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      display: grid;
+      place-items: center;
+      color: white;
+      font-weight: 900;
+    }
 
-        #style-select {
-            padding: 5px;
-            border: 1px solid #ccc;
-            background: #f9f9f9;
-            color: #333;
-            font-size: 14px;
-        }
+    .top-controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
 
-        #sj-form {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin-top: 20px;
-            flex-wrap: wrap;
-        }
+    .chip, select, button, input {
+      border: 1px solid var(--border);
+      background: var(--panel-2);
+      color: var(--text);
+      border-radius: 12px;
+      padding: 10px 12px;
+      font: inherit;
+    }
 
-        #sj-address {
-            width: 70%;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 0;
-            font-size: 16px;
-            outline: none;
-        }
+    button {
+      cursor: pointer;
+      transition: .2s ease;
+    }
 
-        #sj-address:focus {
-            border-color: #4a90e2;
-        }
+    button:hover {
+      transform: translateY(-1px);
+      border-color: var(--accent);
+    }
 
-        button.primary-btn {
-            display: block;
-            padding: 10px 20px;
-            background-color: #4a90e2;
-            color: white;
-            font-size: 1rem;
-            cursor: pointer;
-            border: none;
-            border-radius: 0;
-        }
+    .primary {
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: white;
+      border: none;
+    }
 
-        button.primary-btn:hover {
-            background-color: #357abd;
-        }
+    .tabs-wrap {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 10px;
+      margin-bottom: 18px;
+      backdrop-filter: blur(14px);
+    }
 
-        button:disabled {
-            background-color: #ccc;
-            cursor: not-allowed;
-        }
+    .tabs-bar {
+      display: flex;
+      gap: 10px;
+      overflow-x: auto;
+      padding-bottom: 6px;
+    }
 
-        /* --- PROXY OVERLAY --- */
-        #proxy-overlay {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: #fff;
-            z-index: 9999;
-            display: none;
-            flex-direction: column;
-            overflow: hidden; /* Overlay doesn't scroll body */
-        }
+    .tab {
+      min-width: 180px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 10px 12px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: var(--panel-2);
+      cursor: pointer;
+      white-space: nowrap;
+    }
 
-        .proxy-bar {
-            height: 50px;
-            background-color: #4a90e2;
-            display: flex;
-            align-items: center;
-            padding: 0 15px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-            flex-shrink: 0;
-        }
+    .tab.active {
+      border-color: var(--accent);
+      box-shadow: inset 0 0 0 1px var(--accent);
+    }
 
-        .proxy-bar button {
-            background: #ff5f57;
-            color: white;
-            border: none;
-            padding: 8px 15px;
-            border-radius: 0;
-            font-weight: bold;
-            margin-right: 15px;
-            cursor: pointer;
-        }
+    .tab-title {
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
 
-        #proxy-nav-form { flex-grow: 1; display: flex; }
-        #proxy-nav-input {
-            width: 100%; padding: 8px 12px; border: none; border-radius: 0; outline: none; font-family: monospace;
-        }
-        #sj-frame { border: none; width: 100%; height: calc(100% - 50px); background: white; display: block; }
-        
-        /* --- LOGS WINDOW --- */
-        #logs-window {
-            position: fixed; bottom: 20px; right: 20px; width: 320px;
-            background: white; border: 1px solid #ccc;
-            box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.3);
-            border-radius: 0; overflow: hidden; z-index: 10000;
-            display: flex; flex-direction: column;
-        }
-        .logs-header {
-            background: #4a90e2; color: white; padding: 10px 15px;
-            font-weight: bold; cursor: move; display: flex;
-            justify-content: space-between; align-items: center; user-select: none;
-        }
-        .logs-controls button { background: transparent; border: none; color: white; cursor: pointer; margin-left: 5px; }
-        #update-logs-frame { width: 100%; height: 300px; border: none; background: #f9f9f9; transition: height 0.3s; }
-        #error-msg { color: red; margin-top: 10px; display: none; padding: 10px; background: #fff0f0; border: 1px solid red; }
+    .tab-close {
+      border: none;
+      background: transparent;
+      color: var(--muted);
+      padding: 0 4px;
+      cursor: pointer;
+    }
 
-        /* --- NEWS GRID --- */
-        .news-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-            gap: 15px;
-            text-align: left;
-            margin-top: 15px;
-        }
-        .news-card {
-            display: flex; flex-direction: column; border: 1px solid #eee; text-decoration: none;
-            background: #fff; transition: transform 0.2s, box-shadow 0.2s; height: 100%;
-        }
-        .news-card:hover {
-            transform: translateY(-2px); box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.15); border-color: #4a90e2;
-        }
-        .news-thumb {
-            width: 100%; height: 120px; object-fit: cover; background-color: #f0f0f0; border-bottom: 1px solid #eee;
-        }
-        .news-content { padding: 10px; display: flex; flex-direction: column; flex-grow: 1; }
-        .news-title {
-            color: #4a90e2; font-size: 0.85rem; font-weight: bold; margin-bottom: 5px;
-            display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
-        }
-        .news-date { font-size: 0.7rem; color: #999; margin-top: auto; }
+    .layout {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 18px;
+    }
 
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 22px;
+      backdrop-filter: blur(14px);
+    }
 
-        /* ==================================================================
-           THEME: AUTHENTIC FRUTIGER AERO (2000s / Vista)
-           ================================================================== */
-        
-        body.theme-2007 {
-            /* Classic Vista "Aurora" Gradient */
-            background: radial-gradient(circle at top left, #306eff, transparent 40%),
-                        radial-gradient(circle at bottom right, #00cdac, transparent 40%),
-                        linear-gradient(135deg, #003366 0%, #005b96 100%);
-            background-attachment: fixed;
-            font-family: "Segoe UI", Tahoma, Verdana, sans-serif;
-            color: #222;
-        }
-        body.theme-2007 .address{
-            background: #fff;
-            border: 1px solid #7a9bb0;
-            border-top-color: #555;
-            box-shadow: inset 0 2px 2px rgba(0,0,0,0.1);
-            border-radius: 2px;
-        }
-        /* Container: Window Effect */
-        body.theme-2007 .main-ui-container {
-            background: linear-gradient(to bottom, #f0f0f0 0%, #e0e0e0 100%);
-            /* The "Glass" Border */
-            border: 1px solid #707070;
-            border-radius: 8px;
-            /* Thick translucent cyan outline for "Aero Glass" edge */
-            box-shadow: 
-                0 0 0 5px rgba(100, 200, 255, 0.4), 
-                0 10px 30px rgba(0,0,0,0.5);
-            padding: 0; /* Reset padding for window layout */
-            overflow: hidden;
-        }
+    .hero h1 {
+      margin: 0 0 10px;
+      font-size: clamp(2rem, 4vw, 3.6rem);
+      line-height: 1;
+    }
 
-        /* Fake "Window Controls" & Title Bar */
-        body.theme-2007 .main-ui-container::before {
-            content: "DoxyEdu Browser";
-            display: block;
-            height: 28px;
-            background: linear-gradient(to bottom, #dbebfc 0%, #bcd6f5 100%);
-            border-bottom: 1px solid #8ba0b9;
-            color: #444;
-            text-align: left;
-            padding-left: 10px;
-            line-height: 28px;
-            font-size: 12px;
-            text-shadow: 0 1px 0 rgba(255,255,255,0.8);
-            border-radius: 7px 7px 0 0;
-        }
+    .hero p {
+      color: var(--muted);
+      margin: 0 0 18px;
+    }
 
-        body.theme-2007 .main-ui-container::after {
-            content: " -  □  × ";
-            position: absolute;
-            top: 2px;
-            right: 8px;
-            font-family: monospace;
-            font-size: 14px;
-            color: #555;
-            letter-spacing: 5px;
-            cursor: pointer;
-        }
+    .search-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
 
-        /* Toolbar Area (Moved Nav) */
-        body.theme-2007 .nav-links {
-            background: linear-gradient(to bottom, #f5f5f5 0%, #cfcfcf 100%);
-            border-bottom: 1px solid #aaa;
-            margin: 0;
-            padding: 8px;
-            justify-content: flex-start;
-            box-shadow: inset 0 1px 0 #fff;
-        }
+    .search-row input {
+      flex: 1;
+      min-width: 260px;
+      padding: 14px;
+    }
 
-        body.theme-2007 .nav-links a {
-            color: #333;
-            font-size: 12px;
-            padding: 4px 10px;
-            border: 1px solid transparent;
-            border-radius: 3px;
-            text-shadow: 0 1px 0 #fff;
-        }
+    .quick-links {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-top: 14px;
+    }
 
-        body.theme-2007 .nav-links a:hover {
-            background: linear-gradient(to bottom, #e8f5fc 0%, #cceeff 100%);
-            border: 1px solid #8ba0b9;
-            text-decoration: none;
-        }
+    .quick-link {
+      text-decoration: none;
+      color: var(--text);
+      border: 1px solid var(--border);
+      background: var(--panel-2);
+      padding: 16px;
+      border-radius: 14px;
+      text-align: center;
+      font-weight: 600;
+    }
 
-        /* Content Padding wrapper */
-        body.theme-2007 .main-ui-container > *:not(.nav-links) {
-            /* Apply padding to elements not in nav */
-            margin-left: 20px;
-            margin-right: 20px;
-        }
+    .section-title {
+      margin: 0 0 14px;
+      font-size: 1.05rem;
+    }
 
-        /* Logo Reflection */
-        body.theme-2007 .logo-img {
-            margin-top: 20px;
-            -webkit-box-reflect: below 0px linear-gradient(to bottom, rgba(0,0,0,0.0), rgba(0,0,0,0.2));
-        }
+    .sports-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 14px;
+    }
 
-        body.theme-2007 h1 {
-            color: #003399;
-            font-weight: normal;
-            font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
-            text-shadow: 2px 2px 5px rgba(0,0,0,0.2);
-            margin-bottom: 5px;
-        }
-        
-        body.theme-2007 p {
-            color: #444;
-            font-size: 14px;
-        }
+    .sports-card {
+      text-decoration: none;
+      color: inherit;
+      border: 1px solid var(--border);
+      background: var(--panel-2);
+      border-radius: 16px;
+      overflow: hidden;
+      transition: .2s ease;
+    }
 
-        body.theme-2007 #sj-address {
-            background: #fff;
-            border: 1px solid #7a9bb0;
-            border-top-color: #555;
-            box-shadow: inset 0 2px 2px rgba(0,0,0,0.1);
-            border-radius: 2px;
-            padding: 8px;
-            height: 20%;
-            font-family: "Segoe UI", sans-serif;
-        }
+    .sports-card:hover {
+      transform: translateY(-3px);
+      border-color: var(--accent);
+    }
 
-        body.theme-2007 button.primary-btn {
-            background: linear-gradient(to bottom, #ccffcc 0%, #66cc66 50%, #339933 51%, #006600 100%);
-            border: 1px solid #225522;
-            border-radius: 4px;
-            color: white;
-            font-weight: bold;
-            text-shadow: 0 -1px 0 rgba(0,0,0,0.5);
-            box-shadow: inset 0 1px 0 rgba(255,255,255,0.6), 0 2px 3px rgba(0,0,0,0.2);
-            margin-bottom: 20px; /* Spacing at bottom */
-        }
-        
-        body.theme-2007 button.primary-btn:hover {
-            background: linear-gradient(to bottom, #ddffdd 0%, #88dd88 50%, #44aa44 51%, #007700 100%);
-            box-shadow: 0 0 10px rgba(100,255,100,0.6);
-        }
+    .sports-thumb {
+      width: 100%;
+      height: 140px;
+      object-fit: cover;
+      display: block;
+      background: #dfe7f2;
+    }
 
-        /* Dropdown Style */
-        body.theme-2007 #style-select {
-            border: 1px solid #888;
-            border-radius: 3px;
-            padding: 3px;
-            font-size: 11px;
-            background: linear-gradient(#fff, #eee);
-        }
+    .sports-body {
+      padding: 12px;
+    }
 
-        body.theme-2007 .news-card {
-            border-radius: 6px;
-            border: 1px solid #888;
-            background: linear-gradient(to bottom, #fff 0%, #f4f4f4 100%);
-            box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
-        }
-        
-        body.theme-2007 .news-title {
-            color: #114477;
-            font-family: Tahoma, sans-serif;
-        }
+    .sports-title {
+      font-weight: 700;
+      font-size: .95rem;
+      margin-bottom: 8px;
+    }
 
-        body.theme-2007 .news-thumb {
-            border-radius: 5px 5px 0 0;
-            border-bottom: 1px solid #aaa;
-        }
+    .sports-date {
+      color: var(--muted);
+      font-size: .82rem;
+    }
 
-        /* Logs Window - XP/Vista Style */
-        body.theme-2007 #logs-window {
-            border: 2px solid #0055ea;
-            border-radius: 5px 5px 0 0;
-            box-shadow: 5px 5px 15px rgba(0,0,0,0.5);
-        }
-        body.theme-2007 .logs-header {
-            background: linear-gradient(to bottom, #0058ee 0%, #0023a5 100%); /* XP Blue */
-            font-family: Tahoma;
-            text-shadow: 1px 1px 0 #000;
-        }
-    </style>
+    .side-stack {
+      display: grid;
+      gap: 18px;
+    }
+
+    .mini-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .mini-item {
+      padding: 12px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: var(--panel-2);
+    }
+
+    .footer-note {
+      margin-top: 18px;
+      text-align: center;
+      color: var(--muted);
+      font-size: .9rem;
+    }
+
+    @media (max-width: 900px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+      .quick-links {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 560px) {
+      .quick-links {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
 </head>
-
 <body>
+  <div class="app">
+    <div class="topbar">
+      <div class="brand">
+        <div class="brand-badge">m</div>
+        <span>mad</span>
+      </div>
 
-    <div class="main-ui-container" id="main-menu">
-        <div class="nav-links">
-            <span style="margin-right: auto; font-size:12px; color:#555; padding-left:5px;" class="address">https://doxyedu.dpdns.org/ </span>
-            <a href="/">Home</a>
-            <a href="https://github.com/Arandomdude222/DoxyEdu-web-proxy" target="_blank">Github</a>
-            <a href="/credits.html">Credits</a>
-            <select id="style-select">
-                <option value="default">Default</option>
-                <option value="2007">Frutiger Aero</option>
-            </select>
-        </div>
-
-        <img src="logo.svg" alt="DoxyEdu" class="logo-img">
-        
-        <h1>Welcome to DoxyEdu</h1>
-        <p>Browse the w3b freely.</p>
-
-        <form id="sj-form">
-            <input id="sj-search-engine" value="https://www.google.com/search?q=%s" type="hidden" />
-            <input id="sj-address" type="text" placeholder="http://..." autocomplete="off" disabled />
-            <button type="submit" class="primary-btn" id="sj-btn" disabled>Go →</button>
-        </form>
-        <div id="error-msg"></div>
+      <div class="top-controls">
+        <button id="new-tab-btn" class="primary">+ New Tab</button>
+        <select id="theme-select">
+          <option value="default">Default</option>
+          <option value="aero">Frutiger Aero</option>
+          <option value="dark">Dark Neon</option>
+          <option value="retro">Retro Terminal</option>
+        </select>
+      </div>
     </div>
 
-    <!-- News Container -->
-    <div class="main-ui-container" style="margin-top: 20px;">
-        <h3 style="margin-top: 10px; color: #555; text-align: left; padding-left: 10px; border-bottom: 1px solid #ccc; padding-bottom:5px;">Latest Headlines</h3>
-        <div id="learning-news" class="news-grid">
-            <p style="width: 100%; text-align: center; color: #777;">Loading News Feed...</p>
-        </div>
-        <br>
-    </div>
-    
-
-    <div id="proxy-overlay">
-        <div class="proxy-bar">
-            <button onclick="exitProxy()">Exit</button>
-            <form id="proxy-nav-form">
-                <input id="proxy-nav-input" type="text" placeholder="Type URL here..." />
-            </form>
-        </div>
+    <div class="tabs-wrap">
+      <div class="tabs-bar" id="tabs-bar"></div>
     </div>
 
-    <div id="logs-window">
-        <div class="logs-header" id="logs-header">
-            <span>Update Logs</span>
-            <div class="logs-controls">
-                <button onclick="toggleLogs()">-</button>
-                <button onclick="closeLogs()">×</button>
+    <div class="layout">
+      <div class="panel hero">
+        <h1>Welcome to mad</h1>
+        <p>A cleaner, faster, better front page with tabs, themes, shortcuts, and sports headlines.</p>
+
+        <div class="search-row">
+          <input id="home-search" type="text" placeholder="Search the web..." />
+          <button class="primary" id="search-btn">Search</button>
+        </div>
+
+        <div class="quick-links">
+          <a class="quick-link" href="https://youtube.com" target="_blank">YouTube</a>
+          <a class="quick-link" href="https://wikipedia.org" target="_blank">Wikipedia</a>
+          <a class="quick-link" href="https://github.com" target="_blank">GitHub</a>
+          <a class="quick-link" href="https://reddit.com" target="_blank">Reddit</a>
+        </div>
+      </div>
+
+      <div class="side-stack">
+        <div class="panel">
+          <h3 class="section-title">Dashboard</h3>
+          <div class="mini-list">
+            <div class="mini-item"><strong>Brand:</strong> mad</div>
+            <div class="mini-item"><strong>Tabs:</strong> <span id="tab-count">0</span></div>
+            <div class="mini-item"><strong>Theme:</strong> <span id="theme-name">Default</span></div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <h3 class="section-title">Shortcuts</h3>
+          <div class="mini-list">
+            <div class="mini-item">Use tabs to organize pages</div>
+            <div class="mini-item">Switch themes from the top right</div>
+            <div class="mini-item">Search directly from the homepage</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel" style="margin-top: 18px;">
+      <h3 class="section-title">Latest Sports Headlines</h3>
+      <div id="sports-news" class="sports-grid">
+        <p style="color: var(--muted)">Loading sports news...</p>
+      </div>
+    </div>
+
+    <div class="footer-note">
+      mad — redesigned homepage
+    </div>
+  </div>
+
+  <script>
+    const tabsBar = document.getElementById("tabs-bar");
+    const newTabBtn = document.getElementById("new-tab-btn");
+    const tabCount = document.getElementById("tab-count");
+    const themeSelect = document.getElementById("theme-select");
+    const themeName = document.getElementById("theme-name");
+
+    let tabs = [
+      { id: 1, title: "Home", active: true },
+      { id: 2, title: "Sports", active: false }
+    ];
+    let nextTabId = 3;
+
+    function renderTabs() {
+      tabsBar.innerHTML = "";
+      tabs.forEach(tab => {
+        const tabEl = document.createElement("div");
+        tabEl.className = "tab" + (tab.active ? " active" : "");
+        tabEl.innerHTML = `
+          <span class="tab-title">${tab.title}</span>
+          <button class="tab-close" data-close="${tab.id}">×</button>
+        `;
+        tabEl.addEventListener("click", (e) => {
+          if (e.target.dataset.close) return;
+          tabs = tabs.map(t => ({ ...t, active: t.id === tab.id }));
+          renderTabs();
+        });
+
+        tabEl.querySelector(".tab-close").addEventListener("click", (e) => {
+          e.stopPropagation();
+          if (tabs.length === 1) return;
+          const wasActive = tab.active;
+          tabs = tabs.filter(t => t.id !== tab.id);
+          if (wasActive) tabs[0].active = true;
+          renderTabs();
+        });
+
+        tabsBar.appendChild(tabEl);
+      });
+      tabCount.textContent = tabs.length;
+    }
+
+    newTabBtn.addEventListener("click", () => {
+      tabs = tabs.map(t => ({ ...t, active: false }));
+      tabs.push({
+        id: nextTabId++,
+        title: "New Tab",
+        active: true
+      });
+      renderTabs();
+    });
+
+    function applyTheme(theme) {
+      document.body.classList.remove("theme-aero", "theme-dark", "theme-retro");
+      if (theme === "aero") document.body.classList.add("theme-aero");
+      if (theme === "dark") document.body.classList.add("theme-dark");
+      if (theme === "retro") document.body.classList.add("theme-retro");
+
+      localStorage.setItem("mad-theme", theme);
+
+      const names = {
+        default: "Default",
+        aero: "Frutiger Aero",
+        dark: "Dark Neon",
+        retro: "Retro Terminal"
+      };
+      themeName.textContent = names[theme] || "Default";
+    }
+
+    const savedTheme = localStorage.getItem("mad-theme") || "default";
+    themeSelect.value = savedTheme;
+    applyTheme(savedTheme);
+
+    themeSelect.addEventListener("change", e => applyTheme(e.target.value));
+
+    document.getElementById("search-btn").addEventListener("click", () => {
+      const q = document.getElementById("home-search").value.trim();
+      if (!q) return;
+      window.open(`https://www.google.com/search?q=${encodeURIComponent(q)}`, "_blank");
+    });
+
+    document.getElementById("home-search").addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        document.getElementById("search-btn").click();
+      }
+    });
+
+    async function loadSportsNews() {
+      try {
+        const feedUrl = "https://www.espn.com/espn/rss/news";
+        const res = await fetch(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(feedUrl)}`);
+        const data = await res.json();
+        const container = document.getElementById("sports-news");
+
+        if (!data.items || !data.items.length) {
+          container.innerHTML = "<p>No sports news found.</p>";
+          return;
+        }
+
+        container.innerHTML = "";
+        data.items.slice(0, 8).forEach(item => {
+          let imgUrl = item.thumbnail || "/placeholder.jpg";
+          const date = new Date(item.pubDate).toLocaleDateString();
+
+          const card = document.createElement("a");
+          card.className = "sports-card";
+          card.href = item.link;
+          card.target = "_blank";
+          card.rel = "noopener noreferrer";
+          card.innerHTML = `
+            <img class="sports-thumb" src="${imgUrl}" alt="Sports" onerror="this.src='/placeholder.jpg'">
+            <div class="sports-body">
+              <div class="sports-title">${item.title}</div>
+              <div class="sports-date">${date}</div>
             </div>
-        </div>
-        <iframe id="update-logs-frame" src="/assets/2.html"></iframe>
-    </div>
-
-    <script>
-        "use strict";
-
-        // Theme Switcher Logic
-        const themeSelect = document.getElementById('style-select');
-        const savedTheme = localStorage.getItem('doxy-theme') || 'default';
-        if (savedTheme === '2007') {
-            document.body.classList.add('theme-2007');
-            themeSelect.value = '2007';
-        }
-
-        themeSelect.addEventListener('change', (e) => {
-            const val = e.target.value;
-            if (val === '2007') {
-                document.body.classList.add('theme-2007');
-            } else {
-                document.body.classList.remove('theme-2007');
-            }
-            localStorage.setItem('doxy-theme', val);
+          `;
+          container.appendChild(card);
         });
+      } catch (err) {
+        document.getElementById("sports-news").innerHTML = "<p>Failed to load sports news.</p>";
+        console.error(err);
+      }
+    }
 
-        async function loadRSS() {
-            try {
-                const url = "https://learningnews.com/feed";
-                const res = await fetch(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(url)}`);
-                const data = await res.json();
-                const container = document.getElementById("learning-news");
-
-                if (!data.items) return;
-
-                container.innerHTML = "";
-                data.items.slice(0, 8).forEach(item => {
-                    let imgUrl = item.thumbnail;
-                    if (!imgUrl && item.enclosure && item.enclosure.link) imgUrl = item.enclosure.link;
-                    if (!imgUrl) {
-                        const div = document.createElement('div');
-                        div.innerHTML = item.description;
-                        const img = div.querySelector('img');
-                        if (img) imgUrl = img.src;
-                    }
-                    if (!imgUrl) imgUrl = "/placeholder.jpg";
-
-                    const card = document.createElement("a");
-                    card.className = "news-card";
-                    card.href = item.link;
-                    card.target = "_blank";
-                    const date = new Date(item.pubDate).toLocaleDateString();
-
-                    card.innerHTML = `
-                        <img src="${imgUrl}" class="news-thumb" alt="News" onerror="this.src='/placeholder.jpg'">
-                        <div class="news-content">
-                            <div class="news-title">${item.title}</div>
-                            <div class="news-date">${date}</div>
-                        </div>
-                    `;
-                    container.appendChild(card);
-                });
-            } catch (e) {
-                console.error("RSS Error:", e);
-                document.getElementById("learning-news").innerHTML = "<p>Failed to load news.</p>";
-            }
-        }
-
-        function search(input, template) {
-            try { return new URL(input).toString(); } catch (err) { }
-            try {
-                const url = new URL(`http://${input}`);
-                if (url.hostname.includes(".")) return url.toString();
-            } catch (err) { }
-            return template.replace("%s", encodeURIComponent(input));
-        }
-
-        async function manualRegisterSW() {
-            if ('serviceWorker' in navigator) {
-                return navigator.serviceWorker.register('/scram/sw.js', {
-                    scope: '/scram/service/'
-                });
-            }
-            throw new Error("Service Workers not supported.");
-        }
-
-        window.addEventListener('load', async () => {
-            console.log("DOM Loaded. Initializing...");
-
-            const form = document.getElementById("sj-form");
-            const address = document.getElementById("sj-address");
-            const searchEngine = document.getElementById("sj-search-engine");
-            const btn = document.getElementById("sj-btn");
-            const errorMsg = document.getElementById("error-msg");
-
-            const mainMenu = document.getElementById("main-menu");
-            const proxyOverlay = document.getElementById("proxy-overlay");
-            const proxyInput = document.getElementById("proxy-nav-input");
-            const proxyNavForm = document.getElementById("proxy-nav-form");
-            loadRSS();
-
-            if (typeof BareMux === 'undefined' || typeof $scramjetLoadController === 'undefined') {
-                errorMsg.textContent = "failed to load.";
-                errorMsg.style.display = "block";
-                return;
-            }
-
-            const { ScramjetController } = $scramjetLoadController();
-            const scramjet = new ScramjetController({
-                files: {
-                    wasm: '/scram/scramjet.wasm.wasm',
-                    all: '/scram/scramjet.all.js',
-                    sync: '/scram/scramjet.sync.js',
-                },
-            });
-            scramjet.init();
-
-            const connection = new BareMux.BareMuxConnection("/baremux/worker.js");
-
-            address.disabled = false;
-            address.placeholder = "Search or enter URL...";
-            btn.disabled = false;
-
-            form.addEventListener("submit", async (event) => {
-                event.preventDefault();
-                errorMsg.style.display = "none";
-                const val = address.value.trim();
-                if (!val) return;
-
-                btn.disabled = true;
-                btn.textContent = "Loading...";
-
-                try {
-                    try {
-                        if (typeof registerSW === 'function') await registerSW();
-                        else await manualRegisterSW();
-                    } catch (swErr) {
-                        console.error("SW Error:", swErr);
-                        throw new Error("Failed to register Service Worker.");
-                    }
-
-                    const url = search(val, searchEngine.value);
-                    const wispUrl = (location.protocol === "https:" ? "wss" : "ws") + "://" + location.host + "/wisp/";
-                    if ((await connection.getTransport()) !== "/epoxy/index.mjs") {
-                        await connection.setTransport("/epoxy/index.mjs", [{ wisp: wispUrl }]);
-                    }
-
-                    // Lock body scroll only when proxy is active
-                    document.body.style.overflow = "hidden";
-                    
-                    mainMenu.style.display = "none";
-                    // Hide the news container too
-                    document.querySelector('.main-ui-container[style*="margin-top"]').style.display = "none";
-                    
-                    proxyOverlay.style.display = "flex";
-                    proxyInput.value = url;
-
-                    const existingFrame = document.getElementById("sj-frame");
-                    if (existingFrame) existingFrame.remove();
-
-                    const frame = scramjet.createFrame();
-                    frame.frame.id = "sj-frame";
-                    proxyOverlay.appendChild(frame.frame);
-                    frame.go(url);
-
-                } catch (err) {
-                    console.error(err);
-                    errorMsg.textContent = err.message || err.toString();
-                    errorMsg.style.display = "block";
-                    mainMenu.style.display = "block";
-                    document.querySelector('.main-ui-container[style*="margin-top"]').style.display = "block";
-                    proxyOverlay.style.display = "none";
-                    document.body.style.overflow = "auto";
-                } finally {
-                    btn.disabled = false;
-                    btn.textContent = "Go →";
-                }
-            });
-
-            proxyNavForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-                address.value = proxyInput.value;
-                form.dispatchEvent(new Event('submit'));
-            });
-
-            window.exitProxy = function () {
-                document.body.style.overflow = "auto";
-                proxyOverlay.style.display = "none";
-                mainMenu.style.display = "block";
-                document.querySelector('.main-ui-container[style*="margin-top"]').style.display = "block";
-                const f = document.getElementById("sj-frame");
-                if (f) f.remove();
-                address.value = "";
-                proxyInput.value = "";
-            }
-        });
-
-        // Draggable Logs
-        const logsWindow = document.getElementById("logs-window");
-        const logsHeader = document.getElementById("logs-header");
-        let isDragging = false, currentX, currentY, initialX, initialY, xOffset = 0, yOffset = 0;
-        logsHeader.addEventListener("mousedown", dragStart);
-        document.addEventListener("mouseup", dragEnd);
-        document.addEventListener("mousemove", drag);
-        function dragStart(e) { initialX = e.clientX - xOffset; initialY = e.clientY - yOffset; if (e.target === logsHeader || e.target.parentNode === logsHeader) isDragging = true; }
-        function dragEnd(e) { initialX = currentX; initialY = currentY; isDragging = false; }
-        function drag(e) { if (isDragging) { e.preventDefault(); currentX = e.clientX - initialX; currentY = e.clientY - initialY; xOffset = currentX; yOffset = currentY; setTranslate(currentX, currentY, logsWindow); } }
-        function setTranslate(xPos, yPos, el) { el.style.transform = "translate3d(" + xPos + "px, " + yPos + "px, 0)"; }
-
-        const logsFrame = document.getElementById('update-logs-frame');
-        let isMinimized = false;
-        window.toggleLogs = function () { if (!isMinimized) { logsFrame.style.height = '0px'; isMinimized = true; } else { logsFrame.style.height = '300px'; isMinimized = false; } }
-        window.closeLogs = function () { logsWindow.style.display = 'none'; }
-    </script>
+    renderTabs();
+    loadSportsNews();
+  </script>
 </body>
 </html>
