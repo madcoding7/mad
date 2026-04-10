@@ -23,8 +23,11 @@
       --shadow: 0 10px 25px rgba(0,0,0,0.08);
       --radius: 16px;
       --topbar-height: 72px;
-      --proxy-tabs-height: 52px;
-      --proxy-bar-height: 60px;
+      --proxy-tabs-height: 48px;
+      --proxy-bar-height: 54px;
+      --anim-fast: .16s;
+      --anim-mid: .24s;
+      --anim-slow: .38s;
     }
 
     * { box-sizing: border-box; }
@@ -37,14 +40,16 @@
       margin: 0;
       min-height: 100vh;
       overflow-y: auto;
-      transition: background .3s ease, color .3s ease;
+      transition:
+        background var(--anim-mid) ease,
+        color var(--anim-mid) ease;
       cursor: auto !important;
     }
 
     a { color: inherit; }
 
-    button, input, select, .tab, .news-card, .bookmark-item, .list-links a, .chip-btn, .panel, .hero-card, .drawer {
-      transition: all .25s ease;
+    button, input, select, .tab, .news-card, .bookmark-item, .list-links a, .chip-btn, .panel, .hero-card, .drawer, .embed-item, .embed-layout, .embed-frame-wrap {
+      transition: all var(--anim-mid) ease;
     }
 
     .topbar {
@@ -57,11 +62,14 @@
       gap: 12px;
       padding: 14px 22px;
       min-height: var(--topbar-height);
-      background: rgba(255,255,255,0.78);
-      backdrop-filter: blur(12px);
+      background: rgba(255,255,255,0.76);
+      backdrop-filter: blur(14px);
       border-bottom: 1px solid var(--border);
       transform: translateY(0);
-      transition: transform .35s ease, background .25s ease, border-color .25s ease;
+      transition:
+        transform .28s ease,
+        background .2s ease,
+        border-color .2s ease;
     }
 
     body.topbar-hidden .topbar {
@@ -86,6 +94,7 @@
 
     body.topbar-hidden .topbar-toggle-floating {
       display: block;
+      animation: fadeIn .18s ease;
     }
 
     .brand {
@@ -124,7 +133,7 @@
     .page {
       width: min(1150px, 92%);
       margin: 28px auto;
-      animation: fadeUp .45s ease;
+      animation: fadeUp .4s ease;
     }
 
     .hero {
@@ -145,7 +154,7 @@
       padding: 34px;
       position: relative;
       overflow: hidden;
-      animation: fadeUp .5s ease;
+      animation: fadeUp .42s ease;
     }
 
     .hero-card::before {
@@ -156,6 +165,7 @@
       height: 240px;
       background: radial-gradient(circle, rgba(37,99,235,.16), transparent 65%);
       border-radius: 50%;
+      pointer-events: none;
     }
 
     .hero-label {
@@ -321,7 +331,7 @@
 
     .panel {
       padding: 20px;
-      animation: fadeUp .55s ease;
+      animation: fadeUp .46s ease;
     }
 
     .section-head {
@@ -399,7 +409,7 @@
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
       gap: 14px;
-      animation: fadeUp .25s ease;
+      animation: fadeUp .2s ease;
     }
 
     .news-card {
@@ -453,7 +463,7 @@
     .score-list {
       display: grid;
       gap: 12px;
-      animation: fadeUp .25s ease;
+      animation: fadeUp .2s ease;
     }
 
     .score-card {
@@ -485,6 +495,7 @@
       background: #fef2f2;
       border: 1px solid #fecaca;
       border-radius: 12px;
+      animation: fadeIn .2s ease;
     }
 
     .bookmark-bar {
@@ -494,7 +505,7 @@
       margin-top: 16px;
       padding-top: 14px;
       border-top: 1px solid var(--border);
-      animation: fadeUp .25s ease;
+      animation: fadeUp .18s ease;
     }
 
     .bookmark-pill {
@@ -520,10 +531,12 @@
       display: none;
       flex-direction: column;
       overflow: hidden;
-      animation: fadeIn .25s ease;
+      animation: fadeIn .14s ease;
     }
 
-    body.theme-midnight #proxy-overlay {
+    body.theme-midnight #proxy-overlay,
+    body.theme-neon #proxy-overlay,
+    body.theme-retro-dark #proxy-overlay {
       background: #0a0f1a;
     }
 
@@ -543,7 +556,9 @@
       display: none !important;
     }
 
-    body.theme-midnight .proxy-tabs {
+    body.theme-midnight .proxy-tabs,
+    body.theme-neon .proxy-tabs,
+    body.theme-retro-dark .proxy-tabs {
       background: #111827;
       border-bottom-color: #233044;
     }
@@ -560,6 +575,7 @@
       border-radius: 12px;
       cursor: pointer;
       white-space: nowrap;
+      animation: fadeIn .16s ease;
     }
 
     .tab.active {
@@ -568,13 +584,17 @@
       transform: translateY(-1px);
     }
 
-    body.theme-midnight .tab {
+    body.theme-midnight .tab,
+    body.theme-neon .tab,
+    body.theme-retro-dark .tab {
       background: #0f172a;
       border-color: #263246;
       color: #e5e7eb;
     }
 
-    body.theme-midnight .tab.active {
+    body.theme-midnight .tab.active,
+    body.theme-neon .tab.active,
+    body.theme-retro-dark .tab.active {
       background: #172033;
       border-color: #60a5fa;
     }
@@ -606,7 +626,9 @@
       font-weight: 800;
     }
 
-    body.theme-midnight .tab-add {
+    body.theme-midnight .tab-add,
+    body.theme-neon .tab-add,
+    body.theme-retro-dark .tab-add {
       background: #172033;
       color: #e5e7eb;
     }
@@ -617,17 +639,20 @@
       display: flex;
       align-items: center;
       gap: 10px;
-      padding: 10px 14px;
+      padding: 8px 14px;
       border-bottom: 1px solid #d9e3ef;
       flex-shrink: 0;
       flex-wrap: wrap;
+      animation: slideDown .14s ease;
     }
 
     body.bar-hidden .proxy-bar {
       display: none !important;
     }
 
-    body.theme-midnight .proxy-bar {
+    body.theme-midnight .proxy-bar,
+    body.theme-neon .proxy-bar,
+    body.theme-retro-dark .proxy-bar {
       background: #0f172a;
       border-bottom-color: #223146;
     }
@@ -651,7 +676,8 @@
       height: calc(100% - var(--proxy-tabs-height) - var(--proxy-bar-height));
       background: white;
       display: block;
-      animation: fadeIn .2s ease;
+      animation: frameIn .12s ease;
+      will-change: opacity, transform;
     }
 
     body.bar-hidden #sj-frame {
@@ -672,7 +698,7 @@
       z-index: 10010;
       display: none;
       padding: 16px;
-      animation: fadeUp .22s ease;
+      animation: fadeUp .18s ease;
     }
 
     .drawer h4 {
@@ -726,6 +752,165 @@
       color: var(--muted);
     }
 
+    .embed-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 10020;
+      background: rgba(15,23,42,.24);
+      backdrop-filter: blur(8px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 18px;
+      animation: fadeIn .16s ease;
+    }
+
+    .embed-layout {
+      width: min(1280px, 100%);
+      height: min(90vh, 860px);
+      background: var(--card);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      box-shadow: var(--shadow);
+      display: grid;
+      grid-template-columns: 300px 1fr;
+      overflow: hidden;
+      animation: zoomIn .18s ease;
+    }
+
+    .embed-sidebar {
+      border-right: 1px solid var(--border);
+      background: linear-gradient(180deg, rgba(255,255,255,.45), rgba(255,255,255,.1));
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+
+    .embed-sidebar-head {
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .embed-sidebar-title {
+      font-weight: 800;
+      color: var(--primary);
+    }
+
+    .embed-close {
+      border: none;
+      background: #fee2e2;
+      color: #b91c1c;
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      cursor: pointer;
+      font-size: 18px;
+      font-weight: 900;
+    }
+
+    .embed-close:hover {
+      transform: scale(1.04);
+      filter: brightness(1.02);
+    }
+
+    .embed-list {
+      padding: 14px;
+      display: grid;
+      gap: 10px;
+      overflow: auto;
+    }
+
+    .embed-item {
+      border: 1px solid var(--border);
+      background: #f8fbff;
+      color: var(--text);
+      border-radius: 14px;
+      padding: 12px;
+      cursor: pointer;
+      text-align: left;
+      font-weight: 700;
+    }
+
+    .embed-item:hover,
+    .embed-item.active {
+      border-color: var(--primary);
+      color: var(--primary);
+      transform: translateY(-1px);
+      background: #eef5ff;
+    }
+
+    .embed-main {
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      background: rgba(255,255,255,.35);
+    }
+
+    .embed-main-top {
+      min-height: 62px;
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .embed-title-block {
+      display: grid;
+      gap: 2px;
+    }
+
+    .embed-main-title {
+      font-weight: 800;
+      font-size: 1rem;
+    }
+
+    .embed-main-url {
+      font-size: .82rem;
+      color: var(--muted);
+      word-break: break-all;
+    }
+
+    .embed-frame-wrap {
+      position: relative;
+      flex: 1;
+      background: #fff;
+    }
+
+    .embed-frame,
+    .embed-content-text {
+      width: 100%;
+      height: 100%;
+      border: none;
+      display: block;
+      animation: frameIn .12s ease;
+    }
+
+    .embed-content-text {
+      padding: 24px;
+      overflow: auto;
+      color: var(--text);
+      line-height: 1.6;
+      background: linear-gradient(180deg, rgba(255,255,255,.65), rgba(255,255,255,.95));
+    }
+
+    .embed-empty {
+      width: 100%;
+      height: 100%;
+      display: grid;
+      place-items: center;
+      color: var(--muted);
+      padding: 20px;
+      text-align: center;
+    }
+
     body.theme-default {
       --bg: #f4f7fb;
       --bg2: #eaf0f8;
@@ -748,41 +933,6 @@
       --primary2: #3b82f6;
       --border: #223146;
       --shadow: 0 10px 25px rgba(0,0,0,0.45);
-    }
-
-    body.theme-midnight .topbar,
-    body.theme-midnight .drawer,
-    body.theme-midnight .news-card,
-    body.theme-midnight .score-card,
-    body.theme-midnight .bookmark-item,
-    body.theme-midnight .list-links a,
-    body.theme-midnight #sj-address,
-    body.theme-midnight #proxy-nav-input,
-    body.theme-midnight #bookmark-name,
-    body.theme-midnight #bookmark-url,
-    body.theme-midnight #home-url,
-    body.theme-midnight #search-engine-input,
-    body.theme-midnight #style-select,
-    body.theme-midnight #bookmark-display-select,
-    body.theme-midnight #cloak-select,
-    body.theme-midnight .segmented button,
-    body.theme-midnight .bookmark-pill,
-    body.theme-midnight .topbar-toggle-floating {
-      background-color: #0f172a;
-      color: #e5e7eb;
-    }
-
-    body.theme-midnight #sj-address,
-    body.theme-midnight #proxy-nav-input,
-    body.theme-midnight #bookmark-name,
-    body.theme-midnight #bookmark-url,
-    body.theme-midnight #home-url,
-    body.theme-midnight #search-engine-input,
-    body.theme-midnight #style-select,
-    body.theme-midnight #bookmark-display-select,
-    body.theme-midnight #cloak-select {
-      background: #111827;
-      border-color: #223146;
     }
 
     body.theme-forest {
@@ -829,6 +979,176 @@
       --border: #f6cede;
     }
 
+    body.theme-xp {
+      --bg: #d6e8ff;
+      --bg2: #b7d5ff;
+      --card: #f5fbff;
+      --text: #12345a;
+      --muted: #466b92;
+      --primary: #0b60d1;
+      --primary2: #2a85f6;
+      --border: #8fb8ea;
+      --shadow: 0 10px 22px rgba(14, 82, 156, 0.18);
+    }
+
+    body.theme-retro {
+      --bg: #f6ead3;
+      --bg2: #e8d2a8;
+      --card: #fff7e5;
+      --text: #4a3422;
+      --muted: #86644d;
+      --primary: #c26a2e;
+      --primary2: #8d4b1d;
+      --border: #d9b98e;
+      --shadow: 0 10px 22px rgba(93, 58, 22, 0.16);
+    }
+
+    body.theme-retro-dark {
+      --bg: #241d1a;
+      --bg2: #171210;
+      --card: #2f2622;
+      --text: #f3e3c8;
+      --muted: #c6aa84;
+      --primary: #ff9f43;
+      --primary2: #e67e22;
+      --border: #5d4637;
+      --shadow: 0 10px 28px rgba(0,0,0,.45);
+    }
+
+    body.theme-neon {
+      --bg: #080b16;
+      --bg2: #111827;
+      --card: #0f172a;
+      --text: #d7f9ff;
+      --muted: #7dd3fc;
+      --primary: #22d3ee;
+      --primary2: #06b6d4;
+      --border: #164e63;
+      --shadow: 0 10px 26px rgba(34,211,238,.18);
+    }
+
+    body.theme-ocean {
+      --bg: #ecfeff;
+      --bg2: #cffafe;
+      --card: #ffffff;
+      --text: #12313a;
+      --muted: #46717c;
+      --primary: #0891b2;
+      --primary2: #0e7490;
+      --border: #bae6fd;
+      --shadow: 0 10px 24px rgba(8,145,178,.12);
+    }
+
+    body.theme-default .topbar,
+    body.theme-forest .topbar,
+    body.theme-sunset .topbar,
+    body.theme-lavender .topbar,
+    body.theme-rose .topbar,
+    body.theme-xp .topbar,
+    body.theme-retro .topbar,
+    body.theme-ocean .topbar {
+      background: rgba(255,255,255,0.78);
+    }
+
+    body.theme-midnight .topbar,
+    body.theme-midnight .drawer,
+    body.theme-midnight .news-card,
+    body.theme-midnight .score-card,
+    body.theme-midnight .bookmark-item,
+    body.theme-midnight .list-links a,
+    body.theme-midnight #sj-address,
+    body.theme-midnight #proxy-nav-input,
+    body.theme-midnight #bookmark-name,
+    body.theme-midnight #bookmark-url,
+    body.theme-midnight #home-url,
+    body.theme-midnight #search-engine-input,
+    body.theme-midnight #style-select,
+    body.theme-midnight #bookmark-display-select,
+    body.theme-midnight #cloak-select,
+    body.theme-midnight .segmented button,
+    body.theme-midnight .bookmark-pill,
+    body.theme-midnight .topbar-toggle-floating,
+    body.theme-midnight .embed-layout {
+      background-color: #0f172a;
+      color: #e5e7eb;
+    }
+
+    body.theme-neon .topbar,
+    body.theme-neon .drawer,
+    body.theme-neon .news-card,
+    body.theme-neon .score-card,
+    body.theme-neon .bookmark-item,
+    body.theme-neon .list-links a,
+    body.theme-neon #sj-address,
+    body.theme-neon #proxy-nav-input,
+    body.theme-neon #bookmark-name,
+    body.theme-neon #bookmark-url,
+    body.theme-neon #home-url,
+    body.theme-neon #search-engine-input,
+    body.theme-neon #style-select,
+    body.theme-neon #bookmark-display-select,
+    body.theme-neon #cloak-select,
+    body.theme-neon .segmented button,
+    body.theme-neon .bookmark-pill,
+    body.theme-neon .topbar-toggle-floating,
+    body.theme-neon .embed-layout {
+      background-color: #0f172a;
+      color: #d7f9ff;
+    }
+
+    body.theme-retro-dark .topbar,
+    body.theme-retro-dark .drawer,
+    body.theme-retro-dark .news-card,
+    body.theme-retro-dark .score-card,
+    body.theme-retro-dark .bookmark-item,
+    body.theme-retro-dark .list-links a,
+    body.theme-retro-dark #sj-address,
+    body.theme-retro-dark #proxy-nav-input,
+    body.theme-retro-dark #bookmark-name,
+    body.theme-retro-dark #bookmark-url,
+    body.theme-retro-dark #home-url,
+    body.theme-retro-dark #search-engine-input,
+    body.theme-retro-dark #style-select,
+    body.theme-retro-dark #bookmark-display-select,
+    body.theme-retro-dark #cloak-select,
+    body.theme-retro-dark .segmented button,
+    body.theme-retro-dark .bookmark-pill,
+    body.theme-retro-dark .topbar-toggle-floating,
+    body.theme-retro-dark .embed-layout {
+      background-color: #2f2622;
+      color: #f3e3c8;
+    }
+
+    body.theme-midnight #sj-address,
+    body.theme-midnight #proxy-nav-input,
+    body.theme-midnight #bookmark-name,
+    body.theme-midnight #bookmark-url,
+    body.theme-midnight #home-url,
+    body.theme-midnight #search-engine-input,
+    body.theme-midnight #style-select,
+    body.theme-midnight #bookmark-display-select,
+    body.theme-midnight #cloak-select,
+    body.theme-neon #sj-address,
+    body.theme-neon #proxy-nav-input,
+    body.theme-neon #bookmark-name,
+    body.theme-neon #bookmark-url,
+    body.theme-neon #home-url,
+    body.theme-neon #search-engine-input,
+    body.theme-neon #style-select,
+    body.theme-neon #bookmark-display-select,
+    body.theme-neon #cloak-select,
+    body.theme-retro-dark #sj-address,
+    body.theme-retro-dark #proxy-nav-input,
+    body.theme-retro-dark #bookmark-name,
+    body.theme-retro-dark #bookmark-url,
+    body.theme-retro-dark #home-url,
+    body.theme-retro-dark #search-engine-input,
+    body.theme-retro-dark #style-select,
+    body.theme-retro-dark #bookmark-display-select,
+    body.theme-retro-dark #cloak-select {
+      border-color: var(--border);
+    }
+
     body.compact-browser .page {
       display: none;
     }
@@ -845,8 +1165,23 @@
     }
 
     @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(10px); }
+      from { opacity: 0; transform: translateY(8px); }
       to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes frameIn {
+      from { opacity: 0; transform: translateY(4px) scale(.995); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    @keyframes slideDown {
+      from { opacity: 0; transform: translateY(-6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes zoomIn {
+      from { opacity: 0; transform: scale(.985); }
+      to { opacity: 1; transform: scale(1); }
     }
 
     @media (max-width: 920px) {
@@ -863,6 +1198,13 @@
       body.bar-hidden #sj-frame {
         height: 100% !important;
       }
+      .embed-layout {
+        grid-template-columns: 1fr;
+        height: 92vh;
+      }
+      .embed-sidebar {
+        max-height: 220px;
+      }
     }
   </style>
 </head>
@@ -875,10 +1217,9 @@
     </div>
     <div class="nav-links">
       <a href="/">Home</a>
-      <button type="button" onclick="openQuickNav('https://crazygames.com')">Games</button>
-      <button type="button" onclick="openQuickNav('https://www.google.com/search?q=web+proxy')">Proxies</button>
-      <button type="button" onclick="openQuickNav('https://tlk.io')">Live Chat</button>
-      <button type="button" onclick="openQuickNav('https://www.wikipedia.org')">Information</button>
+      <button type="button" onclick="openEmbedCategory('games')">Games</button>
+      <button type="button" onclick="openInfoPage()">Information</button>
+      <button type="button" onclick="openEmbedCategory('chat')">Live Chat</button>
       <button type="button" onclick="toggleSettings()">Settings</button>
     </div>
   </div>
@@ -923,6 +1264,9 @@
             <a href="#" onclick="toggleSettings(); return false;">Open Settings</a>
             <a href="#" onclick="openQuickNav(loadSettings().homeUrl || 'https://google.com'); return false;">Open Home Page</a>
             <a href="#" onclick="toggleCompactMode(); return false;">Open Focus Page</a>
+            <a href="#" onclick="openEmbedCategory('games'); return false;">Open Games Panel</a>
+            <a href="#" onclick="openEmbedCategory('chat'); return false;">Open Live Chat</a>
+            <a href="#" onclick="openInfoPage(); return false;">About This Site</a>
           </div>
         </div>
       </aside>
@@ -1043,6 +1387,11 @@
         <option value="sunset">Sunset</option>
         <option value="lavender">Lavender</option>
         <option value="rose">Rose</option>
+        <option value="xp">Windows XP</option>
+        <option value="retro">Retro</option>
+        <option value="retro-dark">Retro Dark</option>
+        <option value="neon">Neon</option>
+        <option value="ocean">Ocean</option>
       </select>
     </div>
 
@@ -1083,6 +1432,32 @@
     </div>
   </div>
 
+  <div class="embed-overlay" id="embed-overlay">
+    <div class="embed-layout">
+      <div class="embed-sidebar">
+        <div class="embed-sidebar-head">
+          <div class="embed-sidebar-title" id="embed-sidebar-title">Embeds</div>
+          <button class="embed-close" onclick="closeEmbedOverlay()">×</button>
+        </div>
+        <div class="embed-list" id="embed-list"></div>
+      </div>
+      <div class="embed-main">
+        <div class="embed-main-top">
+          <div class="embed-title-block">
+            <div class="embed-main-title" id="embed-main-title">Select an item</div>
+            <div class="embed-main-url" id="embed-main-url">No content selected</div>
+          </div>
+          <div class="bookmark-row">
+            <button class="ghost-btn" type="button" id="embed-open-new-btn">Open in new tab</button>
+          </div>
+        </div>
+        <div class="embed-frame-wrap" id="embed-frame-wrap">
+          <div class="embed-empty">Choose something from the list to load it here.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <script>
     "use strict";
 
@@ -1109,8 +1484,28 @@
       cloak: "none"
     };
 
+    const EMBED_CATEGORIES = {
+      games: {
+        title: "Games",
+        items: [
+          { name: "Lowk3", url: "https://lowk3.savitaipaleenmusiikkikoulu.fi/" },
+          { name: "Unblocked Games Premium", url: "https://unblockedgamespremium.pages.dev" },
+          { name: "BillyBong50", url: "https://billybong50.pages.dev" },
+          { name: "Clever Mirror", url: "https://d.clever.com.real3m.com/" }
+        ]
+      },
+      chat: {
+        title: "Live Chat",
+        items: [
+          { name: "TLK.io Chat", url: "https://tlk.io" }
+        ]
+      }
+    };
+
     let tabs = [];
     let activeTabId = null;
+    let currentEmbedCategory = null;
+    let currentEmbedItem = null;
 
     function qs(id) { return document.getElementById(id); }
 
@@ -1182,7 +1577,12 @@
         "theme-forest",
         "theme-sunset",
         "theme-lavender",
-        "theme-rose"
+        "theme-rose",
+        "theme-xp",
+        "theme-retro",
+        "theme-retro-dark",
+        "theme-neon",
+        "theme-ocean"
       );
 
       if (!theme || theme === "default") document.body.classList.add("theme-default");
@@ -1191,6 +1591,11 @@
       if (theme === "sunset") document.body.classList.add("theme-sunset");
       if (theme === "lavender") document.body.classList.add("theme-lavender");
       if (theme === "rose") document.body.classList.add("theme-rose");
+      if (theme === "xp") document.body.classList.add("theme-xp");
+      if (theme === "retro") document.body.classList.add("theme-retro");
+      if (theme === "retro-dark") document.body.classList.add("theme-retro-dark");
+      if (theme === "neon") document.body.classList.add("theme-neon");
+      if (theme === "ocean") document.body.classList.add("theme-ocean");
 
       localStorage.setItem(STORAGE_KEYS.theme, theme || "default");
       qs("style-select").value = theme || "default";
@@ -1492,7 +1897,13 @@
 
       const frame = scramjet.createFrame();
       frame.frame.id = "sj-frame";
+      frame.frame.style.opacity = "0";
       qs("proxy-overlay").appendChild(frame.frame);
+
+      requestAnimationFrame(() => {
+        frame.frame.style.opacity = "1";
+      });
+
       frame.go(url);
     }
 
@@ -1785,6 +2196,108 @@
       newWin.document.close();
     }
 
+    function openEmbedCategory(category) {
+      const config = EMBED_CATEGORIES[category];
+      if (!config) return;
+
+      currentEmbedCategory = category;
+      currentEmbedItem = null;
+
+      qs("embed-sidebar-title").textContent = config.title;
+      qs("embed-overlay").style.display = "flex";
+      document.body.style.overflow = "hidden";
+
+      const list = qs("embed-list");
+      list.innerHTML = "";
+
+      config.items.forEach((item, index) => {
+        const btn = document.createElement("button");
+        btn.className = "embed-item";
+        btn.textContent = item.name;
+        btn.type = "button";
+        btn.onclick = () => selectEmbedItem(category, index);
+        list.appendChild(btn);
+      });
+
+      if (config.items.length) {
+        selectEmbedItem(category, 0);
+      } else {
+        qs("embed-main-title").textContent = "No items";
+        qs("embed-main-url").textContent = "Nothing available";
+        qs("embed-frame-wrap").innerHTML = `<div class="embed-empty">No embeds available in this section.</div>`;
+      }
+    }
+
+    function selectEmbedItem(category, index) {
+      const config = EMBED_CATEGORIES[category];
+      if (!config || !config.items[index]) return;
+
+      currentEmbedItem = config.items[index];
+      document.querySelectorAll(".embed-item").forEach((el, i) => {
+        el.classList.toggle("active", i === index);
+      });
+
+      qs("embed-main-title").textContent = currentEmbedItem.name;
+      qs("embed-main-url").textContent = currentEmbedItem.url;
+
+      qs("embed-open-new-btn").onclick = () => {
+        window.open(currentEmbedItem.url, "_blank");
+      };
+
+      qs("embed-frame-wrap").innerHTML = `
+        <iframe
+          class="embed-frame"
+          src="${currentEmbedItem.url.replace(/"/g, "&quot;")}"
+          referrerpolicy="no-referrer"
+          allowfullscreen
+        ></iframe>
+      `;
+    }
+
+    function closeEmbedOverlay() {
+      qs("embed-overlay").style.display = "none";
+      document.body.style.overflow = "auto";
+      currentEmbedCategory = null;
+      currentEmbedItem = null;
+      qs("embed-frame-wrap").innerHTML = `<div class="embed-empty">Choose something from the list to load it here.</div>`;
+    }
+
+    function openInfoPage() {
+      qs("embed-overlay").style.display = "flex";
+      document.body.style.overflow = "hidden";
+      qs("embed-sidebar-title").textContent = "Information";
+      qs("embed-list").innerHTML = `
+        <button class="embed-item active" type="button">About mad</button>
+      `;
+      qs("embed-main-title").textContent = "About This Website";
+      qs("embed-main-url").textContent = "Information panel";
+      qs("embed-open-new-btn").onclick = () => {};
+      qs("embed-frame-wrap").innerHTML = `
+        <div class="embed-content-text">
+          <h2 style="margin-top:0;">mad</h2>
+          <p>
+            mad is a customizable start page with a clean homepage, saved tabs, bookmarks,
+            sports news/scores, themes, and a built-in browser-style interface.
+          </p>
+          <p>
+            Features include:
+          </p>
+          <ul>
+            <li>Quick search and URL navigation</li>
+            <li>Saved bookmarks and tabs</li>
+            <li>Sports center for MLB, NBA, and NFL</li>
+            <li>Theme customization</li>
+            <li>Focus mode and about:blank launcher</li>
+            <li>Embed viewer for games and chat pages</li>
+          </ul>
+          <p>
+            Some external websites may not load inside the embed panel because they block iframe embedding
+            with security headers. If that happens, use <strong>Open in new tab</strong>.
+          </p>
+        </div>
+      `;
+    }
+
     window.addEventListener("load", async () => {
       const form = qs("sj-form");
       const address = qs("sj-address");
@@ -1866,6 +2379,10 @@
         } catch (err) {
           showError(err.message || err.toString());
         }
+      });
+
+      qs("embed-overlay").addEventListener("click", (e) => {
+        if (e.target === qs("embed-overlay")) closeEmbedOverlay();
       });
     });
   </script>
