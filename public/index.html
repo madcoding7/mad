@@ -37,14 +37,14 @@
       margin: 0;
       min-height: 100vh;
       overflow-y: auto;
-      transition: background .25s ease, color .25s ease;
+      transition: background .45s ease, color .45s ease;
       cursor: auto !important;
     }
 
     a { color: inherit; }
 
-    button, input, select, .tab, .news-card, .bookmark-item, .list-links a, .chip-btn, .panel, .hero-card, .drawer {
-      transition: all .18s ease;
+    button, input, select, .tab, .news-card, .bookmark-item, .list-links a, .chip-btn, .panel, .hero-card, .drawer, .info-modal, .score-card, .bookmark-pill {
+      transition: all .35s cubic-bezier(.22,1,.36,1);
     }
 
     .topbar {
@@ -61,7 +61,7 @@
       backdrop-filter: blur(12px);
       border-bottom: 1px solid var(--border);
       transform: translateY(0);
-      transition: transform .25s ease, background .2s ease, border-color .2s ease;
+      transition: transform .4s cubic-bezier(.22,1,.36,1), background .3s ease, border-color .3s ease;
     }
 
     body.topbar-hidden .topbar {
@@ -86,6 +86,7 @@
 
     body.topbar-hidden .topbar-toggle-floating {
       display: block;
+      animation: fadeScale .3s ease;
     }
 
     .brand {
@@ -118,13 +119,13 @@
     .nav-links a:hover, .nav-links button:hover {
       background: rgba(37,99,235,0.08);
       color: var(--primary);
-      transform: translateY(-1px);
+      transform: translateY(-2px);
     }
 
     .page {
       width: min(1150px, 92%);
       margin: 28px auto;
-      animation: fadeUp .35s ease;
+      animation: fadeUp .7s cubic-bezier(.22,1,.36,1);
     }
 
     .hero {
@@ -145,17 +146,7 @@
       padding: 34px;
       position: relative;
       overflow: hidden;
-      animation: fadeUp .35s ease;
-    }
-
-    .hero-card::before {
-      content: "";
-      position: absolute;
-      inset: auto -50px -50px auto;
-      width: 240px;
-      height: 240px;
-      background: radial-gradient(circle, rgba(37,99,235,.16), transparent 65%);
-      border-radius: 50%;
+      animation: fadeUp .6s cubic-bezier(.22,1,.36,1);
     }
 
     .hero-label {
@@ -177,6 +168,11 @@
       color: var(--muted);
       margin: 0 0 18px;
       line-height: 1.5;
+    }
+
+    .private-warning {
+      color: red;
+      font-weight: 800;
     }
 
     #sj-form {
@@ -213,6 +209,7 @@
     #sj-address:focus, #proxy-nav-input:focus, #bookmark-name:focus, #bookmark-url:focus, #home-url:focus, #search-engine-input:focus, #cloak-select:focus, #style-select:focus, #bookmark-display-select:focus {
       border-color: var(--primary);
       box-shadow: 0 0 0 3px rgba(37,99,235,.12);
+      transform: scale(1.01);
     }
 
     .primary-btn, .ghost-btn, .chip-btn, .icon-btn {
@@ -228,7 +225,7 @@
       color: white;
     }
 
-    .primary-btn:hover { filter: brightness(1.05); transform: translateY(-1px); }
+    .primary-btn:hover { filter: brightness(1.06); transform: translateY(-2px) scale(1.01); }
 
     .ghost-btn, .icon-btn {
       background: #eef4ff;
@@ -237,7 +234,7 @@
 
     .ghost-btn:hover, .icon-btn:hover {
       background: #e3edff;
-      transform: translateY(-1px);
+      transform: translateY(-2px);
     }
 
     .icon-btn {
@@ -256,33 +253,39 @@
       fill: currentColor;
     }
 
-    .chip-row {
+    .chip-grid {
       display: flex;
-      flex-wrap: wrap;
+      flex-direction: column;
+      gap: 14px;
+      margin-top: 18px;
+    }
+
+    .chip-row-five {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
       gap: 10px;
-      margin-top: 16px;
-      align-items: center;
     }
 
     .chip-btn {
       background: #f3f6fb;
       color: var(--text);
       border: 1px solid var(--border);
-      padding: 10px 14px;
+      padding: 12px 10px;
+      text-align: center;
     }
 
     .chip-btn:hover {
       border-color: var(--primary);
       color: var(--primary);
       background: #f8fbff;
-      transform: translateY(-1px);
+      transform: translateY(-2px) scale(1.02);
     }
 
-    .chip-divider {
-      width: 1px;
-      height: 30px;
+    .middle-line {
+      width: 100%;
+      height: 1px;
       background: var(--border);
-      margin: 0 2px;
+      margin: 2px 0;
     }
 
     .side-card {
@@ -317,7 +320,7 @@
     .list-links a:hover {
       border-color: var(--primary);
       color: var(--primary);
-      transform: translateY(-1px);
+      transform: translateY(-2px);
     }
 
     .grid {
@@ -329,7 +332,7 @@
 
     .panel {
       padding: 20px;
-      animation: fadeUp .4s ease;
+      animation: fadeUp .6s cubic-bezier(.22,1,.36,1);
     }
 
     .section-head {
@@ -401,13 +404,14 @@
       background: #eaf2ff;
       border-color: #bfd4ff;
       color: var(--primary);
+      transform: scale(1.03);
     }
 
     .news-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
       gap: 14px;
-      animation: fadeUp .18s ease;
+      animation: fadeUp .35s ease;
     }
 
     .news-card {
@@ -422,8 +426,8 @@
     }
 
     .news-card:hover {
-      transform: translateY(-4px) scale(1.01);
-      box-shadow: 0 12px 20px rgba(0,0,0,.08);
+      transform: translateY(-5px) scale(1.015);
+      box-shadow: 0 14px 24px rgba(0,0,0,.08);
       border-color: #bfd4ff;
     }
 
@@ -461,7 +465,7 @@
     .score-list {
       display: grid;
       gap: 12px;
-      animation: fadeUp .18s ease;
+      animation: fadeUp .35s ease;
     }
 
     .score-card {
@@ -471,18 +475,9 @@
       background: #fff;
     }
 
-    .score-top {
-      display: flex;
-      justify-content: space-between;
-      gap: 12px;
-      font-size: .8rem;
-      color: var(--muted);
-      margin-bottom: 8px;
-    }
-
-    .score-match {
-      font-weight: 800;
-      font-size: .95rem;
+    .score-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 18px rgba(0,0,0,.06);
     }
 
     #error-msg {
@@ -502,7 +497,7 @@
       margin-top: 16px;
       padding-top: 14px;
       border-top: 1px solid var(--border);
-      animation: fadeUp .2s ease;
+      animation: fadeUp .3s ease;
     }
 
     .bookmark-pill {
@@ -518,6 +513,7 @@
     .bookmark-pill:hover {
       border-color: var(--primary);
       color: var(--primary);
+      transform: translateY(-2px);
     }
 
     #proxy-overlay {
@@ -528,11 +524,11 @@
       display: none;
       flex-direction: column;
       overflow: hidden;
-      animation: fadeIn .12s ease;
+      animation: fadeIn .25s ease;
     }
 
     body.theme-midnight #proxy-overlay {
-      background: #0a0f1a;
+      background: #050814;
     }
 
     .proxy-tabs {
@@ -552,8 +548,8 @@
     }
 
     body.theme-midnight .proxy-tabs {
-      background: #111827;
-      border-bottom-color: #233044;
+      background: #0b1220;
+      border-bottom-color: #1e293b;
     }
 
     .tab {
@@ -573,17 +569,17 @@
     .tab.active {
       background: white;
       border-color: #8bb4ff;
-      transform: translateY(-1px);
+      transform: translateY(-1px) scale(1.01);
     }
 
     body.theme-midnight .tab {
-      background: #0f172a;
+      background: #111827;
       border-color: #263246;
       color: #e5e7eb;
     }
 
     body.theme-midnight .tab.active {
-      background: #172033;
+      background: #1b2538;
       border-color: #60a5fa;
     }
 
@@ -636,8 +632,8 @@
     }
 
     body.theme-midnight .proxy-bar {
-      background: #0f172a;
-      border-bottom-color: #223146;
+      background: #0b1220;
+      border-bottom-color: #1e293b;
     }
 
     .proxy-bar-left, .proxy-bar-right {
@@ -659,7 +655,7 @@
       height: calc(100% - var(--proxy-tabs-height) - var(--proxy-bar-height));
       background: white;
       display: block;
-      animation: fadeIn .08s ease;
+      animation: fadeIn .25s ease;
     }
 
     body.bar-hidden #sj-frame {
@@ -680,7 +676,7 @@
       z-index: 10010;
       display: none;
       padding: 16px;
-      animation: fadeUp .16s ease;
+      animation: fadeUp .3s ease;
     }
 
     .drawer h4 {
@@ -699,6 +695,10 @@
       padding: 10px;
       display: grid;
       gap: 8px;
+    }
+
+    .bookmark-item:hover {
+      transform: translateY(-2px);
     }
 
     .bookmark-row {
@@ -732,6 +732,41 @@
       font-size: 13px;
       font-weight: 700;
       color: var(--muted);
+    }
+
+    .info-modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.45);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 20000;
+      animation: fadeIn .25s ease;
+    }
+
+    .info-modal {
+      width: min(560px, 92%);
+      background: var(--card);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+      padding: 22px;
+      position: relative;
+      animation: fadeUp .35s ease;
+    }
+
+    .info-close {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      border: none;
+      background: transparent;
+      color: var(--text);
+      font-size: 22px;
+      font-weight: 800;
+      cursor: pointer;
     }
 
     body.theme-default {
@@ -802,28 +837,37 @@
       --border: #f6cede;
     }
 
-    body.theme-retro {
-      --bg: #f4ecd8;
-      --bg2: #e6d8b5;
-      --card: #fff8e7;
-      --text: #3b2f2f;
-      --muted: #7a6652;
-      --primary: #c26d2c;
-      --primary2: #8f4a1c;
-      --border: #d7c29e;
-      --shadow: 0 8px 20px rgba(97, 61, 32, 0.18);
+    body.theme-ocean {
+      --bg: #eef9ff;
+      --bg2: #d8f1ff;
+      --card: #ffffff;
+      --text: #123040;
+      --muted: #5a7a89;
+      --primary: #0891b2;
+      --primary2: #0e7490;
+      --border: #bfe8f5;
     }
 
-    body.theme-xp {
-      --bg: #d6e8ff;
-      --bg2: #b9d5ff;
-      --card: #f7fbff;
-      --text: #12325c;
-      --muted: #4d6d96;
-      --primary: #2b73d2;
-      --primary2: #1d56a6;
-      --border: #8bb7f0;
-      --shadow: 0 8px 18px rgba(31, 84, 160, 0.18);
+    body.theme-emerald {
+      --bg: #ecfdf5;
+      --bg2: #d1fae5;
+      --card: #ffffff;
+      --text: #113127;
+      --muted: #4f7a6a;
+      --primary: #10b981;
+      --primary2: #059669;
+      --border: #b7efd7;
+    }
+
+    body.theme-gold {
+      --bg: #fffbea;
+      --bg2: #fef3c7;
+      --card: #ffffff;
+      --text: #3b2f12;
+      --muted: #8b6f2f;
+      --primary: #d97706;
+      --primary2: #b45309;
+      --border: #f6e3a1;
     }
 
     body.theme-midnight .topbar,
@@ -843,9 +887,14 @@
     body.theme-midnight #cloak-select,
     body.theme-midnight .segmented button,
     body.theme-midnight .bookmark-pill,
-    body.theme-midnight .topbar-toggle-floating {
+    body.theme-midnight .topbar-toggle-floating,
+    body.theme-midnight .info-modal {
       background-color: #0f172a;
       color: #e5e7eb;
+    }
+
+    body.theme-midnight .topbar {
+      background: rgba(15,23,42,0.88);
     }
 
     body.theme-midnight #sj-address,
@@ -856,8 +905,13 @@
     body.theme-midnight #search-engine-input,
     body.theme-midnight #style-select,
     body.theme-midnight #bookmark-display-select,
-    body.theme-midnight #cloak-select {
-      background: #111827;
+    body.theme-midnight #cloak-select,
+    body.theme-midnight .list-links a,
+    body.theme-midnight .bookmark-pill,
+    body.theme-midnight .segmented button,
+    body.theme-midnight .score-card,
+    body.theme-midnight .news-card,
+    body.theme-midnight .bookmark-item {
       border-color: #223146;
     }
 
@@ -877,8 +931,13 @@
     }
 
     @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(8px); }
+      from { opacity: 0; transform: translateY(14px); }
       to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeScale {
+      from { opacity: 0; transform: scale(.96); }
+      to { opacity: 1; transform: scale(1); }
     }
 
     @media (max-width: 920px) {
@@ -888,6 +947,9 @@
       .topbar {
         align-items: flex-start;
         flex-direction: column;
+      }
+      .chip-row-five {
+        grid-template-columns: repeat(2, 1fr);
       }
       #sj-frame {
         height: calc(100% - var(--proxy-tabs-height) - 94px);
@@ -907,7 +969,7 @@
     </div>
     <div class="nav-links">
       <a href="/">Home</a>
-      <button type="button" onclick="openQuickNav('https://www.wikipedia.org')">Information</button>
+      <button type="button" onclick="openInfoModal()">Information</button>
       <button type="button" onclick="toggleSettings()">Settings</button>
     </div>
   </div>
@@ -925,15 +987,24 @@
           <button type="submit" class="primary-btn" id="sj-btn" disabled>Go</button>
         </form>
 
-        <div class="chip-row" id="quick-links">
-          <button class="chip-btn" type="button" data-url="https://google.com">Google</button>
-          <button class="chip-btn" type="button" data-url="https://youtube.com">YouTube</button>
-          <div class="chip-divider"></div>
-          <button class="chip-btn" type="button" data-url="https://mlbwebcast.com">mlbwebcast.com</button>
-          <button class="chip-btn" type="button" data-url="https://buffstreams.plus">buffstreams.plus</button>
-          <div class="chip-divider"></div>
-          <button class="chip-btn" type="button" data-url="https://sharkstreams.net">sharkstreams.net</button>
-          <button class="chip-btn" type="button" data-url="https://wikipedia.org">Wikipedia</button>
+        <div class="chip-grid" id="quick-links">
+          <div class="chip-row-five">
+            <button class="chip-btn" type="button" data-url="https://google.com">Google</button>
+            <button class="chip-btn" type="button" data-url="https://reddit.com">Reddit</button>
+            <button class="chip-btn" type="button" data-url="https://discord.com">Discord</button>
+            <button class="chip-btn" type="button" data-url="https://crazygames.com">CrazyGames</button>
+            <button class="chip-btn" type="button" data-url="https://tiktok.com">Tiktok</button>
+          </div>
+
+          <div class="middle-line"></div>
+
+          <div class="chip-row-five">
+            <button class="chip-btn" type="button" data-url="https://mlbwebcast.com">mlbwebcast</button>
+            <button class="chip-btn" type="button" data-url="https://buffstreams.plus">buffstreams</button>
+            <button class="chip-btn" type="button" data-url="https://sharkstreams.net">sharkstreams</button>
+            <button class="chip-btn" type="button" data-url="https://thetvapp.to">thetvapp</button>
+            <button class="chip-btn" type="button" data-url="https://streameast.ga">streameast</button>
+          </div>
         </div>
 
         <div id="bookmark-bar" class="bookmark-bar"></div>
@@ -1070,8 +1141,9 @@
         <option value="sunset">Sunset</option>
         <option value="lavender">Lavender</option>
         <option value="rose">Rose</option>
-        <option value="retro">Retro</option>
-        <option value="xp">Windows XP</option>
+        <option value="ocean">Ocean</option>
+        <option value="emerald">Emerald</option>
+        <option value="gold">Gold</option>
       </select>
     </div>
 
@@ -1112,6 +1184,16 @@
     </div>
   </div>
 
+  <div class="info-modal-backdrop" id="info-modal">
+    <div class="info-modal">
+      <button class="info-close" onclick="closeInfoModal()">×</button>
+      <h3 style="margin-top:0;">About mad4watching</h3>
+      <p>This website is a custom start page and proxy hub. You can search the web, open sites inside the proxy, save bookmarks, manage tabs, watch sports, and customize the look with themes.</p>
+      <p>It also includes quick links, saved tabs, bookmark tools, and a sports section for scores and news.</p>
+      <p class="private-warning">This website is very PRIVATE, this website has only been given very few people.</p>
+    </div>
+  </div>
+
   <script>
     "use strict";
 
@@ -1143,6 +1225,14 @@
     let activeTabId = null;
 
     function qs(id) { return document.getElementById(id); }
+
+    function openInfoModal() {
+      qs("info-modal").style.display = "flex";
+    }
+
+    function closeInfoModal() {
+      qs("info-modal").style.display = "none";
+    }
 
     function saveJSON(key, value) {
       localStorage.setItem(key, JSON.stringify(value));
@@ -1213,8 +1303,9 @@
         "theme-sunset",
         "theme-lavender",
         "theme-rose",
-        "theme-retro",
-        "theme-xp"
+        "theme-ocean",
+        "theme-emerald",
+        "theme-gold"
       );
 
       if (!theme || theme === "default") document.body.classList.add("theme-default");
@@ -1223,8 +1314,9 @@
       if (theme === "sunset") document.body.classList.add("theme-sunset");
       if (theme === "lavender") document.body.classList.add("theme-lavender");
       if (theme === "rose") document.body.classList.add("theme-rose");
-      if (theme === "retro") document.body.classList.add("theme-retro");
-      if (theme === "xp") document.body.classList.add("theme-xp");
+      if (theme === "ocean") document.body.classList.add("theme-ocean");
+      if (theme === "emerald") document.body.classList.add("theme-emerald");
+      if (theme === "gold") document.body.classList.add("theme-gold");
 
       localStorage.setItem(STORAGE_KEYS.theme, theme || "default");
       qs("style-select").value = theme || "default";
@@ -1902,6 +1994,10 @@
         } catch (err) {
           showError(err.message || err.toString());
         }
+      });
+
+      qs("info-modal").addEventListener("click", (e) => {
+        if (e.target === qs("info-modal")) closeInfoModal();
       });
     });
   </script>
