@@ -37,14 +37,14 @@
       margin: 0;
       min-height: 100vh;
       overflow-y: auto;
-      transition: background .3s ease, color .3s ease;
+      transition: background .25s ease, color .25s ease;
       cursor: auto !important;
     }
 
     a { color: inherit; }
 
     button, input, select, .tab, .news-card, .bookmark-item, .list-links a, .chip-btn, .panel, .hero-card, .drawer {
-      transition: all .25s ease;
+      transition: all .18s ease;
     }
 
     .topbar {
@@ -61,7 +61,7 @@
       backdrop-filter: blur(12px);
       border-bottom: 1px solid var(--border);
       transform: translateY(0);
-      transition: transform .35s ease, background .25s ease, border-color .25s ease;
+      transition: transform .25s ease, background .2s ease, border-color .2s ease;
     }
 
     body.topbar-hidden .topbar {
@@ -124,7 +124,7 @@
     .page {
       width: min(1150px, 92%);
       margin: 28px auto;
-      animation: fadeUp .45s ease;
+      animation: fadeUp .35s ease;
     }
 
     .hero {
@@ -145,7 +145,7 @@
       padding: 34px;
       position: relative;
       overflow: hidden;
-      animation: fadeUp .5s ease;
+      animation: fadeUp .35s ease;
     }
 
     .hero-card::before {
@@ -261,6 +261,7 @@
       flex-wrap: wrap;
       gap: 10px;
       margin-top: 16px;
+      align-items: center;
     }
 
     .chip-btn {
@@ -275,6 +276,13 @@
       color: var(--primary);
       background: #f8fbff;
       transform: translateY(-1px);
+    }
+
+    .chip-divider {
+      width: 1px;
+      height: 30px;
+      background: var(--border);
+      margin: 0 2px;
     }
 
     .side-card {
@@ -321,7 +329,7 @@
 
     .panel {
       padding: 20px;
-      animation: fadeUp .55s ease;
+      animation: fadeUp .4s ease;
     }
 
     .section-head {
@@ -399,7 +407,7 @@
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
       gap: 14px;
-      animation: fadeUp .25s ease;
+      animation: fadeUp .18s ease;
     }
 
     .news-card {
@@ -453,7 +461,7 @@
     .score-list {
       display: grid;
       gap: 12px;
-      animation: fadeUp .25s ease;
+      animation: fadeUp .18s ease;
     }
 
     .score-card {
@@ -494,7 +502,7 @@
       margin-top: 16px;
       padding-top: 14px;
       border-top: 1px solid var(--border);
-      animation: fadeUp .25s ease;
+      animation: fadeUp .2s ease;
     }
 
     .bookmark-pill {
@@ -520,7 +528,7 @@
       display: none;
       flex-direction: column;
       overflow: hidden;
-      animation: fadeIn .25s ease;
+      animation: fadeIn .12s ease;
     }
 
     body.theme-midnight #proxy-overlay {
@@ -651,7 +659,7 @@
       height: calc(100% - var(--proxy-tabs-height) - var(--proxy-bar-height));
       background: white;
       display: block;
-      animation: fadeIn .2s ease;
+      animation: fadeIn .08s ease;
     }
 
     body.bar-hidden #sj-frame {
@@ -672,7 +680,7 @@
       z-index: 10010;
       display: none;
       padding: 16px;
-      animation: fadeUp .22s ease;
+      animation: fadeUp .16s ease;
     }
 
     .drawer h4 {
@@ -750,41 +758,6 @@
       --shadow: 0 10px 25px rgba(0,0,0,0.45);
     }
 
-    body.theme-midnight .topbar,
-    body.theme-midnight .drawer,
-    body.theme-midnight .news-card,
-    body.theme-midnight .score-card,
-    body.theme-midnight .bookmark-item,
-    body.theme-midnight .list-links a,
-    body.theme-midnight #sj-address,
-    body.theme-midnight #proxy-nav-input,
-    body.theme-midnight #bookmark-name,
-    body.theme-midnight #bookmark-url,
-    body.theme-midnight #home-url,
-    body.theme-midnight #search-engine-input,
-    body.theme-midnight #style-select,
-    body.theme-midnight #bookmark-display-select,
-    body.theme-midnight #cloak-select,
-    body.theme-midnight .segmented button,
-    body.theme-midnight .bookmark-pill,
-    body.theme-midnight .topbar-toggle-floating {
-      background-color: #0f172a;
-      color: #e5e7eb;
-    }
-
-    body.theme-midnight #sj-address,
-    body.theme-midnight #proxy-nav-input,
-    body.theme-midnight #bookmark-name,
-    body.theme-midnight #bookmark-url,
-    body.theme-midnight #home-url,
-    body.theme-midnight #search-engine-input,
-    body.theme-midnight #style-select,
-    body.theme-midnight #bookmark-display-select,
-    body.theme-midnight #cloak-select {
-      background: #111827;
-      border-color: #223146;
-    }
-
     body.theme-forest {
       --bg: #eef7f0;
       --bg2: #dfeee4;
@@ -829,6 +802,65 @@
       --border: #f6cede;
     }
 
+    body.theme-retro {
+      --bg: #f4ecd8;
+      --bg2: #e6d8b5;
+      --card: #fff8e7;
+      --text: #3b2f2f;
+      --muted: #7a6652;
+      --primary: #c26d2c;
+      --primary2: #8f4a1c;
+      --border: #d7c29e;
+      --shadow: 0 8px 20px rgba(97, 61, 32, 0.18);
+    }
+
+    body.theme-xp {
+      --bg: #d6e8ff;
+      --bg2: #b9d5ff;
+      --card: #f7fbff;
+      --text: #12325c;
+      --muted: #4d6d96;
+      --primary: #2b73d2;
+      --primary2: #1d56a6;
+      --border: #8bb7f0;
+      --shadow: 0 8px 18px rgba(31, 84, 160, 0.18);
+    }
+
+    body.theme-midnight .topbar,
+    body.theme-midnight .drawer,
+    body.theme-midnight .news-card,
+    body.theme-midnight .score-card,
+    body.theme-midnight .bookmark-item,
+    body.theme-midnight .list-links a,
+    body.theme-midnight #sj-address,
+    body.theme-midnight #proxy-nav-input,
+    body.theme-midnight #bookmark-name,
+    body.theme-midnight #bookmark-url,
+    body.theme-midnight #home-url,
+    body.theme-midnight #search-engine-input,
+    body.theme-midnight #style-select,
+    body.theme-midnight #bookmark-display-select,
+    body.theme-midnight #cloak-select,
+    body.theme-midnight .segmented button,
+    body.theme-midnight .bookmark-pill,
+    body.theme-midnight .topbar-toggle-floating {
+      background-color: #0f172a;
+      color: #e5e7eb;
+    }
+
+    body.theme-midnight #sj-address,
+    body.theme-midnight #proxy-nav-input,
+    body.theme-midnight #bookmark-name,
+    body.theme-midnight #bookmark-url,
+    body.theme-midnight #home-url,
+    body.theme-midnight #search-engine-input,
+    body.theme-midnight #style-select,
+    body.theme-midnight #bookmark-display-select,
+    body.theme-midnight #cloak-select {
+      background: #111827;
+      border-color: #223146;
+    }
+
     body.compact-browser .page {
       display: none;
     }
@@ -845,7 +877,7 @@
     }
 
     @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(10px); }
+      from { opacity: 0; transform: translateY(8px); }
       to { opacity: 1; transform: translateY(0); }
     }
 
@@ -875,9 +907,6 @@
     </div>
     <div class="nav-links">
       <a href="/">Home</a>
-      <button type="button" onclick="openQuickNav('https://crazygames.com')">Games</button>
-      <button type="button" onclick="openQuickNav('https://www.google.com/search?q=web+proxy')">Proxies</button>
-      <button type="button" onclick="openQuickNav('https://tlk.io')">Live Chat</button>
       <button type="button" onclick="openQuickNav('https://www.wikipedia.org')">Information</button>
       <button type="button" onclick="toggleSettings()">Settings</button>
     </div>
@@ -899,10 +928,12 @@
         <div class="chip-row" id="quick-links">
           <button class="chip-btn" type="button" data-url="https://google.com">Google</button>
           <button class="chip-btn" type="button" data-url="https://youtube.com">YouTube</button>
+          <div class="chip-divider"></div>
+          <button class="chip-btn" type="button" data-url="https://mlbwebcast.com">mlbwebcast.com</button>
+          <button class="chip-btn" type="button" data-url="https://buffstreams.plus">buffstreams.plus</button>
+          <div class="chip-divider"></div>
+          <button class="chip-btn" type="button" data-url="https://sharkstreams.net">sharkstreams.net</button>
           <button class="chip-btn" type="button" data-url="https://wikipedia.org">Wikipedia</button>
-          <button class="chip-btn" type="button" data-url="https://reddit.com">Reddit</button>
-          <button class="chip-btn" type="button" data-url="https://discord.com/app">Discord</button>
-          <button class="chip-btn" type="button" data-url="https://crazygames.com">CrazyGames</button>
         </div>
 
         <div id="bookmark-bar" class="bookmark-bar"></div>
@@ -922,7 +953,6 @@
             <a href="#" onclick="toggleBookmarks(); return false;">Open Bookmarks</a>
             <a href="#" onclick="toggleSettings(); return false;">Open Settings</a>
             <a href="#" onclick="openQuickNav(loadSettings().homeUrl || 'https://google.com'); return false;">Open Home Page</a>
-            <a href="#" onclick="toggleCompactMode(); return false;">Open Focus Page</a>
           </div>
         </div>
       </aside>
@@ -993,9 +1023,6 @@
         <button class="icon-btn" onclick="toggleSettings()" title="Settings">
           <svg viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.31.06-.63.06-.94s-.02-.63-.06-.94l2.03-1.58a.5.5 0 0 0 .12-.64l-1.92-3.32a.5.5 0 0 0-.6-.22l-2.39.96a7.03 7.03 0 0 0-1.63-.94l-.36-2.54A.5.5 0 0 0 13.9 2h-3.8a.5.5 0 0 0-.49.42l-.36 2.54c-.58.22-1.12.54-1.63.94l-2.39-.96a.5.5 0 0 0-.6.22L2.71 8.48a.5.5 0 0 0 .12.64l2.03 1.58c-.04.31-.06.63-.06.94s.02.63.06.94l-2.03 1.58a.5.5 0 0 0-.12.64l1.92 3.32a.5.5 0 0 0 .6.22l2.39-.96c.51.4 1.05.72 1.63.94l.36 2.54a.5.5 0 0 0 .49.42h3.8a.5.5 0 0 0 .49-.42l.36-2.54c.58-.22 1.12-.54 1.63-.94l2.39.96a.5.5 0 0 0 .6-.22l1.92-3.32a.5.5 0 0 0-.12-.64l-2.03-1.58ZM12 15.5A3.5 3.5 0 1 1 12 8a3.5 3.5 0 0 1 0 7.5Z"/></svg>
         </button>
-        <button class="icon-btn" onclick="toggleCompactMode()" title="Focus Mode">
-          <svg viewBox="0 0 24 24"><path d="M7 14H5v5h5v-2H7v-3zm0-4h2V7h3V5H5v5zm10 7h-3v2h5v-5h-2v3zm0-12V5h-5v2h3v3h2V5z"/></svg>
-        </button>
       </div>
 
       <form id="proxy-nav-form">
@@ -1043,6 +1070,8 @@
         <option value="sunset">Sunset</option>
         <option value="lavender">Lavender</option>
         <option value="rose">Rose</option>
+        <option value="retro">Retro</option>
+        <option value="xp">Windows XP</option>
       </select>
     </div>
 
@@ -1090,6 +1119,7 @@
     let connection = null;
     let sportsTimerInterval = null;
     let sportsSecondsLeft = 60;
+    let proxyReadyPromise = null;
 
     const STORAGE_KEYS = {
       theme: "mad-theme",
@@ -1182,7 +1212,9 @@
         "theme-forest",
         "theme-sunset",
         "theme-lavender",
-        "theme-rose"
+        "theme-rose",
+        "theme-retro",
+        "theme-xp"
       );
 
       if (!theme || theme === "default") document.body.classList.add("theme-default");
@@ -1191,6 +1223,8 @@
       if (theme === "sunset") document.body.classList.add("theme-sunset");
       if (theme === "lavender") document.body.classList.add("theme-lavender");
       if (theme === "rose") document.body.classList.add("theme-rose");
+      if (theme === "retro") document.body.classList.add("theme-retro");
+      if (theme === "xp") document.body.classList.add("theme-xp");
 
       localStorage.setItem(STORAGE_KEYS.theme, theme || "default");
       qs("style-select").value = theme || "default";
@@ -1223,37 +1257,43 @@
     }
 
     async function ensureProxyReady() {
-      if (typeof BareMux === "undefined" || typeof $scramjetLoadController === "undefined") {
-        throw new Error("Failed to load proxy libraries.");
-      }
+      if (proxyReadyPromise) return proxyReadyPromise;
 
-      if (!scramjet) {
-        const { ScramjetController } = $scramjetLoadController();
-        scramjet = new ScramjetController({
-          files: {
-            wasm: "/scram/scramjet.wasm.wasm",
-            all: "/scram/scramjet.all.js",
-            sync: "/scram/scramjet.sync.js",
-          },
-        });
-        scramjet.init();
-      }
+      proxyReadyPromise = (async () => {
+        if (typeof BareMux === "undefined" || typeof $scramjetLoadController === "undefined") {
+          throw new Error("Failed to load proxy libraries.");
+        }
 
-      if (!connection) {
-        connection = new BareMux.BareMuxConnection("/baremux/worker.js");
-      }
+        if (!scramjet) {
+          const { ScramjetController } = $scramjetLoadController();
+          scramjet = new ScramjetController({
+            files: {
+              wasm: "/scram/scramjet.wasm.wasm",
+              all: "/scram/scramjet.all.js",
+              sync: "/scram/scramjet.sync.js",
+            },
+          });
+          scramjet.init();
+        }
 
-      try {
-        if (typeof registerSW === "function") await registerSW();
-        else await manualRegisterSW();
-      } catch {
-        throw new Error("Failed to register Service Worker.");
-      }
+        if (!connection) {
+          connection = new BareMux.BareMuxConnection("/baremux/worker.js");
+        }
 
-      const wispUrl = (location.protocol === "https:" ? "wss" : "ws") + "://" + location.host + "/wisp/";
-      if ((await connection.getTransport()) !== "/epoxy/index.mjs") {
-        await connection.setTransport("/epoxy/index.mjs", [{ wisp: wispUrl }]);
-      }
+        try {
+          if (typeof registerSW === "function") await registerSW();
+          else await manualRegisterSW();
+        } catch {
+          throw new Error("Failed to register Service Worker.");
+        }
+
+        const wispUrl = (location.protocol === "https:" ? "wss" : "ws") + "://" + location.host + "/wisp/";
+        if ((await connection.getTransport()) !== "/epoxy/index.mjs") {
+          await connection.setTransport("/epoxy/index.mjs", [{ wisp: wispUrl }]);
+        }
+      })();
+
+      return proxyReadyPromise;
     }
 
     function getBookmarks() {
@@ -1569,12 +1609,6 @@
       qs("topbar-floating-btn").textContent = hidden ? "Show Bar" : "Hide Bar";
     }
 
-    async function toggleCompactMode() {
-      const tab = tabs.find(t => t.id === activeTabId);
-      const targetUrl = tab?.url || loadSettings().homeUrl || location.href;
-      openAboutBlankPage(targetUrl);
-    }
-
     function applyCompactMode() {
       const enabled = localStorage.getItem(STORAGE_KEYS.compactMode) === "1";
       document.body.classList.toggle("compact-browser", enabled);
@@ -1814,6 +1848,8 @@
       address.disabled = false;
       address.placeholder = "Search or enter URL...";
       btn.disabled = false;
+
+      ensureProxyReady().catch(() => {});
 
       const sportsMode = loadJSON(STORAGE_KEYS.sportsMode, { type: "scores", league: "mlb" });
       setSportsMode(sportsMode.type, sportsMode.league);
