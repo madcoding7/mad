@@ -23,6 +23,8 @@
       --shadow: 0 10px 25px rgba(0,0,0,0.08);
       --radius: 16px;
       --topbar-height: 72px;
+      --proxy-tabs-height: 52px;
+      --proxy-bar-height: 60px;
     }
 
     * { box-sizing: border-box; }
@@ -534,6 +536,11 @@
       border-bottom: 1px solid #c9d5e6;
       overflow-x: auto;
       flex-shrink: 0;
+      min-height: var(--proxy-tabs-height);
+    }
+
+    body.bar-hidden .proxy-tabs {
+      display: none !important;
     }
 
     body.theme-midnight .proxy-tabs {
@@ -605,7 +612,7 @@
     }
 
     .proxy-bar {
-      min-height: 56px;
+      min-height: var(--proxy-bar-height);
       background: white;
       display: flex;
       align-items: center;
@@ -614,6 +621,10 @@
       border-bottom: 1px solid #d9e3ef;
       flex-shrink: 0;
       flex-wrap: wrap;
+    }
+
+    body.bar-hidden .proxy-bar {
+      display: none !important;
     }
 
     body.theme-midnight .proxy-bar {
@@ -637,10 +648,14 @@
     #sj-frame {
       border: none;
       width: 100%;
-      height: calc(100% - 112px);
+      height: calc(100% - var(--proxy-tabs-height) - var(--proxy-bar-height));
       background: white;
       display: block;
       animation: fadeIn .2s ease;
+    }
+
+    body.bar-hidden #sj-frame {
+      height: 100% !important;
     }
 
     .drawer {
@@ -709,6 +724,18 @@
       font-size: 13px;
       font-weight: 700;
       color: var(--muted);
+    }
+
+    body.theme-default {
+      --bg: #f4f7fb;
+      --bg2: #eaf0f8;
+      --card: #ffffff;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --primary: #2563eb;
+      --primary2: #1d4ed8;
+      --border: #dbe3ef;
+      --shadow: 0 10px 25px rgba(0,0,0,0.08);
     }
 
     body.theme-midnight {
@@ -831,7 +858,10 @@
         flex-direction: column;
       }
       #sj-frame {
-        height: calc(100% - 150px);
+        height: calc(100% - var(--proxy-tabs-height) - 94px);
+      }
+      body.bar-hidden #sj-frame {
+        height: 100% !important;
       }
     }
   </style>
@@ -892,7 +922,7 @@
             <a href="#" onclick="toggleBookmarks(); return false;">Open Bookmarks</a>
             <a href="#" onclick="toggleSettings(); return false;">Open Settings</a>
             <a href="#" onclick="openQuickNav(loadSettings().homeUrl || 'https://google.com'); return false;">Open Home Page</a>
-            <a href="#" onclick="toggleCompactMode(); return false;">Toggle Browser Focus Mode</a>
+            <a href="#" onclick="toggleCompactMode(); return false;">Open Focus Page</a>
           </div>
         </div>
       </aside>
@@ -1146,12 +1176,22 @@
     }
 
     function applyTheme(theme) {
-      document.body.classList.remove("theme-midnight", "theme-forest", "theme-sunset", "theme-lavender", "theme-rose");
+      document.body.classList.remove(
+        "theme-default",
+        "theme-midnight",
+        "theme-forest",
+        "theme-sunset",
+        "theme-lavender",
+        "theme-rose"
+      );
+
+      if (!theme || theme === "default") document.body.classList.add("theme-default");
       if (theme === "midnight") document.body.classList.add("theme-midnight");
       if (theme === "forest") document.body.classList.add("theme-forest");
       if (theme === "sunset") document.body.classList.add("theme-sunset");
       if (theme === "lavender") document.body.classList.add("theme-lavender");
       if (theme === "rose") document.body.classList.add("theme-rose");
+
       localStorage.setItem(STORAGE_KEYS.theme, theme || "default");
       qs("style-select").value = theme || "default";
     }
@@ -1167,11 +1207,11 @@
     }
 
     function search(input, template) {
-      try { return new URL(input).toString(); } catch (err) {}
+      try { return new URL(input).toString(); } catch {}
       try {
         const url = new URL(`http://${input}`);
         if (url.hostname.includes(".")) return url.toString();
-      } catch (err) {}
+      } catch {}
       return template.replace("%s", encodeURIComponent(input));
     }
 
@@ -1515,7 +1555,9 @@
 
     function toggleTopbar() {
       document.body.classList.toggle("topbar-hidden");
-      const hidden = document.body.classList.contains("topbar-hidden");
+      document.body.classList.toggle("bar-hidden");
+
+      const hidden = document.body.classList.contains("bar-hidden");
       localStorage.setItem(STORAGE_KEYS.topbarHidden, hidden ? "1" : "0");
       qs("topbar-floating-btn").textContent = hidden ? "Show Bar" : "Hide Bar";
     }
@@ -1523,27 +1565,14 @@
     function applyTopbarState() {
       const hidden = localStorage.getItem(STORAGE_KEYS.topbarHidden) === "1";
       document.body.classList.toggle("topbar-hidden", hidden);
+      document.body.classList.toggle("bar-hidden", hidden);
       qs("topbar-floating-btn").textContent = hidden ? "Show Bar" : "Hide Bar";
     }
 
     async function toggleCompactMode() {
-      const enabled = !document.body.classList.contains("compact-browser");
-      document.body.classList.toggle("compact-browser", enabled);
-      localStorage.setItem(STORAGE_KEYS.compactMode, enabled ? "1" : "0");
-
-      if (enabled) {
-        try {
-          if (document.fullscreenElement == null && document.documentElement.requestFullscreen) {
-            await document.documentElement.requestFullscreen();
-          }
-        } catch {}
-      } else {
-        try {
-          if (document.fullscreenElement && document.exitFullscreen) {
-            await document.exitFullscreen();
-          }
-        } catch {}
-      }
+      const tab = tabs.find(t => t.id === activeTabId);
+      const targetUrl = tab?.url || loadSettings().homeUrl || location.href;
+      openAboutBlankPage(targetUrl);
     }
 
     function applyCompactMode() {
@@ -1560,11 +1589,6 @@
       if (f) f.remove();
       qs("sj-address").value = "";
       qs("proxy-nav-input").value = "";
-      try {
-        if (document.fullscreenElement && document.exitFullscreen) {
-          document.exitFullscreen();
-        }
-      } catch {}
     };
 
     function escapeHtml(str) {
@@ -1725,13 +1749,38 @@
       }, 1000);
     }
 
-    function openAboutBlankPage() {
+    function openAboutBlankPage(targetUrl = "") {
       const newWin = window.open("about:blank", "_blank");
       if (!newWin) return;
+
+      const safeTarget = targetUrl || location.href;
+
       newWin.document.write(`
-        <title>Loading...</title>
-        <style>html,body,iframe{margin:0;padding:0;width:100%;height:100%;border:0;overflow:hidden;background:#fff;}</style>
-        <iframe src="https://mad4watching.onrender.com"></iframe>
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <title>Loading...</title>
+          <style>
+            html, body {
+              margin: 0;
+              padding: 0;
+              width: 100%;
+              height: 100%;
+              overflow: hidden;
+              background: #fff;
+            }
+            iframe {
+              width: 100%;
+              height: 100%;
+              border: 0;
+              display: block;
+            }
+          </style>
+        </head>
+        <body>
+          <iframe src="${safeTarget.replace(/"/g, "&quot;")}"></iframe>
+        </body>
+        </html>
       `);
       newWin.document.close();
     }
@@ -1778,9 +1827,9 @@
         });
       });
 
-      document.querySelectorAll("#quick-links .chip-btn").forEach(btn => {
-        btn.addEventListener("click", async () => {
-          const url = btn.dataset.url;
+      document.querySelectorAll("#quick-links .chip-btn").forEach(btnEl => {
+        btnEl.addEventListener("click", async () => {
+          const url = btnEl.dataset.url;
           await openQuickNav(url);
         });
       });
